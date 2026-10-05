@@ -139,7 +139,9 @@ private func bytes(_ keys: [String]) -> Set<[UInt8]> {
 
   let result = await changes.upload(items) { _ in }
   #expect(result == ChangeResult(done: 2, failedKeys: ["dest/photos/bad.txt"], cancelled: false))
-  #expect(await repository.uploads.map(\.contentType) == ["image/jpeg", "text/plain", "text/plain"])
+  #expect(
+    await repository.uploads.sorted { $0.key < $1.key }.map(\.contentType)
+      == ["text/plain", "image/jpeg", "text/plain"])
 }
 
 @MainActor
@@ -178,54 +180,16 @@ private func bytes(_ keys: [String]) -> Set<[UInt8]> {
   let objects = try await changes.objects(in: folder("a/f/"))
   let result = await changes.delete(objects) { _ in }
 
-  #expect(await repository.deletes.map(\.count) == [1000, 2])
+  #expect(await repository.deletes.map(\.count).sorted() == [2, 1000])
   #expect(result == ChangeResult(done: 1001, failedKeys: ["a/f/locked.txt"], cancelled: false))
 }
 
+/// A browser on `repository`, connected with a profile that allows changes.
 @MainActor
-@Test func cancellingDuringAConflictPromptStopsTheUpload() async throws {
-  let directory = scratchDirectory()
+private func writableBrowser(
+  _ repository: StubRepository, in directory: URL
+) async throws -> (BrowserController, ConnectionProfile) {
   try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-  defer { try? FileManager.default.removeItem(at: directory) }
-  let local = directory.appendingPathComponent("first.txt")
-  try Data("x".utf8).write(to: local)
-  let repository = StubRepository(keys: ["first.txt"])
-  let credentials = MemoryCredentialStore()
-  let model = AppModel(
-    repository: repository,
-    profileStore: ProfileStore(fileURL: directory.appendingPathComponent("profiles.json")),
-    credentialStore: credentials, defaults: scratchDefaults())
-  await model.loadProfiles()
-  var profile = try garageProfile(bucket: "test-bucket")
-  profile.allowsChanges = true
-  try await model.save(profile, credentials: testCredentials)
-  try await waitUntil { model.downloadSource() != nil && !model.isConnecting }
-  let browser = BrowserController(model: model)
-  let location = try #require(model.browser.location)
-
-  browser.upload([local], into: location)
-  try await waitUntil { browser.conflict != nil }
-  #expect(browser.conflict?.name == "first.txt")
-  browser.cancelTransfer()
-  try await waitUntil { !browser.isTransferring }
-
-  #expect(browser.transfer == nil && browser.conflict == nil)
-  #expect(await repository.uploads.isEmpty)
-
-  browser.upload([local], into: location)
-  try await waitUntil { browser.conflict != nil }
-  browser.resolveConflict(.replace, applyToAll: false)
-  try await waitUntil { !browser.isTransferring }
-  #expect(await repository.uploads.map(\.key) == ["first.txt"])
-  #expect(browser.changeGeneration == 1)
-}
-
-@MainActor
-@Test func droppingItemsOnAnotherFolderMovesThemAndOnTheirOwnFolderDoesNothing() async throws {
-  let directory = scratchDirectory()
-  try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-  defer { try? FileManager.default.removeItem(at: directory) }
-  let repository = StubRepository(keys: ["first.txt"])
   let model = AppModel(
     repository: repository,
     profileStore: ProfileStore(fileURL: directory.appendingPathComponent("profiles.json")),
@@ -235,19 +199,149 @@ private func bytes(_ keys: [String]) -> Set<[UInt8]> {
   profile.allowsChanges = true
   try await model.save(profile, credentials: testCredentials)
   try await waitUntil { model.downloadSource() != nil && !model.isConnecting }
-  let browser = BrowserController(model: model)
-  let location = try #require(model.browser.location)
+  return (BrowserController(model: model), profile)
+}
+
+/// Local files named `names` in `directory`.
+private func localFiles(_ names: [String], in directory: URL) throws -> [URL] {
+  try names.map {
+    let url = directory.appendingPathComponent($0)
+    try Data("x".utf8).write(to: url)
+    return url
+  }
+}
+
+@MainActor
+@Test func cancellingDuringAConflictPromptStopsTheUpload() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let repository = StubRepository(keys: ["first.txt"])
+  let (browser, _) = try await writableBrowser(repository, in: directory)
+  let local = try localFiles(["first.txt"], in: directory)[0]
+  let location = try #require(browser.model.browser.location)
+
+  browser.upload([local], into: location)
+  try await waitUntil { browser.conflict != nil }
+  #expect(browser.conflict?.name == "first.txt")
+  browser.cancelTransfer(try #require(browser.conflict).transferID)
+  try await waitUntil { browser.transfers.isEmpty }
+
+  #expect(browser.conflict == nil)
+  #expect(await repository.uploads.isEmpty)
+
+  browser.upload([local], into: location)
+  try await waitUntil { browser.conflict != nil }
+  browser.resolveConflict(.replace, applyToAll: false)
+  try await waitUntil { browser.transfers.allSatisfy { !$0.isRunning } }
+  #expect(await repository.uploads.map(\.key) == ["first.txt"])
+  #expect(browser.transfers.first?.result?.succeeded == true)
+  #expect(browser.changeGeneration == 1)
+}
+
+@MainActor
+@Test func conflictPromptsQueueOldestFirstAndCancellingOneWithdrawsOnlyItsPrompt() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let repository = StubRepository(keys: ["a.txt", "b.txt", "c.txt"])
+  let (browser, _) = try await writableBrowser(repository, in: directory)
+  let files = try localFiles(["a.txt", "b.txt", "c.txt"], in: directory)
+  let location = try #require(browser.model.browser.location)
+
+  for file in files {
+    browser.upload([file], into: location)
+    try await waitUntil { browser.conflicts.last?.name == file.lastPathComponent }
+  }
+  #expect(browser.conflicts.map(\.name) == ["a.txt", "b.txt", "c.txt"])
+  #expect(browser.transfers.count == 3)
+
+  browser.cancelTransfer(browser.conflicts[1].transferID)
+  #expect(browser.conflicts.map(\.name) == ["a.txt", "c.txt"])
+  browser.resolveConflict(.replace, applyToAll: false)
+  #expect(browser.conflict?.name == "c.txt")
+  browser.resolveConflict(.skip, applyToAll: false)
+
+  try await waitUntil { browser.transfers.count == 2 && browser.transfers.allSatisfy { !$0.isRunning } }
+  #expect(browser.conflict == nil)
+  #expect(await repository.uploads.map(\.key) == ["a.txt"])
+}
+
+@MainActor
+@Test func transfersRunTogetherAndCancellingOneLeavesTheOtherRunning() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let repository = StubRepository(keys: [], delay: .milliseconds(300))
+  let (browser, _) = try await writableBrowser(repository, in: directory)
+  let files = try localFiles(["one.txt", "two.txt"], in: directory)
+  let location = try #require(browser.model.browser.location)
+
+  browser.upload([files[0]], into: location)
+  browser.upload([files[1]], into: location)
+  try await waitUntil { await repository.inFlight == 2 }
+  let (first, second) = (browser.transfers[0], browser.transfers[1])
+  browser.cancelTransfer(first.id)
+  try await waitUntil { !first.isRunning && !second.isRunning }
+
+  #expect(first.result?.message == "Stopped after 0 files")
+  #expect(second.result?.succeeded == true)
+  #expect(await repository.keys == ["two.txt"])
+  #expect(browser.changeGeneration == 2)
+}
+
+@MainActor
+@Test func changesRunFourObjectsAtOnce() async throws {
+  let keys = (0..<10).map { "a/\($0).txt" }
+  let repository = StubRepository(keys: keys, delay: .milliseconds(20))
+  let changes = ObjectChanges(repository: repository, source: try source())
+  let progress = Recorder<BatchDownloadProgress>()
+
+  let items = keys.map { CopyItem(sourceKey: $0, size: 1, destinationKey: "b/" + $0) }
+  let result = await changes.copy(items, deletingSources: false) { progress.values.append($0) }
+
+  #expect(await repository.maxInFlight == 4)
+  #expect(result == ChangeResult(done: 10, failedKeys: [], cancelled: false))
+  #expect(
+    progress.values.last
+      == BatchDownloadProgress(completedFiles: 10, totalFiles: 10, receivedBytes: 10, totalBytes: 10))
+}
+
+@MainActor
+@Test func droppingItemsOnAnotherFolderMovesThemAndOnTheirOwnFolderDoesNothing() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let repository = StubRepository(keys: ["first.txt"])
+  let (browser, profile) = try await writableBrowser(repository, in: directory)
+  let location = try #require(browser.model.browser.location)
   let first = S3ItemReference(
     profileID: profile.id, bucket: "test-bucket", isFolder: false, key: Array("first.txt".utf8))
   let elsewhere = S3ItemReference(profileID: UUID(), bucket: "test-bucket", isFolder: false, key: first.key)
   let folder = try S3Location(bucket: "test-bucket", prefix: "archive/")
 
-  #expect(!browser.accept([.item(first)], into: location))
-  #expect(!browser.accept([.item(elsewhere)], into: folder))
+  #expect(!browser.accept([.item(first)], into: location, copying: false))
+  #expect(!browser.accept([.item(elsewhere)], into: folder, copying: false))
   #expect(await repository.copies.isEmpty)
 
-  #expect(browser.accept([.item(first)], into: folder))
+  #expect(browser.accept([.item(first)], into: folder, copying: false))
   try await waitUntil { browser.changeGeneration == 1 }
   #expect(await repository.copies.map(\.destination) == ["archive/first.txt"])
   #expect(await repository.deletes == [["first.txt"]])
+}
+
+@MainActor
+@Test func optionDroppingItemsCopiesThemWithoutDeletingTheSources() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let repository = StubRepository(keys: ["first.txt"])
+  let (browser, profile) = try await writableBrowser(repository, in: directory)
+  let first = S3ItemReference(
+    profileID: profile.id, bucket: "test-bucket", isFolder: false, key: Array("first.txt".utf8))
+  let folder = try S3Location(bucket: "test-bucket", prefix: "archive/")
+
+  #expect(browser.accept([.item(first)], into: folder, copying: true))
+  try await waitUntil { browser.changeGeneration == 1 }
+
+  #expect(browser.transfers.first?.kind == .copy)
+  #expect(browser.transfers.first?.result?.message == "Copied 1 file")
+  #expect(await repository.copies.map(\.destination) == ["archive/first.txt"])
+  #expect(await repository.deletes.isEmpty)
+  #expect(await repository.keys?.sorted() == ["archive/first.txt", "first.txt"])
 }

@@ -28,6 +28,7 @@ struct ObjectBrowserView: View {
         .dropDestination(for: BrowserDrop.self, isEnabled: browser.canModify) { drops, _ in
           if let location = model.browser.location { browser.accept(drops, into: location) }
         }
+        .dropConfiguration { BrowserController.dropConfiguration($0) }
         .onDropSessionUpdated {
           isDropTargeted = browser.canModify && $0.phase.isOver && $0.localSession == nil
         }
@@ -77,7 +78,7 @@ struct ObjectBrowserView: View {
     }
     .onChange(of: rows.map(\.id)) { _, ids in browser.pruneSelection(to: ids) }
     // A finished transfer's result belongs to the connection it ran in.
-    .onChange(of: model.selectedProfileID) { browser.dismissTransfer() }
+    .onChange(of: model.selectedProfileID) { browser.clearFinishedTransfers() }
   }
 
   private var isFiltering: Bool {
@@ -297,7 +298,6 @@ struct BrowserItemMenu: View {
       }
       if !files.isEmpty {
         Button("Download…") { browser.download(ids) }
-          .disabled(browser.isTransferring)
         if files.count == 1 {
           Button("Share Link…") { browser.share(files[0].id) }
         }
@@ -328,10 +328,10 @@ private struct ChangeMenuItems: View {
       // canModify is off in Show Deleted Files, so Restore only needs a connection that allows changes.
       let readOnly = browser.model.selectedProfile?.allowsChanges != true
       Button("Restore") { browser.restore(ids) }
-        .disabled(readOnly || browser.isTransferring)
+        .disabled(readOnly)
         .help(readOnly ? reason : "")
     } else {
-      let unavailable = !browser.canModify || browser.isTransferring
+      let unavailable = !browser.canModify
       Button("Rename…") { if let id = ids.first { browser.requestRename(id) } }
         .disabled(unavailable || ids.count != 1)
         .help(reason)
@@ -355,14 +355,14 @@ struct FolderMenuItems: View {
   var body: some View {
     let inHistory = browser.historyMode != nil
     Button("Upload Files Here…") { browser.uploadFiles(into: location) }
-      .disabled(!browser.canModify || browser.isTransferring)
+      .disabled(!browser.canModify)
       .help(browser.modifyUnavailableReason ?? "")
     Button("New Folder") { browser.requestNewFolder(in: location) }
       .disabled(!browser.canModify)
       .help(browser.modifyUnavailableReason ?? "")
     Divider()
     Button("Download…") { browser.downloadFolder(location) }
-      .disabled(browser.isTransferring || inHistory)
+      .disabled(inHistory)
       .help(
         inHistory ? "Folder downloads get current files only. Choose Show Current Files to download." : "")
     if let profileID = browser.model.selectedProfileID {
@@ -456,6 +456,7 @@ private struct LocationPath: View {
         .dropDestination(for: BrowserDrop.self, isEnabled: browser.canModify) { drops, _ in
           browser.accept(drops, into: folder)
         }
+        .dropConfiguration { BrowserController.dropConfiguration($0) }
         .onDropSessionUpdated { session in
           if browser.canModify && session.phase.isOver {
             dropTarget = folder
@@ -641,16 +642,19 @@ private struct PreviewStatus: View {
   }
 }
 
-/// Floating bottom bar: selection summary, then progress and result of the current transfer.
+/// Floating bottom bar: selection summary, then transfers. One transfer shows its progress and result inline;
+/// several show a summary that opens the list.
 private struct TransfersBar: View {
   let browser: BrowserController
+  @State private var showsList = false
 
   var body: some View {
     // The inspector already offers a single item's actions.
     let selection = browser.selection
-    if browser.transfer != nil || selection.count > 1 || (!selection.isEmpty && !browser.showsInspector) {
+    if !browser.transfers.isEmpty || selection.count > 1 || (!selection.isEmpty && !browser.showsInspector) {
       GlassEffectContainer(spacing: 8) {
         HStack(spacing: 12) { content }
+          .buttonStyle(.glass)
           .padding(10)
           .frame(maxWidth: .infinity)
           .glassEffect(.regular, in: .rect(cornerRadius: 16))
@@ -662,51 +666,52 @@ private struct TransfersBar: View {
 
   @ViewBuilder
   private var content: some View {
-    switch browser.transfer {
-    case .running(let kind, let name, let progress):
-      Group {
-        if progress.totalFiles == 0 {
-          ProgressView()  // Listing a folder before the transfer starts.
-        } else if progress.totalBytes > 0 {
-          ProgressView(value: Double(progress.receivedBytes), total: Double(progress.totalBytes))
-        } else {
-          // Deletes and empty files move no bytes.
-          ProgressView(value: Double(progress.completedFiles), total: Double(progress.totalFiles))
-        }
+    let transfers = browser.transfers
+    if transfers.isEmpty {
+      selectionSummary
+    } else if transfers.count == 1 {
+      TransferRow(transfer: transfers[0], browser: browser)
+    } else {
+      summary(transfers)
+    }
+  }
+
+  /// "3 transfers · 2 running" with their combined progress, or how they ended.
+  @ViewBuilder
+  private func summary(_ transfers: [Transfer]) -> some View {
+    let running = transfers.filter(\.isRunning)
+    let all = countLabel(transfers.count, "transfer")
+    if running.isEmpty {
+      let failed = transfers.count { $0.result?.succeeded == false }
+      Label {
+        Text(failed == 0 ? "\(all) finished" : "\(all) finished · \(failed.formatted()) failed")
+      } icon: {
+        Image(systemName: failed == 0 ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+          .foregroundStyle(failed == 0 ? Color.green : Color.orange)
       }
-      .progressViewStyle(.linear)
-      .frame(width: 140)
-      .accessibilityLabel(Self.verb(kind))
-      Text(Self.describe(kind, progress, name: name))
+      .font(.callout)
+    } else {
+      TransferProgressBar(progress: Self.combined(running))
+        .accessibilityLabel("Transfers")
+      Text("\(all) · \(running.count.formatted()) running")
         .font(.callout)
         .monospacedDigit()
         .lineLimit(1)
-        .truncationMode(.middle)
-      Spacer(minLength: 8)
-      Button("Cancel") { browser.cancelTransfer() }
-        .buttonStyle(.glass)
-    case .finished(let message, let succeeded, let reveal, let failedKeys):
-      Label {
-        Text(message).lineLimit(1).truncationMode(.middle)
-      } icon: {
-        Image(systemName: succeeded ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-          .foregroundStyle(succeeded ? Color.green : Color.orange)
-      }
-      .font(.callout)
-      Spacer(minLength: 8)
-      if !failedKeys.isEmpty {
-        Button("Copy Failed Keys") { browser.copy(failedKeys) }
-          .buttonStyle(.glass)
-      }
-      if let reveal {
-        Button("Show in Finder") { NSWorkspace.shared.activateFileViewerSelecting([reveal]) }
-          .buttonStyle(.glass)
-      }
-      Button("Dismiss") { browser.dismissTransfer() }
-        .buttonStyle(.glass)
-    case nil:
-      selectionSummary
     }
+    Spacer(minLength: 8)
+    Button("Show All", systemImage: "chevron.up") { showsList.toggle() }
+      .popover(isPresented: $showsList, arrowEdge: .top) { TransfersList(browser: browser) }
+      // Closed with the summary, so it doesn't reopen by itself when several transfers run again.
+      .onDisappear { showsList = false }
+  }
+
+  /// Running transfers as one: their files and bytes added up.
+  private static func combined(_ transfers: [Transfer]) -> BatchDownloadProgress {
+    BatchDownloadProgress(
+      completedFiles: transfers.reduce(0) { $0 + $1.progress.completedFiles },
+      totalFiles: transfers.reduce(0) { $0 + $1.progress.totalFiles },
+      receivedBytes: transfers.reduce(0) { $0 + $1.progress.receivedBytes },
+      totalBytes: transfers.reduce(0) { $0 + $1.progress.totalBytes })
   }
 
   @ViewBuilder
@@ -723,10 +728,78 @@ private struct TransfersBar: View {
     .lineLimit(1)
     Spacer(minLength: 8)
     Button("Deselect All") { browser.selection = [] }
-      .buttonStyle(.glass)
     Button("Download…", systemImage: "arrow.down.to.line") { browser.downloadSelection() }
       .buttonStyle(.glassProminent)
       .disabled(!browser.canDownloadSelection)
+  }
+}
+
+/// Every transfer, oldest first, each with its own Cancel or result actions.
+private struct TransfersList: View {
+  let browser: BrowserController
+
+  var body: some View {
+    VStack(spacing: 0) {
+      ScrollView {
+        VStack(spacing: 0) {
+          ForEach(browser.transfers) { transfer in
+            if transfer.id != browser.transfers.first?.id { Divider() }
+            HStack(spacing: 12) { TransferRow(transfer: transfer, browser: browser) }
+              .padding(.vertical, 8)
+          }
+        }
+        .padding(.horizontal, 16)
+      }
+      .frame(maxHeight: 320)
+      .fixedSize(horizontal: false, vertical: true)
+      Divider()
+      HStack {
+        Spacer()
+        Button("Clear Finished") { browser.clearFinishedTransfers() }
+          .disabled(browser.transfers.allSatisfy(\.isRunning))
+      }
+      .padding(12)
+    }
+    .frame(width: 520)
+    // The bar's glass buttons don't belong on the popover's own surface.
+    .buttonStyle(.automatic)
+    .controlSize(.small)
+  }
+}
+
+/// One transfer's progress and Cancel, then its result with Copy Failed Keys, Show in Finder and Dismiss.
+private struct TransferRow: View {
+  let transfer: Transfer
+  let browser: BrowserController
+
+  var body: some View {
+    if let result = transfer.result {
+      Label {
+        Text(result.message).lineLimit(1).truncationMode(.middle)
+      } icon: {
+        Image(systemName: result.succeeded ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+          .foregroundStyle(result.succeeded ? Color.green : Color.orange)
+      }
+      .font(.callout)
+      Spacer(minLength: 8)
+      if !result.failedKeys.isEmpty {
+        Button("Copy Failed Keys") { browser.copy(result.failedKeys) }
+      }
+      if let reveal = result.reveal {
+        Button("Show in Finder") { NSWorkspace.shared.activateFileViewerSelecting([reveal]) }
+      }
+      Button("Dismiss") { browser.dismissTransfer(transfer.id) }
+    } else {
+      TransferProgressBar(progress: transfer.progress)
+        .accessibilityLabel(Self.verb(transfer.kind))
+      Text(Self.describe(transfer.kind, transfer.progress, name: transfer.name))
+        .font(.callout)
+        .monospacedDigit()
+        .lineLimit(1)
+        .truncationMode(.middle)
+      Spacer(minLength: 8)
+      Button("Cancel") { browser.cancelTransfer(transfer.id) }
+    }
   }
 
   private static func verb(_ kind: TransferKind) -> String {
@@ -734,7 +807,8 @@ private struct TransfersBar: View {
     case .download: "Downloading"
     case .upload: "Uploading"
     case .move: "Moving"
-    case .copy: "Restoring"
+    case .copy: "Copying"
+    case .restore: "Restoring"
     case .delete: "Deleting"
     }
   }
@@ -755,5 +829,24 @@ private struct TransfersBar: View {
     let files = "\(progress.completedFiles.formatted()) of \(countLabel(progress.totalFiles, "file"))"
     let details = [name, bytes, progress.totalFiles > 1 ? files : nil].compactMap { $0 }
     return details.isEmpty ? "\(action)…" : "\(action) \(details.joined(separator: " · "))"
+  }
+}
+
+private struct TransferProgressBar: View {
+  let progress: BatchDownloadProgress
+
+  var body: some View {
+    Group {
+      if progress.totalFiles == 0 {
+        ProgressView()  // Listing a folder before the transfer starts.
+      } else if progress.totalBytes > 0 {
+        ProgressView(value: Double(progress.receivedBytes), total: Double(progress.totalBytes))
+      } else {
+        // Deletes and empty files move no bytes.
+        ProgressView(value: Double(progress.completedFiles), total: Double(progress.totalFiles))
+      }
+    }
+    .progressViewStyle(.linear)
+    .frame(width: 140)
   }
 }

@@ -14,6 +14,8 @@ struct ContentView: View {
   /// An external link to a bucket no connection knows, waiting for the user's go-ahead.
   @State private var linkToConfirm: ExternalLink?
   @State private var linkError: String?
+  /// Favorite or recent folder a drag is over; dropping moves items there (or uploads Finder files there).
+  @State private var sidebarDropTarget: S3Location?
 
   private struct ExternalLink {
     let text: String
@@ -139,7 +141,7 @@ struct ContentView: View {
               Label("Upload Files", systemImage: "arrow.up.to.line")
             }
             .help(browser.modifyUnavailableReason ?? "Upload files or folders to this folder (⌘U)")
-            .disabled(!browser.canModify || browser.isTransferring)
+            .disabled(!browser.canModify)
           }
 
           Button {
@@ -256,9 +258,29 @@ struct ContentView: View {
     .task { await model.loadProfiles() }
   }
 
+  /// Favorite or recent folder; also a drop target, like a folder in Finder's sidebar.
   private func locationLabel(_ location: S3Location) -> some View {
     Label(location.displayName, systemImage: location.prefix.isEmpty ? "shippingbox" : "folder")
       .help(location.displayString)
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .background {
+        if sidebarDropTarget == location {
+          RoundedRectangle(cornerRadius: 6, style: .continuous)
+            .strokeBorder(Color.accentColor, lineWidth: 2)
+            .padding(-4)
+        }
+      }
+      .dropDestination(for: BrowserDrop.self, isEnabled: browser.canModify) { drops, _ in
+        browser.accept(drops, into: location)
+      }
+      .dropConfiguration { BrowserController.dropConfiguration($0) }
+      .onDropSessionUpdated { session in
+        if browser.canModify && session.phase.isOver {
+          sidebarDropTarget = location
+        } else if sidebarDropTarget == location {
+          sidebarDropTarget = nil
+        }
+      }
   }
 
   /// The clicked item until its location loads; then the open favorite, bucket or recent location,

@@ -49,6 +49,7 @@ struct BrowserGrid: View {
               drops, _ in
               if let folder = browser.location(of: row.id) { browser.accept(drops, into: folder) }
             }
+            .dropConfiguration { BrowserController.dropConfiguration($0) }
             .onDropSessionUpdated { session in
               // A folder dragged over its own card isn't a target, as in Finder.
               let isOwnCard =

@@ -10,6 +10,7 @@
 		055FA9199BEBEA3C0BE4C87F /* PreviewFileNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9941E58DA85DE0307ACBE866 /* PreviewFileNameTests.swift */; };
 		05EDC92FD9AD7F4B22CEC2C0 /* BatchDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D492F8D03CFE403B612D08 /* BatchDownloaderTests.swift */; };
 		09C760ABD3138CD34B53B278 /* BrowserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18FFFFDC367949AA81A87841 /* BrowserRow.swift */; };
+		0C39168EFB8370F85998DB5C /* FolderSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D875D6223D94B3BED35E7F1 /* FolderSyncTests.swift */; };
 		0D0871B8C9433D7F98F20AA0 /* InlinePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE21E30A3FA9169BA89D13D /* InlinePlayer.swift */; };
 		0EEB805E0C94383DBBD76540 /* DeepSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF783093A6A01360B234FA65 /* DeepSearch.swift */; };
 		1130AA57D88606970639AF9B /* FavoriteEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2720412B1B8F6768609994FD /* FavoriteEntity.swift */; };
@@ -32,8 +33,10 @@
 		4A719EC037389126CD1CCFFD /* StorageClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C510250F2C922B9F31A9FB /* StorageClassName.swift */; };
 		5085DB8C7173D9BBCFF0523C /* OpenBucketApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F931CDEAE87B61EDA971BE /* OpenBucketApp.swift */; };
 		666AE8D353C3A02C7AF5B774 /* QuickLookPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F91A8E141D620626C0A5849 /* QuickLookPanel.swift */; };
+		68FFF3897A3E237790537A7E /* FolderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948F2E2210FBFEF2F36F21C0 /* FolderSync.swift */; };
 		6AA5FF8C29DBD96854F64373 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D892EF569D3EA2E8A2236C7A /* ProfileStore.swift */; };
 		6CA9ABA211FAADB8FC6A87D5 /* ObjectChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554EAF94D2FBAB08846A6B82 /* ObjectChanges.swift */; };
+		709AE5D7BA61071A658F6BDB /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01D4561055D8A14E976E30 /* Concurrency.swift */; };
 		7FED78FBAC2BA182C03E1CDD /* PreviewFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E2B0C26FE30A89B9FC43E6 /* PreviewFileName.swift */; };
 		8111B49B392055E29D326866 /* BatchDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B385C52E15190191826676 /* BatchDownloader.swift */; };
 		820E7F421BE9DD72CC7AD2D3 /* KeychainCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE9CC622E1E0D826A5A2818 /* KeychainCredentialStore.swift */; };
@@ -74,6 +77,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B01D4561055D8A14E976E30 /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
 		16D8A0C33F2C27C733201821 /* AWSConfigProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConfigProfiles.swift; sourceTree = "<group>"; };
 		18FFFFDC367949AA81A87841 /* BrowserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserRow.swift; sourceTree = "<group>"; };
 		1E951DA6702BDB08733DF7D2 /* Treemap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Treemap.swift; sourceTree = "<group>"; };
@@ -94,6 +98,7 @@
 		5CABA9DDB550978A4CE40825 /* StorageScan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageScan.swift; sourceTree = "<group>"; };
 		64F931CDEAE87B61EDA971BE /* OpenBucketApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBucketApp.swift; sourceTree = "<group>"; };
 		6543CFDF7A80DCBAE012B785 /* InsightTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightTarget.swift; sourceTree = "<group>"; };
+		6D875D6223D94B3BED35E7F1 /* FolderSyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSyncTests.swift; sourceTree = "<group>"; };
 		711BEF07C60DBC90F3B3DE9C /* OpenBucket */ = {isa = PBXFileReference; lastKnownFileType = folder; name = OpenBucket; path = Packages/OpenBucket; sourceTree = SOURCE_ROOT; };
 		7D64BE089D18AA0396391CE1 /* ObjectTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTableView.swift; sourceTree = "<group>"; };
 		7E40837C83461EC99EB6BB4D /* ServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesTests.swift; sourceTree = "<group>"; };
@@ -101,6 +106,7 @@
 		864DD839CD137461C88AA9B1 /* BackupVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupVerification.swift; sourceTree = "<group>"; };
 		8F91A8E141D620626C0A5849 /* QuickLookPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookPanel.swift; sourceTree = "<group>"; };
 		92EFCC703C8816C7CE7E7352 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		948F2E2210FBFEF2F36F21C0 /* FolderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSync.swift; sourceTree = "<group>"; };
 		9753D4E4D8B03462533C60A1 /* StorageOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageOverviewView.swift; sourceTree = "<group>"; };
 		9941E58DA85DE0307ACBE866 /* PreviewFileNameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFileNameTests.swift; sourceTree = "<group>"; };
 		A1C510250F2C922B9F31A9FB /* StorageClassName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageClassName.swift; sourceTree = "<group>"; };
@@ -152,6 +158,7 @@
 				D961406D85301962C645C5AE /* AWSConfigProfilesTests.swift */,
 				C9D492F8D03CFE403B612D08 /* BatchDownloaderTests.swift */,
 				C356ECA0BDF4C3E50710927F /* BrowserControllerTests.swift */,
+				6D875D6223D94B3BED35E7F1 /* FolderSyncTests.swift */,
 				85CF20FCBB9A02230BABD036 /* InsightTests.swift */,
 				B7AE53B9526D0C4A81D4A7B0 /* ObjectChangesTests.swift */,
 				9941E58DA85DE0307ACBE866 /* PreviewFileNameTests.swift */,
@@ -204,9 +211,11 @@
 			isa = PBXGroup;
 			children = (
 				864DD839CD137461C88AA9B1 /* BackupVerification.swift */,
+				0B01D4561055D8A14E976E30 /* Concurrency.swift */,
 				DF783093A6A01360B234FA65 /* DeepSearch.swift */,
 				F814B6AA744374B48622FFB2 /* FolderDownloader.swift */,
 				DB1AA2BCD89784B002B615B8 /* FolderHistory.swift */,
+				948F2E2210FBFEF2F36F21C0 /* FolderSync.swift */,
 				ABCC8AE51F48E34BF8475F9F /* ImageMetadata.swift */,
 				554EAF94D2FBAB08846A6B82 /* ObjectChanges.swift */,
 				29C6546EF6ED325919C60AD2 /* ObjectListing.swift */,
@@ -407,12 +416,14 @@
 				09C760ABD3138CD34B53B278 /* BrowserRow.swift in Sources */,
 				D80C11FA476E02E511653697 /* BrowserThumbnail.swift in Sources */,
 				273390C883DB1A792F3609AE /* ChangeSheets.swift in Sources */,
+				709AE5D7BA61071A658F6BDB /* Concurrency.swift in Sources */,
 				1EBFD07A91677539D164286A /* ConnectionEditor.swift in Sources */,
 				15A16CB5F322D02535AED277 /* ContentView.swift in Sources */,
 				0EEB805E0C94383DBBD76540 /* DeepSearch.swift in Sources */,
 				1130AA57D88606970639AF9B /* FavoriteEntity.swift in Sources */,
 				867B18F22AA4BB67F3EA75F2 /* FolderDownloader.swift in Sources */,
 				AF2E61E46D5F5CA62F9E1EEA /* FolderHistory.swift in Sources */,
+				68FFF3897A3E237790537A7E /* FolderSync.swift in Sources */,
 				487A919504D4CD8308F723DA /* ImageMetadata.swift in Sources */,
 				0D0871B8C9433D7F98F20AA0 /* InlinePlayer.swift in Sources */,
 				F90B4027F9E4882C0CBBFF36 /* InsightTarget.swift in Sources */,
@@ -446,6 +457,7 @@
 				F651B51B789D257D6C31F054 /* AppModelTests.swift in Sources */,
 				05EDC92FD9AD7F4B22CEC2C0 /* BatchDownloaderTests.swift in Sources */,
 				4457BC80A527EF9505749B43 /* BrowserControllerTests.swift in Sources */,
+				0C39168EFB8370F85998DB5C /* FolderSyncTests.swift in Sources */,
 				D0545CBB9D547946D2B0813A /* InsightTests.swift in Sources */,
 				C64D80226004CE652569808C /* ObjectChangesTests.swift in Sources */,
 				055FA9199BEBEA3C0BE4C87F /* PreviewFileNameTests.swift in Sources */,

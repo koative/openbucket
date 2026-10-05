@@ -3,7 +3,7 @@ import Foundation
 import Observation
 import OpenBucketCore
 
-/// Compares a local folder with an S3 folder by path, size and MD5-based ETag. Read-only on both sides.
+/// Compares a local folder with an S3 folder by path, size and MD5-based ETag; the comparison changes neither side.
 @MainActor @Observable
 final class BackupVerification {
   enum Status: String, Sendable {
@@ -25,6 +25,8 @@ final class BackupVerification {
     let status: Status
     let localSize: Int64?
     let remoteSize: Int64?
+    /// The object's exact key; nil when the file is only on this Mac.
+    let remoteKey: String?
     var id: String { relativePath }
   }
 
@@ -101,7 +103,9 @@ final class BackupVerification {
             try Task.checkCancellation()
           }
           entries.append(
-            Entry(relativePath: path, status: status, localSize: file?.size, remoteSize: object?.size))
+            Entry(
+              relativePath: path, status: status, localSize: file?.size, remoteSize: object?.size,
+              remoteKey: object?.key))
           checkedFiles += 1
         }
       } catch {

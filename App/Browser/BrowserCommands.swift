@@ -33,7 +33,7 @@ struct BrowserCommands: Commands {
         .disabled(model.selectedProfile == nil || browser.isSheetPresented)
       Divider()
       Button("Download…") { browser.downloadSelection() }
-        .disabled(!browsing || !browser.canDownloadSelection || browser.isTransferring)
+        .disabled(!browsing || !browser.canDownloadSelection)
       Button("Share Link…") {
         if let row = browser.quickLookTarget { browser.share(row.id) }
       }
@@ -41,7 +41,7 @@ struct BrowserCommands: Commands {
       Divider()
       Button("Upload Files…") { browser.uploadFiles() }
         .keyboardShortcut("u")
-        .disabled(changesUnavailable || browser.isTransferring)
+        .disabled(changesUnavailable)
       Button("New Folder") { browser.requestNewFolder() }
         .keyboardShortcut("n", modifiers: [.command, .shift])
         .disabled(changesUnavailable)
@@ -59,13 +59,13 @@ struct BrowserCommands: Commands {
     CommandGroup(after: .pasteboard) {
       Divider()
       Button("Rename…") { if let id = browser.selection.first { browser.requestRename(id) } }
-        .disabled(changesUnavailable || browser.isTransferring || browser.selection.count != 1)
+        .disabled(changesUnavailable || browser.selection.count != 1)
       Button("Move To…") { browser.requestMove(browser.selection) }
-        .disabled(changesUnavailable || browser.isTransferring || browser.selection.isEmpty)
+        .disabled(changesUnavailable || browser.selection.isEmpty)
       // ⌘⌫ must still delete text while the search field is being edited.
       Button("Delete…") { browser.requestDelete(browser.selection) }
         .keyboardShortcut(.delete)
-        .disabled(changesUnavailable || !navigating || browser.isTransferring || browser.selection.isEmpty)
+        .disabled(changesUnavailable || !navigating || browser.selection.isEmpty)
       Button("Restore") { browser.restore(browser.selection) }
         .disabled(!browsing || !browser.canRestoreSelection)
       Divider()

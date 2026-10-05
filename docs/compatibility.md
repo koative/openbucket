@@ -21,10 +21,13 @@ Changes are sent only for connections with **Allow changes** turned on. They use
 | --- | --- |
 | Upload | `PutObject` up to 16 MiB; above that `CreateMultipartUpload`, `UploadPart` (parts of at least 16 MiB, at most 10,000 parts) and `CompleteMultipartUpload`, or `AbortMultipartUpload` after a failure or cancel. Content-Type comes from the file extension |
 | New Folder | `PutObject` of an empty `folder/` marker |
-| Rename, Move To, drag to a folder | `CopyObject` (multipart `UploadPartCopy` above 5 GiB) then `DeleteObjects` for each copied source; a source whose copy failed is kept |
+| Rename, Move To, drag to a folder | `CopyObject` (multipart `UploadPartCopy` above 5 GiB) then `DeleteObjects` for each copied source; a source whose copy failed is kept. ⌥-drop copies without the delete |
 | Delete | `DeleteObjects` in batches of 1,000 without version IDs, so versioned buckets keep the data behind a delete marker |
 | Restore | `CopyObject` of the chosen version onto its own key, which makes it the newest version |
 | Metadata and tags | `CopyObject` onto the same key with replaced headers, then `PutObjectTagging` or `DeleteObjectTagging` when tags changed |
+| Update S3 (Compare window) | Upload as above for files that are new or changed on this Mac; nothing is deleted |
+
+Transfers run side by side, and each works on up to four files (or four `DeleteObjects` batches) at a time.
 
 Existing destinations are found by listing the destination prefix first; a name that already exists prompts Replace, Keep Both (`name 2.ext`) or Skip. Delete reads `GetBucketVersioning` to say whether deleted files can be restored. The opt-in write round trip uploads a small and a multipart file, creates a folder marker, copies, replaces metadata and deletes everything under a fresh prefix:
 
@@ -66,4 +69,4 @@ Use the same test against each provider before calling it verified. Never commit
 
 ## SDK boundary
 
-The first adapter candidate was the official AWS SDK for Swift, but its approximately 2.4 GB repository did not finish fetching on the development machine within 18 minutes. Soto 7.15.0 resolved and passed the Garage and endpoint-path tests. `OpenBucketCore` depends on an S3 repository protocol, so the SDK can be changed without rewriting browser views.
+The first adapter candidate was the official AWS SDK for Swift, but its approximately 2.4 GB repository did not finish fetching on the development machine within 18 minutes. Soto resolved and passes the Garage and endpoint-path tests; the exact versions are pinned in `Packages/OpenBucket/Package.resolved`. `OpenBucketCore` depends on an S3 repository protocol, so the SDK can be changed without rewriting browser views.

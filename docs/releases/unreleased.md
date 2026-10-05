@@ -4,19 +4,16 @@ Changes since v0.1.1. Rename this file to the release version when publishing.
 
 ## Highlights
 
-- Changes to S3, per connection: turn on **Allow changes** to upload files and folders (⌘U, toolbar or Finder drop, multipart for large files), create folders (⇧⌘N), rename, move (Move To, or drag files and folders onto a folder or a parent in the path bar), delete (⌘⌫), restore versions and deleted files, and edit content headers, metadata and tags. Existing names prompt Replace, Keep Both or Skip. Connections stay read-only by default.
-- Versions: per-file version history, Show Deleted Files and Browse As Of a date on versioned buckets.
-- Share links: presigned download or open-in-browser links from 15 minutes to 7 days, with a QR code.
-- Storage Overview (treemap by size and kind, storage classes, largest files) and Compare with Local Folder (checks a local copy by size and checksum).
-- AWS CLI profiles as a credential source, including roles and IAM Identity Center.
-- Favorites and recent folders per connection, `s3://` links from other apps, S3 console URLs in Go to Location, search below the current folder, and App Intents with favorites in Spotlight.
-- Inline video playback, photo EXIF and full object details (headers, metadata, tags) in the Info panel; folder downloads.
-- A quieter, more native window: breadcrumb path, Finder-style selection, single-line list rows with a Kind column, a Get Info–style Info panel, redesigned Storage Overview and Compare windows.
-- Native multi-selection in grid and list, with ⌘A, ⇧-click, and ⌘-click.
-- Keyboard navigation and menu commands: Quick Look with Space or ⌘Y, enclosing folder with ⌘↑, back and forward with ⌘[ and ⌘], grid and list with ⌘1 and ⌘2, Find with ⌘F, and the Info panel with ⌥⌘I.
-- Context menus on files and folders, drag-out to Finder, and Copy S3 URI.
-- Single and batch downloads show byte progress and can be cancelled.
-- A Show Previews toggle for image and video thumbnails.
+- **Changes to S3**, opt-in per connection with **Allow changes** (off by default): upload files and folders (⌘U, toolbar or Finder drop, multipart for large files), New Folder (⇧⌘N), rename, Move To, drag onto a folder, a parent in the path bar or a sidebar folder (hold ⌥ to copy), delete (⌘⌫), restore versions and deleted files, and edit content headers, metadata and tags. Existing names prompt Replace, Keep Both or Skip.
+- **One-way sync** in Compare with Local Folder: after a comparison, **Update S3** uploads new and changed files from this Mac and **Update Mac** downloads new and changed files from S3. Nothing is deleted on either side; a local file that gets replaced goes to the Trash.
+- **Transfers side by side**: file, batch and folder downloads, uploads, moves and deletes run alongside each other, four files at a time each, with byte progress, cancellation and failed-key reporting in the transfers bar.
+- **Versions**: per-file version history, Show Deleted Files and Browse As Of a date on versioned buckets.
+- **Share links**: presigned download or open-in-browser links from 15 minutes to 7 days, with a QR code.
+- **Insight**: Storage Overview (treemap by size and kind, storage classes, largest files) and Compare with Local Folder (size and checksum check of a local copy).
+- **Connections**: AWS CLI profiles as a credential source, including roles and IAM Identity Center.
+- **Navigation**: favorites and recent folders per connection, `s3://` links from other apps, S3 console URLs in Go to Location, search below the current folder, App Intents with favorites in Spotlight, native multi-selection (⌘A, ⇧-click, ⌘-click), context menus, Copy S3 URI, drag-out to Finder, and keyboard commands (Space or ⌘Y Quick Look, ⌘↑, ⌘[ ⌘], ⌘1 ⌘2, ⌘F, ⌥⌘I).
+- **Info panel**: inline video playback, photo EXIF, full object details (headers, metadata, tags), and a Show Previews toggle for thumbnails.
+- **A quieter, more native window**: breadcrumb path, Finder-style selection, single-line list rows with a Kind column, a Get Info–style Info panel, and redesigned Storage Overview and Compare windows.
 
 ## Fixes
 

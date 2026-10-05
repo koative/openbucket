@@ -4,7 +4,7 @@
 
 # OpenBucket
 
-**A native S3 browser for macOS. See your objects, inspect media, and download what you need.**
+**A native S3 browser for macOS. Browse, preview, share, and manage the objects in your buckets.**
 
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-18181b?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-f05138?logo=swift&logoColor=white)
@@ -21,11 +21,13 @@ Download the latest signed and notarized build from [GitHub Releases](https://gi
 
 ## See it in action
 
-The screenshots show a real OpenBucket window connected to a local Garage bucket with the [included demo objects](#demo-data).
+The screenshots show a real OpenBucket window connected to a local Garage bucket seeded with the [included demo objects](#demo-data).
 
-![Grid view with image and video thumbnails, a selected file, and the Info panel with details and photo dimensions](docs/media/browser-grid.jpg)
+![Grid view of the demo travel folder with image and video thumbnails, a selected photo, and the Info panel with details and photo dimensions](docs/media/browser-grid.jpg)
 
-![List view with name, size, modified and kind columns, a selected file, and the Info panel](docs/media/browser-list.jpg)
+![List view with name, size, modified and kind columns, a selected photo, and the Info panel](docs/media/browser-list.jpg)
+
+![Storage Overview of the travel folder: a treemap of its files by size and kind, the storage class, and the largest files](docs/media/storage-overview.jpg)
 
 ## What works
 
@@ -37,13 +39,13 @@ The screenshots show a real OpenBucket window connected to a local Garage bucket
 | Selection and commands | Native multi-selection in grid and list (⌘A, ⇧-click, ⌘-click); menu commands and shortcuts for the enclosing folder (⌘↑), back and forward (⌘[ ⌘]), grid and list (⌘1 ⌘2), Find (⌘F) and the Info panel (⌥⌘I); context menus; Copy S3 URI |
 | Media and details | Image and video thumbnails with a Show Previews toggle; Quick Look with Space or ⌘Y; inline video playback; HEAD details, user metadata, tags and photo EXIF in the Info panel |
 | Versions | Version history per file with Quick Look, download and restore; Show Deleted Files (⇧⌘.) and Browse As Of a date on versioned buckets |
-| Downloads and links | File, batch and whole-folder downloads with byte progress, cancellation and failed-key reporting; drag files out to Finder; presigned share links (15 minutes to 7 days) with QR code |
-| Changes | With **Allow changes** on: upload files and folders (⌘U, toolbar or Finder drop; large files in multipart parts), New Folder (⇧⌘N), rename, Move To or drag items onto a folder or a parent in the path bar, Delete (⌘⌫), restore versions and deleted files, edit content headers, metadata and tags. Existing names prompt Replace, Keep Both or Skip |
-| Insight | Storage Overview: treemap of a folder by size and kind, storage classes and largest files. Compare with Local Folder: checks a local copy against S3 by size and checksum without changing either side |
+| Downloads and links | File, batch and whole-folder downloads with byte progress, cancellation and failed-key reporting; several transfers at once, each moving four files at a time; drag files out to Finder; presigned share links (15 minutes to 7 days) with QR code |
+| Changes | With **Allow changes** on: upload files and folders (⌘U, toolbar or Finder drop; large files in multipart parts), New Folder (⇧⌘N), rename, Move To or drag items onto a folder, a parent in the path bar or a sidebar folder (hold ⌥ to copy instead), Delete (⌘⌫), restore versions and deleted files, edit content headers, metadata and tags. Existing names prompt Replace, Keep Both or Skip |
+| Insight and sync | Storage Overview: treemap of a folder by size and kind, storage classes and largest files. Compare with Local Folder: checks a local copy against S3 by size and checksum, then optionally **Update S3** or **Update Mac** with the new and changed files; nothing is deleted on either side, and replaced local files go to the Trash |
 | Shortcuts | App Intents for opening a favorite or an `s3://` location and copying a share link; favorites appear in Spotlight |
 | Secrets | Access keys and session tokens in macOS Keychain; non-secret connection settings in a user-only profile file |
 
-Sync, Finder mounting, bucket management, permanent deletion of individual versions and non-S3 protocols are outside this preview. [Compatibility details](docs/compatibility.md) document endpoint paths, the S3 operations used, and provider test status; [security details](docs/security.md) explain local storage, temporary files, and what changes S3.
+Continuous or two-way sync, Finder mounting, bucket management, permanent deletion of individual versions and non-S3 protocols are outside this preview. [Compatibility details](docs/compatibility.md) document endpoint paths, the S3 operations used, and provider test status; [security details](docs/security.md) explain local storage, temporary files, and what changes S3.
 
 ## Connect to S3
 
@@ -69,7 +71,7 @@ The repository includes six small demo objects in [`docs/demo-assets/travel`](do
 | `OPENBUCKET_DEMO_SECRET_KEY` | Secret access key |
 | `OPENBUCKET_DEMO_PREFIX` | Optional destination prefix |
 
-After setting them in your shell, run `scripts/seed-demo.sh` and open the printed `s3://` location in OpenBucket. The script replaces any objects with the same six names under that prefix, so use a disposable location. Credentials and local profile files are never part of the repository. The README screenshots use `gallery/` in an isolated local Garage fixture.
+After setting them in your shell, run `scripts/seed-demo.sh` and open the printed `s3://` location in OpenBucket. The script replaces any objects with the same six names under that prefix, so use a disposable location. Credentials and local profile files are never part of the repository. The README screenshots show these objects under `travel/` in a local Garage bucket.
 
 ## Build and test
 

@@ -7,7 +7,9 @@ import Testing
 /// Lists `buckets`, one object page plus a second page; downloads write the key's bytes ("bad.txt" fails).
 /// AWS profiles resolve to `testCredentials` expiring `credentialLifetime` after each resolution; versions
 /// and details are unsupported. With `keys`, `listAllObjects` serves those (size 1) and writes update them;
-/// uploads and copies of keys ending in "bad.txt" fail, deletes of keys ending in "locked.txt" are refused.
+/// uploads and copies of keys ending in "bad.txt" fail, deletes of keys ending in "locked.txt" are refused. With
+/// `delay`, downloads, uploads, copies and deletes take that long (cancellable), so parallel calls overlap and
+/// `inFlight`/`maxInFlight` count them.
 actor StubRepository: S3Repository {
   struct Download: Sendable {
     let profileID: UUID
@@ -35,11 +37,26 @@ actor StubRepository: S3Repository {
   private(set) var copies: [Copy] = []
   /// Keys of each deleteObjects request.
   private(set) var deletes: [[String]] = []
+  private let delay: Duration?
+  private(set) var inFlight = 0
+  private(set) var maxInFlight = 0
 
-  init(credentialLifetime: TimeInterval? = nil, buckets: [String] = [], keys: [String]? = nil) {
+  init(
+    credentialLifetime: TimeInterval? = nil, buckets: [String] = [], keys: [String]? = nil,
+    delay: Duration? = nil
+  ) {
     self.credentialLifetime = credentialLifetime
     self.buckets = buckets
     self.keys = keys
+    self.delay = delay
+  }
+
+  private func pause() async throws {
+    guard let delay else { return }
+    inFlight += 1
+    maxInFlight = max(maxInFlight, inFlight)
+    defer { inFlight -= 1 }
+    try await Task.sleep(for: delay)
   }
 
   func listBuckets(profile: ConnectionProfile, credentials: S3Credentials) -> [String] { buckets }
@@ -138,7 +155,8 @@ actor StubRepository: S3Repository {
     to destination: URL,
     maximumBytes: Int64,
     progress: @escaping @Sendable (_ bytesReceived: Int64) -> Void
-  ) throws {
+  ) async throws {
+    try await pause()
     downloads.append(Download(profileID: profile.id, bucket: bucket, key: key, versionID: versionID))
     if key == "bad.txt" { throw CocoaError(.fileReadUnknown) }
     let data = Data(key.utf8)
@@ -153,7 +171,8 @@ actor StubRepository: S3Repository {
   func uploadFile(
     profile: ConnectionProfile, credentials: S3Credentials, bucket: String, key: String, from source: URL,
     headers: ObjectHeaders, progress: @escaping @Sendable (_ bytesSent: Int64) -> Void
-  ) throws {
+  ) async throws {
+    try await pause()
     uploads.append((key, headers.contentType))
     if key.hasSuffix("bad.txt") { throw S3Failure(category: .service, message: "Upload refused.") }
     store(key)
@@ -168,7 +187,8 @@ actor StubRepository: S3Repository {
   func copyObject(
     profile: ConnectionProfile, credentials: S3Credentials, bucket: String, sourceKey: String,
     sourceVersionID: String?, size: Int64, destinationKey: String, headers: ObjectHeaders?
-  ) throws {
+  ) async throws {
+    try await pause()
     copies.append(
       Copy(source: sourceKey, versionID: sourceVersionID, destination: destinationKey, headers: headers))
     if sourceKey.hasSuffix("bad.txt") { throw S3Failure(category: .service, message: "Copy refused.") }
@@ -176,8 +196,9 @@ actor StubRepository: S3Repository {
   }
 
   func deleteObjects(profile: ConnectionProfile, credentials: S3Credentials, bucket: String, keys: [String])
-    -> [DeleteFailure]
+    async throws -> [DeleteFailure]
   {
+    try await pause()
     deletes.append(keys)
     let refused = keys.filter { $0.hasSuffix("locked.txt") }
     self.keys?.removeAll { key in keys.contains(key) && !refused.contains(key) }
@@ -240,9 +261,9 @@ func scratchDefaults() -> UserDefaults {
 let testCredentials = S3Credentials(accessKeyID: "test", secretAccessKey: "test")
 
 @MainActor
-func waitUntil(_ condition: () -> Bool) async throws {
+func waitUntil(_ condition: @MainActor () async -> Bool) async throws {
   var attempts = 0
-  while !condition() {
+  while await !condition() {
     attempts += 1
     try #require(attempts < 400, "Timed out waiting for the model")
     try await Task.sleep(for: .milliseconds(5))

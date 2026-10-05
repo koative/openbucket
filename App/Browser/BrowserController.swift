@@ -2,6 +2,7 @@ import AppKit
 import CoreTransferable
 import Observation
 import OpenBucketCore
+import SwiftUI
 import UniformTypeIdentifiers
 
 enum BrowserLayout: String {
@@ -14,19 +15,45 @@ struct EditorTarget: Identifiable {
   let profile: ConnectionProfile?
 }
 
-/// `move` = rename or move (copy, then delete the source); `copy` = restore an old version.
+/// `move` = rename or move (copy, then delete the source); `copy` = ⌥-drop copies; `restore` = copy an old
+/// version onto its key.
 enum TransferKind {
-  case download, upload, move, copy, delete
+  case download, upload, move, copy, restore, delete
 }
 
-enum Transfer {
-  case running(kind: TransferKind, name: String?, progress: BatchDownloadProgress)
-  case finished(message: String, succeeded: Bool, reveal: URL?, failedKeys: [String])
+struct TransferResult {
+  let message: String
+  let succeeded: Bool
+  /// Shown in Finder on request: the downloaded file or folder.
+  let reveal: URL?
+  let failedKeys: [String]
+}
+
+/// One download or write in the transfers bar; several run at once. `result` is set once it has finished.
+@MainActor @Observable
+final class Transfer: Identifiable {
+  let id = UUID()
+  let kind: TransferKind
+  /// Nil for several files.
+  let name: String?
+  fileprivate(set) var progress: BatchDownloadProgress
+  fileprivate(set) var result: TransferResult?
+  @ObservationIgnored fileprivate var task: Task<Void, Never>?
+
+  fileprivate init(kind: TransferKind, name: String?, progress: BatchDownloadProgress) {
+    self.kind = kind
+    self.name = name
+    self.progress = progress
+  }
+
+  var isRunning: Bool { result == nil }
 }
 
 /// Finder-style prompt shown while an upload or move waits for an answer.
 struct ConflictPrompt: Identifiable {
   let id: UUID
+  /// The waiting transfer; cancelling it withdraws the prompt.
+  let transferID: Transfer.ID
   /// The file name, as the user knows it.
   let name: String
   /// The destination key that already exists.
@@ -185,14 +212,17 @@ final class BrowserController {
   }
   private(set) var preparingPreview: ObjectSummary?
   private(set) var previewFailure: PreviewFailure?
-  private(set) var transfer: Transfer?
-  var isTransferring: Bool {
-    if case .running = transfer { true } else { false }
-  }
+  /// Running and finished transfers, oldest first.
+  private(set) var transfers: [Transfer] = []
   /// Bumped after every finished write, so views reload details and versions.
   private(set) var changeGeneration = 0
-  /// Shown as a dialog while an upload or move waits in `askConflict`.
-  private(set) var conflict: ConflictPrompt?
+  /// Prompts of transfers waiting in `askConflict`, oldest first; one dialog at a time shows the first.
+  private var pendingConflicts:
+    [(prompt: ConflictPrompt, answer: CheckedContinuation<ConflictAnswer?, Never>)] =
+      []
+  var conflicts: [ConflictPrompt] { pendingConflicts.map(\.prompt) }
+  /// Shown as a dialog until answered or its transfer is cancelled.
+  var conflict: ConflictPrompt? { pendingConflicts.first?.prompt }
   /// New Folder sheet while set.
   var newFolderParent: S3Location?
   var renameTarget: RenameTarget?
@@ -207,8 +237,6 @@ final class BrowserController {
   /// The browser window; save and open panels attach to it.
   @ObservationIgnored weak var window: NSWindow?
   @ObservationIgnored private var previewTask: Task<Void, Never>?
-  @ObservationIgnored private var transferTask: Task<Void, Never>?
-  @ObservationIgnored private var conflictAnswer: CheckedContinuation<ConflictAnswer?, Never>?
 
   init(model: AppModel) {
     self.model = model
@@ -629,7 +657,7 @@ final class BrowserController {
       return
     }
     let rows = fileRows(for: ids)
-    guard !isTransferring, !rows.isEmpty, let source = model.downloadSource() else { return }
+    guard !rows.isEmpty, let source = model.downloadSource() else { return }
     if rows.count == 1, let object = rows[0].object {
       save(object, versionID: rows[0].versionID, from: source)
     } else {
@@ -642,14 +670,14 @@ final class BrowserController {
 
   /// One file at `versionID` (nil = current) through a save panel.
   func download(_ object: ObjectSummary, versionID: String?) {
-    guard !isTransferring, let source = model.downloadSource() else { return }
+    guard let source = model.downloadSource() else { return }
     save(object, versionID: versionID, from: source)
   }
 
   /// Recreates the folder and everything below it inside a chosen local folder. Current files only, so
   /// not offered in history modes.
   func downloadFolder(_ location: S3Location) {
-    guard !isTransferring, historyMode == nil, let source = model.downloadSource() else { return }
+    guard historyMode == nil, let source = model.downloadSource() else { return }
     let name = location.displayName
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
@@ -658,24 +686,31 @@ final class BrowserController {
     panel.prompt = "Download"
     panel.message = "OpenBucket will create a folder named “\(name)” here with everything inside it."
     Task {
-      guard let directory = await choose(panel), !isTransferring else { return }
-      start(.download, name: name, Self.preparing) {
+      guard let directory = await choose(panel) else { return }
+      start(.download, name: name, Self.preparing) { transfer in
         let result = try await FolderDownloader(repository: self.model.repository).download(
           location, from: source, into: directory
-        ) { self.update($0) }
+        ) { transfer.progress = $0 }
         return Self.finished(result)
       }
     }
   }
 
-  /// Also answers a pending conflict prompt, so the waiting transfer can stop.
-  func cancelTransfer() {
-    transferTask?.cancel()
-    answerConflict(nil)
+  /// Stops the transfer; its waiting conflict prompts are withdrawn so it can stop.
+  func cancelTransfer(_ id: Transfer.ID) {
+    transfers.first { $0.id == id }?.task?.cancel()
+    let withdrawn = pendingConflicts.filter { $0.prompt.transferID == id }
+    pendingConflicts.removeAll { $0.prompt.transferID == id }
+    for conflict in withdrawn { conflict.answer.resume(returning: nil) }
   }
 
-  func dismissTransfer() {
-    if !isTransferring { transfer = nil }
+  /// Removes a finished transfer from the bar.
+  func dismissTransfer(_ id: Transfer.ID) {
+    transfers.removeAll { $0.id == id && !$0.isRunning }
+  }
+
+  func clearFinishedTransfers() {
+    transfers.removeAll { !$0.isRunning }
   }
 
   private func save(_ object: ObjectSummary, versionID: String?, from source: AppModel.DownloadSource) {
@@ -683,19 +718,20 @@ final class BrowserController {
     panel.nameFieldStringValue = PreviewFileName.from(objectKey: object.key)
     panel.canCreateDirectories = true
     Task {
-      guard let destination = await choose(panel), !isTransferring else { return }
+      guard let destination = await choose(panel) else { return }
       let name = destination.lastPathComponent
       let total = object.size
       let initial = BatchDownloadProgress(
         completedFiles: 0, totalFiles: 1, receivedBytes: 0, totalBytes: total)
-      start(.download, name: name, initial) {
+      start(.download, name: name, initial) { transfer in
         try await self.model.download(
           object, versionID: versionID, from: source, to: destination, maximumBytes: .max
         ) { bytes in
-          self.update(
-            BatchDownloadProgress(completedFiles: 0, totalFiles: 1, receivedBytes: bytes, totalBytes: total))
+          transfer.progress = BatchDownloadProgress(
+            completedFiles: 0, totalFiles: 1, receivedBytes: bytes, totalBytes: total)
         }
-        return .finished(message: "Downloaded \(name)", succeeded: true, reveal: destination, failedKeys: [])
+        return TransferResult(
+          message: "Downloaded \(name)", succeeded: true, reveal: destination, failedKeys: [])
       }
     }
   }
@@ -710,14 +746,14 @@ final class BrowserController {
     panel.prompt = "Download"
     panel.message = "OpenBucket will create a new folder here for the \(countLabel(objects.count, "file"))."
     Task {
-      guard let directory = await choose(panel), !isTransferring else { return }
+      guard let directory = await choose(panel) else { return }
       let total = objects.reduce(Int64.zero) { $0 + $1.size }
       let initial = BatchDownloadProgress(
         completedFiles: 0, totalFiles: objects.count, receivedBytes: 0, totalBytes: total)
-      start(.download, name: nil, initial) {
+      start(.download, name: nil, initial) { transfer in
         let result = try await self.model.downloadSelected(
           objects, versionIDs: versionIDs, from: source, into: directory
-        ) { self.update($0) }
+        ) { transfer.progress = $0 }
         return Self.finished(result)
       }
     }
@@ -734,7 +770,7 @@ final class BrowserController {
     return response == .OK ? panel.url : nil
   }
 
-  private static func finished(_ result: BatchDownloadResult) -> Transfer {
+  private static func finished(_ result: BatchDownloadResult) -> TransferResult {
     let downloaded = countLabel(result.downloaded, "file")
     let message =
       result.cancelled
@@ -742,12 +778,12 @@ final class BrowserController {
       : result.failedKeys.isEmpty
         ? "Downloaded \(downloaded)"
         : "Downloaded \(downloaded) · \(result.failedKeys.count.formatted()) failed"
-    return .finished(
+    return TransferResult(
       message: message, succeeded: !result.cancelled && result.failedKeys.isEmpty,
       reveal: result.directory, failedKeys: result.failedKeys)
   }
 
-  private static func finished(_ result: ChangeResult, _ verb: String) -> Transfer {
+  private static func finished(_ result: ChangeResult, _ verb: String) -> TransferResult {
     let done = countLabel(result.done, "file")
     let message =
       result.cancelled
@@ -755,7 +791,7 @@ final class BrowserController {
       : result.failedKeys.isEmpty
         ? "\(verb) \(done)"
         : "\(verb) \(done) · \(result.failedKeys.count.formatted()) failed"
-    return .finished(
+    return TransferResult(
       message: message, succeeded: !result.cancelled && result.failedKeys.isEmpty, reveal: nil,
       failedKeys: result.failedKeys)
   }
@@ -764,38 +800,43 @@ final class BrowserController {
   private static let preparing = BatchDownloadProgress(
     completedFiles: 0, totalFiles: 0, receivedBytes: 0, totalBytes: 0)
 
+  /// Adds a running transfer and runs `work` for it. A cancelled transfer that throws leaves the bar.
   private func start(
     _ kind: TransferKind, name: String?, _ progress: BatchDownloadProgress,
-    _ work: @escaping @MainActor () async throws -> Transfer
+    _ work: @escaping @MainActor (Transfer) async throws -> TransferResult
   ) {
-    transfer = .running(kind: kind, name: name, progress: progress)
-    transferTask = Task {
+    let transfer = Transfer(kind: kind, name: name, progress: progress)
+    transfers.append(transfer)
+    transfer.task = Task {
       do {
-        transfer = try await work()
+        transfer.result = try await work(transfer)
       } catch {
         let verb =
           switch kind {
           case .download: "download"
           case .upload: "upload"
           case .move: "move"
-          case .copy: "restore"
+          case .copy: "copy"
+          case .restore: "restore"
           case .delete: "delete"
           }
-        transfer =
-          Task.isCancelled
-          ? nil
-          : .finished(
+        if Task.isCancelled {
+          transfers.removeAll { $0 === transfer }
+        } else {
+          transfer.result = TransferResult(
             message: "Couldn't \(verb) \(name ?? "the files"). \(AppModel.failure(for: error).message)",
             succeeded: false, reveal: nil, failedKeys: [])
+        }
       }
-      transferTask = nil
+      transfer.task = nil
     }
   }
 
-  /// Transfers drain their progress before returning, so only the running transfer receives updates.
-  private func update(_ progress: BatchDownloadProgress) {
-    guard case .running(let kind, let name, _) = transfer else { return }
-    transfer = .running(kind: kind, name: name, progress: progress)
+  /// Shows `message` as a failed transfer, for actions that never started one.
+  private func showFailure(_ kind: TransferKind, _ message: String) {
+    let transfer = Transfer(kind: kind, name: nil, progress: Self.preparing)
+    transfer.result = TransferResult(message: message, succeeded: false, reveal: nil, failedKeys: [])
+    transfers.append(transfer)
   }
 
   // MARK: Changes
@@ -826,7 +867,6 @@ final class BrowserController {
     ObjectChanges(repository: model.repository, source: source)
   }
 
-  private static let busy = "Wait for the current transfer to finish."
   private static let notReady = "The connection isn't ready yet. Try again in a moment."
 
   /// Listed rows among `ids`, folders included.
@@ -849,30 +889,26 @@ final class BrowserController {
     }
   }
 
-  /// Shows `conflict` and waits for `resolveConflict`; nil when the transfer is cancelled instead.
-  private func askConflict(key: String, remaining: Int) async -> ConflictAnswer? {
+  /// Queues a prompt for `transfer` and waits for `resolveConflict`; nil when the transfer is cancelled instead.
+  private func askConflict(for transfer: Transfer, key: String, remaining: Int) async -> ConflictAnswer? {
     guard !Task.isCancelled else { return nil }
     return await withCheckedContinuation { continuation in
-      conflictAnswer = continuation
-      conflict = ConflictPrompt(
-        id: UUID(), name: ObjectChanges.name(of: key), key: key, isFolder: false, remaining: remaining)
+      let prompt = ConflictPrompt(
+        id: UUID(), transferID: transfer.id, name: ObjectChanges.name(of: key), key: key, isFolder: false,
+        remaining: remaining)
+      pendingConflicts.append((prompt, continuation))
     }
   }
 
+  /// Answers the prompt on screen (the oldest); the next one, if any, shows after it.
   func resolveConflict(_ choice: ConflictChoice, applyToAll: Bool) {
-    answerConflict((choice, applyToAll))
-  }
-
-  private func answerConflict(_ answer: ConflictAnswer?) {
-    let continuation = conflictAnswer
-    conflictAnswer = nil
-    conflict = nil
-    continuation?.resume(returning: answer)
+    guard !pendingConflicts.isEmpty else { return }
+    pendingConflicts.removeFirst().answer.resume(returning: (choice, applyToAll))
   }
 
   /// Open panel for files and folders to upload into `location` (nil = the current folder).
   func uploadFiles(into location: S3Location? = nil) {
-    guard canModify, !isTransferring, let location = location ?? model.browser.location else { return }
+    guard canModify, let location = location ?? model.browser.location else { return }
     let panel = NSOpenPanel()
     panel.canChooseFiles = true
     panel.canChooseDirectories = true
@@ -887,16 +923,16 @@ final class BrowserController {
 
   /// Uploads files, and folders with everything inside, into `location`; taken names go to `conflict`.
   func upload(_ urls: [URL], into location: S3Location) {
-    guard canModify, !isTransferring, !urls.isEmpty, let source = writeSource(),
+    guard canModify, !urls.isEmpty, let source = writeSource(),
       location.bucket == source.bucket
     else { return }
     let changes = changes(source)
-    start(.upload, name: urls.count == 1 ? urls[0].lastPathComponent : nil, Self.preparing) {
+    start(.upload, name: urls.count == 1 ? urls[0].lastPathComponent : nil, Self.preparing) { transfer in
       let plan = try await changes.uploadPlan(urls, into: location.prefix) {
-        await self.askConflict(key: $0, remaining: $1)
+        await self.askConflict(for: transfer, key: $0, remaining: $1)
       }
       guard let items = plan else { throw CancellationError() }
-      let result = await changes.upload(items) { self.update($0) }
+      let result = await changes.upload(items) { transfer.progress = $0 }
       let file = items.count == 1 && items[0].source != nil && location == self.model.browser.location
       self.finishWrite(selecting: file ? BrowserRow.ID(isFolder: false, key: Array(items[0].key.utf8)) : nil)
       return Self.finished(result, "Uploaded")
@@ -945,7 +981,6 @@ final class BrowserController {
       renameTarget = nil
       return nil
     }
-    guard !isTransferring else { return Self.busy }
     guard let row = listedRows(for: [target.id]).first else { return "“\(target.name)” is no longer here." }
     let newKey = ObjectChanges.parentPrefix(of: row.fullKey) + newName + (row.isFolder ? "/" : "")
     let changes = changes(source)
@@ -959,16 +994,16 @@ final class BrowserController {
       return AppModel.failure(for: error).message
     }
     guard !items.isEmpty else { return "“\(target.name)” is no longer here." }
-    guard !isTransferring else { return Self.busy }
     renameTarget = nil
     let location = model.browser.location
-    start(.move, name: target.name, Self.preparing) {
-      let result = await changes.copy(items, deletingSources: true) { self.update($0) }
+    start(.move, name: target.name, Self.preparing) { transfer in
+      let result = await changes.copy(items, deletingSources: true) { transfer.progress = $0 }
       self.finishWrite(
         selecting: location == self.model.browser.location
           ? BrowserRow.ID(isFolder: row.isFolder, key: Array(newKey.utf8)) : nil)
       guard result.cancelled || !result.failedKeys.isEmpty else {
-        return .finished(message: "Renamed to “\(newName)”", succeeded: true, reveal: nil, failedKeys: [])
+        return TransferResult(
+          message: "Renamed to “\(newName)”", succeeded: true, reveal: nil, failedKeys: [])
       }
       return Self.finished(result, "Renamed")
     }
@@ -981,13 +1016,13 @@ final class BrowserController {
     moveTarget = MoveTarget(ids: Set(rows.map(\.id)), names: rows.map(\.name))
   }
 
-  /// Moves the items into `destination` (same bucket) as a transfer; nil once started, else why not.
-  func move(_ target: MoveTarget, to destination: S3Location) async -> String? {
+  /// Moves the items into `destination` (same bucket) as a transfer, or with `copying` copies them there; nil once
+  /// started, else why not.
+  func move(_ target: MoveTarget, to destination: S3Location, copying: Bool = false) async -> String? {
     guard canModify, let source = writeSource() else { return modifyUnavailableReason ?? Self.notReady }
     guard destination.bucket == source.bucket else {
-      return "Items can only be moved within “\(source.bucket)”."
+      return "Items can only be \(copying ? "copied" : "moved") within “\(source.bucket)”."
     }
-    guard !isTransferring else { return Self.busy }
     let rows = listedRows(for: target.ids)
     guard !rows.isEmpty else { return "These items are no longer here." }
     let prefix =
@@ -996,14 +1031,14 @@ final class BrowserController {
     if let problem = ObjectChanges.moveProblem(rows, to: prefix) { return problem }
     moveTarget = nil
     let changes = changes(source)
-    start(.move, name: rows.count == 1 ? rows[0].name : nil, Self.preparing) {
+    start(copying ? .copy : .move, name: rows.count == 1 ? rows[0].name : nil, Self.preparing) { transfer in
       let plan = try await changes.movePlan(rows, to: prefix) {
-        await self.askConflict(key: $0, remaining: $1)
+        await self.askConflict(for: transfer, key: $0, remaining: $1)
       }
       guard let items = plan else { throw CancellationError() }
-      let result = await changes.copy(items, deletingSources: true) { self.update($0) }
+      let result = await changes.copy(items, deletingSources: !copying) { transfer.progress = $0 }
       self.finishWrite()
-      return Self.finished(result, "Moved")
+      return Self.finished(result, copying ? "Copied" : "Moved")
     }
     return nil
   }
@@ -1011,7 +1046,7 @@ final class BrowserController {
   /// Asks for confirmation through `deleteConfirmation`, worded by the bucket's versioning.
   func requestDelete(_ ids: Set<BrowserRow.ID>) {
     let rows = listedRows(for: ids)
-    guard canModify, !isTransferring, !rows.isEmpty, let source = writeSource() else { return }
+    guard canModify, !rows.isEmpty, let source = writeSource() else { return }
     let title = rows.count == 1 ? "Delete “\(rows[0].name)”?" : "Delete \(rows.count.formatted()) items?"
     Task {
       let versioning = try? await model.repository.bucketVersioning(
@@ -1025,12 +1060,12 @@ final class BrowserController {
   func confirmDelete(_ confirmation: DeleteConfirmation) {
     deleteConfirmation = nil
     let rows = listedRows(for: confirmation.ids)
-    guard canModify, !isTransferring, !rows.isEmpty, let source = writeSource() else { return }
+    guard canModify, !rows.isEmpty, let source = writeSource() else { return }
     let changes = changes(source)
-    start(.delete, name: rows.count == 1 ? rows[0].name : nil, Self.preparing) {
+    start(.delete, name: rows.count == 1 ? rows[0].name : nil, Self.preparing) { transfer in
       var objects: [ObjectSummary] = []
       for row in rows { objects += try await changes.objects(in: row) }
-      let result = await changes.delete(objects) { self.update($0) }
+      let result = await changes.delete(objects) { transfer.progress = $0 }
       self.finishWrite()
       return Self.finished(result, "Deleted")
     }
@@ -1043,7 +1078,7 @@ final class BrowserController {
 
   /// Works in history modes, unlike `canModify`.
   var canRestoreSelection: Bool {
-    model.selectedProfile?.allowsChanges == true && !isTransferring && !restorableRows(selection).isEmpty
+    model.selectedProfile?.allowsChanges == true && !restorableRows(selection).isEmpty
   }
 
   func restore(_ version: ObjectVersion) {
@@ -1067,13 +1102,14 @@ final class BrowserController {
 
   /// Copies versions onto their own keys, making them current; history is kept.
   private func restoreVersions(_ items: [CopyItem]) {
-    guard !isTransferring, !items.isEmpty, let source = writeSource() else { return }
+    guard !items.isEmpty, let source = writeSource() else { return }
     let changes = changes(source)
     let initial = BatchDownloadProgress(
       completedFiles: 0, totalFiles: items.count, receivedBytes: 0,
       totalBytes: items.reduce(Int64.zero) { $0 + $1.size })
-    start(.copy, name: items.count == 1 ? ObjectChanges.name(of: items[0].sourceKey) : nil, initial) {
-      let result = await changes.copy(items, deletingSources: false) { self.update($0) }
+    let name = items.count == 1 ? ObjectChanges.name(of: items[0].sourceKey) : nil
+    start(.restore, name: name, initial) { transfer in
+      let result = await changes.copy(items, deletingSources: false) { transfer.progress = $0 }
       self.finishWrite()
       return Self.finished(result, "Restored")
     }
@@ -1089,11 +1125,10 @@ final class BrowserController {
           versionID: nil)
         metadataTarget = MetadataTarget(object: object, headers: ObjectHeaders(details), tags: details.tags)
       } catch {
-        guard !isTransferring else { return }
-        transfer = .finished(
-          message: "Couldn't read the metadata of “\(ObjectChanges.name(of: object.key))”. "
-            + AppModel.failure(for: error).message,
-          succeeded: false, reveal: nil, failedKeys: [])
+        showFailure(
+          .copy,
+          "Couldn't read the metadata of “\(ObjectChanges.name(of: object.key))”. "
+            + AppModel.failure(for: error).message)
       }
     }
   }
@@ -1189,18 +1224,28 @@ final class BrowserController {
       profileID: source.profile.id, bucket: source.bucket, isFolder: row.isFolder, key: row.id.key)
   }
 
-  /// A drop on `folder`: browser items move there, Finder files and folders upload there. False when ignored.
+  /// A drop on `folder`: browser items move there (copy with `copying`, ⌥ held by default), Finder files and
+  /// folders upload there. False when ignored.
   @discardableResult
-  func accept(_ drops: [BrowserDrop], into folder: S3Location) -> Bool {
+  func accept(
+    _ drops: [BrowserDrop], into folder: S3Location, copying: Bool = NSEvent.modifierFlags.contains(.option)
+  ) -> Bool {
     let items = drops.compactMap { if case .item(let item) = $0 { item } else { nil } }
-    guard items.isEmpty else { return moveDropped(items, into: folder) }
+    guard items.isEmpty else { return dropItems(items, into: folder, copying: copying) }
     let urls = drops.compactMap { if case .file(let url) = $0 { url } else { nil } }
-    guard canModify, !isTransferring, !urls.isEmpty else { return false }
+    guard canModify, !urls.isEmpty else { return false }
     upload(urls, into: folder)
     return true
   }
 
-  private func moveDropped(_ items: [S3ItemReference], into destination: S3Location) -> Bool {
+  /// Drop cursor for browser drop targets: Finder files show copy (they upload); the app's own items show move,
+  /// or copy while ⌥ is held.
+  static func dropConfiguration(_ session: DropSession) -> DropConfiguration {
+    DropConfiguration(
+      operation: session.localSession == nil || NSEvent.modifierFlags.contains(.option) ? .copy : .move)
+  }
+
+  private func dropItems(_ items: [S3ItemReference], into destination: S3Location, copying: Bool) -> Bool {
     guard canModify, let location = model.browser.location, let profileID = model.selectedProfileID else {
       return false
     }
@@ -1214,8 +1259,8 @@ final class BrowserController {
     guard !rows.isEmpty else { return false }
     Task {
       let target = MoveTarget(ids: Set(rows.map(\.id)), names: rows.map(\.name))
-      if let problem = await move(target, to: destination) {
-        transfer = .finished(message: problem, succeeded: false, reveal: nil, failedKeys: [])
+      if let problem = await move(target, to: destination, copying: copying) {
+        showFailure(copying ? .copy : .move, problem)
       }
     }
     return true

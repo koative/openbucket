@@ -389,7 +389,6 @@ struct VersionsSection: View {
       if browser.canModify, Self.canRestore(version) {
         Button("Restore") { browser.restore(version) }
           .controlSize(.small)
-          .disabled(browser.isTransferring)
           .help("Make this version the current one; newer versions are kept.")
       }
       if !version.isDeleteMarker {
@@ -419,7 +418,7 @@ struct VersionsSection: View {
   @ViewBuilder private func actions(_ version: ObjectVersion) -> some View {
     if Self.canRestore(version) {
       Button("Restore") { browser.restore(version) }
-        .disabled(!browser.canModify || browser.isTransferring)
+        .disabled(!browser.canModify)
         .help(
           browser.modifyUnavailableReason ?? "Make this version the current one; newer versions are kept.")
       Divider()
@@ -427,7 +426,6 @@ struct VersionsSection: View {
     Button("Quick Look") { browser.quickLook(version.summary, versionID: version.versionID) }
       .disabled(version.size > BrowserRow.previewLimit)
     Button("Download…") { browser.download(version.summary, versionID: version.versionID) }
-      .disabled(browser.isTransferring)
     Button("Share Link…") {
       browser.shareTarget = ShareTarget(object: version.summary, versionID: version.versionID)
     }

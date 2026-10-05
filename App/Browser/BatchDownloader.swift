@@ -48,7 +48,7 @@ struct BatchDownloader {
     return await download(plan, into: directory, from: source, progress: progress)
   }
 
-  /// Downloads `plan` sequentially below `root`, creating subfolders. Per-file failures (including paths
+  /// Downloads `plan` below `root`, four files at a time, creating subfolders. Per-file failures (including paths
   /// that would leave `root`) land in `failedKeys`; cancelling the task returns `cancelled: true`.
   func download(
     _ plan: [DownloadItem],
@@ -57,46 +57,29 @@ struct BatchDownloader {
     progress: @escaping @MainActor (BatchDownloadProgress) -> Void
   ) async -> BatchDownloadResult {
     let rootPath = root.standardized.path + "/"
-    let totalFiles = plan.count
-    let totalBytes = plan.reduce(0) { $0 + $1.object.size }
-    let throttle = ProgressThrottle(progress)
-    var downloaded = 0
-    var failedKeys: [String] = []
-    var finishedBytes: Int64 = 0
-    for (index, item) in plan.enumerated() {
-      if Task.isCancelled { break }
+    let tally = BatchTally(plan.map { (files: 1, bytes: $0.object.size) }, progress: progress)
+    await forEachConcurrently(Array(plan.indices)) { [repository] index in
+      let item = plan[index]
       let destination = root.appendingPathComponent(item.path)
-      if destination.standardized.path.hasPrefix(rootPath) {
-        let base = finishedBytes
-        do {
-          try FileManager.default.createDirectory(
-            at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
-          try await repository.downloadObject(
-            profile: source.profile, credentials: source.credentials, bucket: source.bucket,
-            key: item.object.key, versionID: item.versionID, to: destination, maximumBytes: .max
-          ) { received in
-            throttle.send(
-              BatchDownloadProgress(
-                completedFiles: index, totalFiles: totalFiles, receivedBytes: base + received,
-                totalBytes: totalBytes))
-          }
-          downloaded += 1
-        } catch {
-          if Task.isCancelled { break }
-          failedKeys.append(item.object.key)
-        }
-      } else {
-        failedKeys.append(item.object.key)
+      guard destination.standardized.path.hasPrefix(rootPath) else {
+        tally.finish(index, failedKeys: [item.object.key])
+        return
       }
-      finishedBytes += item.object.size
-      throttle.send(
-        BatchDownloadProgress(
-          completedFiles: index + 1, totalFiles: totalFiles, receivedBytes: finishedBytes,
-          totalBytes: totalBytes))
+      do {
+        try FileManager.default.createDirectory(
+          at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try await repository.downloadObject(
+          profile: source.profile, credentials: source.credentials, bucket: source.bucket,
+          key: item.object.key, versionID: item.versionID, to: destination, maximumBytes: .max
+        ) { tally.send(index, bytes: $0) }
+        tally.finish(index)
+      } catch {
+        if !Task.isCancelled { tally.finish(index, failedKeys: [item.object.key]) }
+      }
     }
-    await throttle.finish()
+    let result = await tally.result()
     return BatchDownloadResult(
-      directory: root, downloaded: downloaded, failedKeys: failedKeys, cancelled: Task.isCancelled)
+      directory: root, downloaded: result.done, failedKeys: result.failedKeys, cancelled: Task.isCancelled)
   }
 }
 

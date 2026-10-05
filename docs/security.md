@@ -18,6 +18,8 @@ Every connection starts read-only. Upload, New Folder, rename, Move To, Delete, 
 
 Uploading a folder sends its regular files and skips hidden files (such as `.DS_Store`) and symbolic links. Rename and Move To copy each object and delete the source only after its copy succeeded. Delete asks for confirmation; on a bucket without versioning it is permanent, and on a versioned bucket it adds delete markers that Show Deleted Files can restore. Saving metadata rewrites the object in place.
 
+Sync in Compare with Local Folder runs only after a complete comparison and a confirmation that lists what it will do. It never deletes on either side. **Update S3** needs **Allow changes** and replaces changed objects; the confirmation says so when the bucket has no versioning. **Update Mac** only reads S3: each download is written to a temporary file on the same volume first, and only once it has finished does the file it replaces move to the Trash and the new copy take its place, so a failed or cancelled download leaves the old file where it was. Keys that would resolve outside the chosen folder (such as `../`) are refused.
+
 ## Share links
 
 Share links are presigned `GET` URLs signed on this Mac with the connection's credentials; no request is made to create them. Anyone with the link can download that object (or that version) until it expires, after 15 minutes to 7 days. When the connection uses temporary credentials, the link can't outlive them, so its expiry is shortened to match.

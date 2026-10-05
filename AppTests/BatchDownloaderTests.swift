@@ -79,5 +79,51 @@ import Testing
   #expect(result.failedKeys == ["escape.txt", "bad.txt"])
   #expect(try String(contentsOf: root.appendingPathComponent("x/y/a.txt"), encoding: .utf8) == "a.txt")
   #expect(!FileManager.default.fileExists(atPath: parent.appendingPathComponent("escape.txt").path))
-  #expect(await repository.downloads.map(\.versionID) == ["v1", nil])
+  // Files run in parallel, so requests arrive in any order.
+  #expect(await repository.downloads.sorted { $0.key < $1.key }.map(\.versionID) == ["v1", nil])
+}
+
+@MainActor
+@Test func batchDownloadRunsFourFilesAtOnceAndTotalsTheirProgress() async throws {
+  let parent = scratchDirectory()
+  try FileManager.default.createDirectory(at: parent, withIntermediateDirectories: false)
+  defer { try? FileManager.default.removeItem(at: parent) }
+  let source = AppModel.DownloadSource(
+    profile: try garageProfile(), bucket: "test-bucket", credentials: testCredentials)
+  let objects = (0..<10).map { ObjectSummary(key: "\($0).txt", size: 5, lastModified: nil, eTag: nil) }
+  let repository = StubRepository(delay: .milliseconds(20))
+  let progress = Recorder<BatchDownloadProgress>()
+
+  let result = try await BatchDownloader(repository: repository).download(
+    objects, from: source, into: parent
+  ) { progress.values.append($0) }
+
+  #expect(await repository.maxInFlight == 4)
+  #expect(result.downloaded == 10 && result.failedKeys.isEmpty)
+  // Each stub file reports 5 bytes ("0.txt") on top of the others' finished bytes, never more than the total.
+  #expect(progress.values.allSatisfy { $0.receivedBytes <= 50 && $0.completedFiles <= 10 })
+  #expect(
+    progress.values.last
+      == BatchDownloadProgress(completedFiles: 10, totalFiles: 10, receivedBytes: 50, totalBytes: 50))
+}
+
+private actor StartLog {
+  private(set) var items: [Int] = []
+  func add(_ item: Int) { items.append(item) }
+}
+
+@Test func concurrentWorkStopsStartingItemsOnceCancelled() async throws {
+  let started = StartLog()
+  let task = Task {
+    await forEachConcurrently(Array(0..<20), width: 4) { item in
+      await started.add(item)
+      try? await Task.sleep(for: .seconds(10))
+    }
+  }
+  while await started.items.count < 4 { try await Task.sleep(for: .milliseconds(5)) }
+  task.cancel()
+  await task.value
+
+  // The four running items were cancelled out of their sleep; none after them started.
+  #expect(await started.items.sorted() == [0, 1, 2, 3])
 }

@@ -25,7 +25,7 @@ struct ChangeResult: Equatable {
 
 typealias ConflictAnswer = (choice: ConflictChoice, applyToAll: Bool)
 
-/// Plans and runs writes for one connection, one object at a time, like `BatchDownloader`.
+/// Plans and runs writes for one connection, four objects at a time, like `BatchDownloader`.
 @MainActor
 struct ObjectChanges {
   let repository: any S3Repository
@@ -289,7 +289,8 @@ struct ObjectChanges {
   func upload(
     _ items: [UploadItem], progress: @escaping @MainActor (BatchDownloadProgress) -> Void
   ) async -> ChangeResult {
-    await run(items.map { (key: $0.key, size: $0.size) }, progress: progress) { index, report in
+    await run(items.map { (key: $0.key, size: $0.size) }, progress: progress) {
+      [repository, source] index, report in
       let item = items[index]
       if let file = item.source {
         try await repository.uploadFile(
@@ -308,7 +309,8 @@ struct ObjectChanges {
     _ items: [CopyItem], deletingSources: Bool, progress: @escaping @MainActor (BatchDownloadProgress) -> Void
   ) async -> ChangeResult {
     // ponytail: one delete request per moved object; batch them if moving thousands feels slow.
-    await run(items.map { (key: $0.sourceKey, size: $0.size) }, progress: progress) { index, _ in
+    await run(items.map { (key: $0.sourceKey, size: $0.size) }, progress: progress) {
+      [repository, source] index, _ in
       let item = items[index]
       try await repository.copyObject(
         profile: source.profile, credentials: source.credentials, bucket: source.bucket,
@@ -322,74 +324,48 @@ struct ObjectChanges {
     }
   }
 
-  /// Deletes 1000 keys per request; keys the server rejects, or of a failed request, land in `failedKeys`.
+  /// Deletes 1000 keys per request, up to four requests at a time; keys the server rejects, or of a failed
+  /// request, land in `failedKeys`.
   func delete(
     _ objects: [ObjectSummary], progress: @escaping @MainActor (BatchDownloadProgress) -> Void
   ) async -> ChangeResult {
-    let totalBytes = objects.reduce(Int64.zero) { $0 + $1.size }
-    let throttle = ProgressThrottle(progress)
-    var done = 0
-    var failedKeys: [String] = []
-    var finishedBytes: Int64 = 0
-    for start in stride(from: 0, to: objects.count, by: 1000) {
-      if Task.isCancelled { break }
-      let batch = objects[start..<min(start + 1000, objects.count)]
+    let batches = stride(from: 0, to: objects.count, by: 1000).map {
+      Array(objects[$0..<min($0 + 1000, objects.count)])
+    }
+    let tally = BatchTally(
+      batches.map { (files: $0.count, bytes: $0.reduce(Int64.zero) { $0 + $1.size }) }, progress: progress)
+    await forEachConcurrently(Array(batches.indices)) { [repository, source] index in
+      let keys = batches[index].map(\.key)
       do {
         let failures = try await repository.deleteObjects(
-          profile: source.profile, credentials: source.credentials, bucket: source.bucket,
-          keys: batch.map(\.key))
-        failedKeys += failures.map(\.key)
-        done += batch.count - failures.count
+          profile: source.profile, credentials: source.credentials, bucket: source.bucket, keys: keys)
+        tally.finish(index, failedKeys: failures.map(\.key))
       } catch {
-        if Task.isCancelled { break }
-        failedKeys += batch.map(\.key)
+        if !Task.isCancelled { tally.finish(index, failedKeys: keys) }
       }
-      finishedBytes += batch.reduce(Int64.zero) { $0 + $1.size }
-      throttle.send(
-        BatchDownloadProgress(
-          completedFiles: start + batch.count, totalFiles: objects.count, receivedBytes: finishedBytes,
-          totalBytes: totalBytes))
     }
-    await throttle.finish()
-    return ChangeResult(done: done, failedKeys: failedKeys, cancelled: Task.isCancelled)
+    let result = await tally.result()
+    return ChangeResult(done: result.done, failedKeys: result.failedKeys, cancelled: Task.isCancelled)
   }
 
-  /// Runs `body` for each item in order, reporting progress like `BatchDownloader`: failures land in
-  /// `failedKeys`, cancelling stops after the current item.
+  /// Runs `body` for each item, four at a time, reporting progress like `BatchDownloader`: failures land in
+  /// `failedKeys`, cancelling starts no further items and cancels the running ones.
   private func run(
     _ items: [(key: String, size: Int64)],
     progress: @escaping @MainActor (BatchDownloadProgress) -> Void,
-    _ body: (_ index: Int, _ report: @escaping @Sendable (Int64) -> Void) async throws -> Void
+    _ body:
+      @escaping @Sendable (_ index: Int, _ report: @escaping @Sendable (Int64) -> Void) async throws -> Void
   ) async -> ChangeResult {
-    let totalFiles = items.count
-    let totalBytes = items.reduce(Int64.zero) { $0 + $1.size }
-    let throttle = ProgressThrottle(progress)
-    var done = 0
-    var failedKeys: [String] = []
-    var finishedBytes: Int64 = 0
-    for (index, item) in items.enumerated() {
-      if Task.isCancelled { break }
-      let base = finishedBytes
-      let size = item.size
+    let tally = BatchTally(items.map { (files: 1, bytes: $0.size) }, progress: progress)
+    await forEachConcurrently(Array(items.indices)) { index in
       do {
-        try await body(index) { sent in
-          throttle.send(
-            BatchDownloadProgress(
-              completedFiles: index, totalFiles: totalFiles, receivedBytes: base + min(sent, size),
-              totalBytes: totalBytes))
-        }
-        done += 1
+        try await body(index) { tally.send(index, bytes: $0) }
+        tally.finish(index)
       } catch {
-        if Task.isCancelled { break }
-        failedKeys.append(item.key)
+        if !Task.isCancelled { tally.finish(index, failedKeys: [items[index].key]) }
       }
-      finishedBytes += size
-      throttle.send(
-        BatchDownloadProgress(
-          completedFiles: index + 1, totalFiles: totalFiles, receivedBytes: finishedBytes,
-          totalBytes: totalBytes))
     }
-    await throttle.finish()
-    return ChangeResult(done: done, failedKeys: failedKeys, cancelled: Task.isCancelled)
+    let result = await tally.result()
+    return ChangeResult(done: result.done, failedKeys: result.failedKeys, cancelled: Task.isCancelled)
   }
 }

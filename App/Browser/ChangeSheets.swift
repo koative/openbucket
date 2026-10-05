@@ -20,9 +20,10 @@ struct ChangePresentations: ViewModifier {
       .sheet(item: $browser.moveTarget) { target in
         MoveSheet(target: target, browser: browser)
       }
-      // Its buttons answer the prompt; the controller clears `conflict` itself.
+      // Its buttons answer the prompt; the controller clears `conflict` itself, then shows the next queued one.
       .sheet(item: Binding(get: { browser.conflict }, set: { _ in })) { prompt in
         ConflictSheet(prompt: prompt, browser: browser)
+          .id(prompt.id)
       }
       .confirmationDialog(
         browser.deleteConfirmation?.title ?? "",
@@ -240,7 +241,7 @@ struct MoveSheet: View {
   }
 }
 
-/// Finder-style prompt while an upload or move waits for an answer; Cancel stops the whole transfer.
+/// Finder-style prompt while an upload or move waits for an answer; Cancel stops that transfer.
 struct ConflictSheet: View {
   let prompt: ConflictPrompt
   let browser: BrowserController
@@ -273,7 +274,7 @@ struct ConflictSheet: View {
         Toggle("Apply to all \(countLabel(prompt.remaining + 1, "conflict"))", isOn: $appliesToAll)
       }
       HStack {
-        Button("Cancel") { browser.cancelTransfer() }
+        Button("Cancel") { browser.cancelTransfer(prompt.transferID) }
           .keyboardShortcut(.cancelAction)
         Spacer()
         Button("Skip") { resolve(.skip) }

@@ -31,7 +31,7 @@ struct InspectorPane: View {
       } actions: {
         Button("Download…") { browser.download(Set(selected.map(\.id))) }
           .buttonStyle(.borderedProminent)
-          .disabled(files.isEmpty || browser.isTransferring)
+          .disabled(files.isEmpty)
       }
     }
   }
@@ -87,7 +87,6 @@ struct ObjectInspectorView: View {
           if browser.canModify, let object = row.object, row.versionID == nil, !row.isDeleted {
             Button("Edit…") { browser.requestEditMetadata(object) }
               .controlSize(.small)
-              .disabled(browser.isTransferring)
               .help("Edit content headers, metadata and tags")
           }
         }
@@ -216,7 +215,6 @@ struct ObjectInspectorView: View {
       .actionStyle(titled: primaryTitled, stretches: true)
       .buttonStyle(.borderedProminent)
       .help("Download…")
-      .disabled(browser.isTransferring)
       Button("Share Link…", systemImage: "square.and.arrow.up") {
         browser.shareTarget = ShareTarget(object: object, versionID: row.versionID)
       }
