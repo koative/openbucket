@@ -10,24 +10,57 @@
 		055FA9199BEBEA3C0BE4C87F /* PreviewFileNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9941E58DA85DE0307ACBE866 /* PreviewFileNameTests.swift */; };
 		05EDC92FD9AD7F4B22CEC2C0 /* BatchDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D492F8D03CFE403B612D08 /* BatchDownloaderTests.swift */; };
 		09C760ABD3138CD34B53B278 /* BrowserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18FFFFDC367949AA81A87841 /* BrowserRow.swift */; };
+		0D0871B8C9433D7F98F20AA0 /* InlinePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE21E30A3FA9169BA89D13D /* InlinePlayer.swift */; };
+		0EEB805E0C94383DBBD76540 /* DeepSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF783093A6A01360B234FA65 /* DeepSearch.swift */; };
+		1130AA57D88606970639AF9B /* FavoriteEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2720412B1B8F6768609994FD /* FavoriteEntity.swift */; };
 		15A16CB5F322D02535AED277 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA5F357829EB81D59F69654 /* ContentView.swift */; };
+		180E06D589CD8E984E7E4A0A /* Treemap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E951DA6702BDB08733DF7D2 /* Treemap.swift */; };
+		191A84572DCBBF1C681F2B78 /* BrowseAsOfSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD816E27B8182AB7205F8FD /* BrowseAsOfSheet.swift */; };
 		1C564A3BBFEBD322051CDC1D /* ObjectInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A752271B4BBFDFACCA08E36 /* ObjectInspectorView.swift */; };
 		1EBFD07A91677539D164286A /* ConnectionEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6E5FC0CF2A73879A6FD7D9 /* ConnectionEditor.swift */; };
+		220166B561E2D6502B78307B /* StorageScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CABA9DDB550978A4CE40825 /* StorageScan.swift */; };
+		23183DF7A18D4B528AFEB542 /* StorageOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9753D4E4D8B03462533C60A1 /* StorageOverviewView.swift */; };
+		273390C883DB1A792F3609AE /* ChangeSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EE166EE0EF57EA141910BC /* ChangeSheets.swift */; };
 		2F47367288B737107B0DD557 /* BrowserGridCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD851FFC71E254416662CC6 /* BrowserGridCard.swift */; };
 		336BBE225E4ECE606A578A86 /* OpenBucketS3 in Frameworks */ = {isa = PBXBuildFile; productRef = 4BABCC04768593C406BAE11C /* OpenBucketS3 */; };
+		3C4922818B8797A6E2D16307 /* AWSConfigProfilesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D961406D85301962C645C5AE /* AWSConfigProfilesTests.swift */; };
+		4457BC80A527EF9505749B43 /* BrowserControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C356ECA0BDF4C3E50710927F /* BrowserControllerTests.swift */; };
+		471A86BED871E4602DA48439 /* TestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502E8591D3BBA0D0F38C54B7 /* TestDoubles.swift */; };
+		487A919504D4CD8308F723DA /* ImageMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCC8AE51F48E34BF8475F9F /* ImageMetadata.swift */; };
+		487AF0727F47CBE849C7642E /* ObjectListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C6546EF6ED325919C60AD2 /* ObjectListing.swift */; };
 		487B3D81F668001D75058D5D /* OpenBucketCore in Frameworks */ = {isa = PBXBuildFile; productRef = 887403CD20B5EBC385904939 /* OpenBucketCore */; };
+		4A719EC037389126CD1CCFFD /* StorageClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C510250F2C922B9F31A9FB /* StorageClassName.swift */; };
 		5085DB8C7173D9BBCFF0523C /* OpenBucketApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F931CDEAE87B61EDA971BE /* OpenBucketApp.swift */; };
+		666AE8D353C3A02C7AF5B774 /* QuickLookPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F91A8E141D620626C0A5849 /* QuickLookPanel.swift */; };
 		6AA5FF8C29DBD96854F64373 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D892EF569D3EA2E8A2236C7A /* ProfileStore.swift */; };
+		6CA9ABA211FAADB8FC6A87D5 /* ObjectChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554EAF94D2FBAB08846A6B82 /* ObjectChanges.swift */; };
 		7FED78FBAC2BA182C03E1CDD /* PreviewFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E2B0C26FE30A89B9FC43E6 /* PreviewFileName.swift */; };
 		8111B49B392055E29D326866 /* BatchDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B385C52E15190191826676 /* BatchDownloader.swift */; };
 		820E7F421BE9DD72CC7AD2D3 /* KeychainCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE9CC622E1E0D826A5A2818 /* KeychainCredentialStore.swift */; };
+		867B18F22AA4BB67F3EA75F2 /* FolderDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F814B6AA744374B48622FFB2 /* FolderDownloader.swift */; };
+		96B7DB71AD07D3424A90103D /* ShareLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CECD037AC88BF71881286 /* ShareLinkView.swift */; };
 		985534263FD98CFF6B847369 /* StorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FC01D86217CC165F100A40 /* StorageTests.swift */; };
 		A2B30E7553E514A25A7783B8 /* ObjectBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60D4E8CC17F9615D66E9AF7 /* ObjectBrowserView.swift */; };
+		A3DBF6C8304A0F35BE6B8A6B /* OpenBucketIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC24ECBC900A051CA2BB5A8 /* OpenBucketIntents.swift */; };
 		A51FCA0293CF9A3FC2F34B14 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E53802465FE31616C866F0 /* AppModel.swift */; };
+		AB1D649179D92B909BDDF412 /* BrowserCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4257A5832CA0FFD2ACF089C /* BrowserCommands.swift */; };
+		AF2E61E46D5F5CA62F9E1EEA /* FolderHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1AA2BCD89784B002B615B8 /* FolderHistory.swift */; };
+		B73EBB088458453F801CC209 /* BackupVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864DD839CD137461C88AA9B1 /* BackupVerification.swift */; };
+		C1697075C68E3F76A4A1E2A6 /* AWSConfigProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8A0C33F2C27C733201821 /* AWSConfigProfiles.swift */; };
+		C64D80226004CE652569808C /* ObjectChangesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AE53B9526D0C4A81D4A7B0 /* ObjectChangesTests.swift */; };
 		C826489C8EA4AB91CBEB137B /* ObjectTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64BE089D18AA0396391CE1 /* ObjectTableView.swift */; };
+		C9B9D3E894982103DFB5EA15 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB965BCC11B097AC30F75D57 /* SearchResultsView.swift */; };
+		CC0AF3C0CC8A78CA0680E789 /* ServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E40837C83461EC99EB6BB4D /* ServicesTests.swift */; };
+		D0545CBB9D547946D2B0813A /* InsightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CF20FCBB9A02230BABD036 /* InsightTests.swift */; };
+		D349749582F5BED353165BD5 /* ShareLinkExpiryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702938D8CF6D13C20636AC /* ShareLinkExpiryTests.swift */; };
 		D80C11FA476E02E511653697 /* BrowserThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A0DB88793D9A81759A4BF8 /* BrowserThumbnail.swift */; };
+		DB6623F38BD7B1BF1E111251 /* InspectorSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBF4B8FEE3667BC2320CB418 /* InspectorSections.swift */; };
+		E36575214AEE982CEE18A358 /* MetadataEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0F873316834119F67D8113 /* MetadataEditor.swift */; };
 		E4212E389D40A90874DFA701 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92EFCC703C8816C7CE7E7352 /* Assets.xcassets */; };
+		E6804E73D2A16445534F8A76 /* BackupVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2149254C0E36EEB5EDFFB5CE /* BackupVerifyView.swift */; };
+		EB12EE6853D0AB4B616AB86D /* BrowserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B67FE53092C7F55D7FB6D3 /* BrowserController.swift */; };
 		F651B51B789D257D6C31F054 /* AppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537FEEA76A1D05CD100C79BA /* AppModelTests.swift */; };
+		F90B4027F9E4882C0CBBFF36 /* InsightTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6543CFDF7A80DCBAE012B785 /* InsightTarget.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,27 +74,61 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		16D8A0C33F2C27C733201821 /* AWSConfigProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConfigProfiles.swift; sourceTree = "<group>"; };
 		18FFFFDC367949AA81A87841 /* BrowserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserRow.swift; sourceTree = "<group>"; };
+		1E951DA6702BDB08733DF7D2 /* Treemap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Treemap.swift; sourceTree = "<group>"; };
+		2149254C0E36EEB5EDFFB5CE /* BackupVerifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupVerifyView.swift; sourceTree = "<group>"; };
+		2720412B1B8F6768609994FD /* FavoriteEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEntity.swift; sourceTree = "<group>"; };
+		29C6546EF6ED325919C60AD2 /* ObjectListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectListing.swift; sourceTree = "<group>"; };
+		34702938D8CF6D13C20636AC /* ShareLinkExpiryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareLinkExpiryTests.swift; sourceTree = "<group>"; };
 		39906F4FFCB7FBD884F76912 /* OpenBucket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenBucket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A0DB88793D9A81759A4BF8 /* BrowserThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserThumbnail.swift; sourceTree = "<group>"; };
+		4B044A5F5C1BDD133502827A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4BA5F357829EB81D59F69654 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4F6E5FC0CF2A73879A6FD7D9 /* ConnectionEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionEditor.swift; sourceTree = "<group>"; };
+		502E8591D3BBA0D0F38C54B7 /* TestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDoubles.swift; sourceTree = "<group>"; };
 		537FEEA76A1D05CD100C79BA /* AppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelTests.swift; sourceTree = "<group>"; };
+		554EAF94D2FBAB08846A6B82 /* ObjectChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectChanges.swift; sourceTree = "<group>"; };
 		5A752271B4BBFDFACCA08E36 /* ObjectInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectInspectorView.swift; sourceTree = "<group>"; };
 		5BD851FFC71E254416662CC6 /* BrowserGridCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserGridCard.swift; sourceTree = "<group>"; };
+		5CABA9DDB550978A4CE40825 /* StorageScan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageScan.swift; sourceTree = "<group>"; };
 		64F931CDEAE87B61EDA971BE /* OpenBucketApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBucketApp.swift; sourceTree = "<group>"; };
+		6543CFDF7A80DCBAE012B785 /* InsightTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightTarget.swift; sourceTree = "<group>"; };
 		711BEF07C60DBC90F3B3DE9C /* OpenBucket */ = {isa = PBXFileReference; lastKnownFileType = folder; name = OpenBucket; path = Packages/OpenBucket; sourceTree = SOURCE_ROOT; };
 		7D64BE089D18AA0396391CE1 /* ObjectTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTableView.swift; sourceTree = "<group>"; };
+		7E40837C83461EC99EB6BB4D /* ServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesTests.swift; sourceTree = "<group>"; };
+		85CF20FCBB9A02230BABD036 /* InsightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightTests.swift; sourceTree = "<group>"; };
+		864DD839CD137461C88AA9B1 /* BackupVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupVerification.swift; sourceTree = "<group>"; };
+		8F91A8E141D620626C0A5849 /* QuickLookPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookPanel.swift; sourceTree = "<group>"; };
 		92EFCC703C8816C7CE7E7352 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9753D4E4D8B03462533C60A1 /* StorageOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageOverviewView.swift; sourceTree = "<group>"; };
 		9941E58DA85DE0307ACBE866 /* PreviewFileNameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFileNameTests.swift; sourceTree = "<group>"; };
+		A1C510250F2C922B9F31A9FB /* StorageClassName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageClassName.swift; sourceTree = "<group>"; };
 		A9E53802465FE31616C866F0 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		ABCC8AE51F48E34BF8475F9F /* ImageMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadata.swift; sourceTree = "<group>"; };
 		B60D4E8CC17F9615D66E9AF7 /* ObjectBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectBrowserView.swift; sourceTree = "<group>"; };
+		B7AE53B9526D0C4A81D4A7B0 /* ObjectChangesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectChangesTests.swift; sourceTree = "<group>"; };
+		B9EE166EE0EF57EA141910BC /* ChangeSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSheets.swift; sourceTree = "<group>"; };
+		BBE21E30A3FA9169BA89D13D /* InlinePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlinePlayer.swift; sourceTree = "<group>"; };
 		BD4E870664208E516FCC2697 /* OpenBucketTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBucketTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BFD816E27B8182AB7205F8FD /* BrowseAsOfSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseAsOfSheet.swift; sourceTree = "<group>"; };
 		C0E2B0C26FE30A89B9FC43E6 /* PreviewFileName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFileName.swift; sourceTree = "<group>"; };
 		C1B385C52E15190191826676 /* BatchDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDownloader.swift; sourceTree = "<group>"; };
+		C356ECA0BDF4C3E50710927F /* BrowserControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserControllerTests.swift; sourceTree = "<group>"; };
 		C9D492F8D03CFE403B612D08 /* BatchDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDownloaderTests.swift; sourceTree = "<group>"; };
+		CBC24ECBC900A051CA2BB5A8 /* OpenBucketIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBucketIntents.swift; sourceTree = "<group>"; };
 		D1FC01D86217CC165F100A40 /* StorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTests.swift; sourceTree = "<group>"; };
+		D2B67FE53092C7F55D7FB6D3 /* BrowserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserController.swift; sourceTree = "<group>"; };
+		D43CECD037AC88BF71881286 /* ShareLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareLinkView.swift; sourceTree = "<group>"; };
 		D892EF569D3EA2E8A2236C7A /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
+		D961406D85301962C645C5AE /* AWSConfigProfilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConfigProfilesTests.swift; sourceTree = "<group>"; };
+		DB1AA2BCD89784B002B615B8 /* FolderHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderHistory.swift; sourceTree = "<group>"; };
+		DF783093A6A01360B234FA65 /* DeepSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepSearch.swift; sourceTree = "<group>"; };
+		E4257A5832CA0FFD2ACF089C /* BrowserCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserCommands.swift; sourceTree = "<group>"; };
+		EB965BCC11B097AC30F75D57 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
+		EBF4B8FEE3667BC2320CB418 /* InspectorSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorSections.swift; sourceTree = "<group>"; };
+		F814B6AA744374B48622FFB2 /* FolderDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderDownloader.swift; sourceTree = "<group>"; };
+		FC0F873316834119F67D8113 /* MetadataEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataEditor.swift; sourceTree = "<group>"; };
 		FFE9CC622E1E0D826A5A2818 /* KeychainCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainCredentialStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,9 +149,16 @@
 			isa = PBXGroup;
 			children = (
 				537FEEA76A1D05CD100C79BA /* AppModelTests.swift */,
+				D961406D85301962C645C5AE /* AWSConfigProfilesTests.swift */,
 				C9D492F8D03CFE403B612D08 /* BatchDownloaderTests.swift */,
+				C356ECA0BDF4C3E50710927F /* BrowserControllerTests.swift */,
+				85CF20FCBB9A02230BABD036 /* InsightTests.swift */,
+				B7AE53B9526D0C4A81D4A7B0 /* ObjectChangesTests.swift */,
 				9941E58DA85DE0307ACBE866 /* PreviewFileNameTests.swift */,
+				7E40837C83461EC99EB6BB4D /* ServicesTests.swift */,
+				34702938D8CF6D13C20636AC /* ShareLinkExpiryTests.swift */,
 				D1FC01D86217CC165F100A40 /* StorageTests.swift */,
+				502E8591D3BBA0D0F38C54B7 /* TestDoubles.swift */,
 			);
 			path = AppTests;
 			sourceTree = "<group>";
@@ -94,10 +168,15 @@
 			children = (
 				A9E53802465FE31616C866F0 /* AppModel.swift */,
 				4BA5F357829EB81D59F69654 /* ContentView.swift */,
+				4B044A5F5C1BDD133502827A /* Info.plist */,
 				64F931CDEAE87B61EDA971BE /* OpenBucketApp.swift */,
 				4A1342BBDDA65166643C9D50 /* Browser */,
 				87883C5C8813EE1C07F8AF59 /* Connections */,
+				976C1081881F2B2F499A3C7E /* Insight */,
+				91EC8B45C4AA3F1F72F4A492 /* Inspector */,
+				622F92289C2DC203EC04CDF1 /* Intents */,
 				67CD54E60177F4ADECDB1296 /* Resources */,
+				4747D6D5471FE7B50B88E195 /* Services */,
 				C93A6001A89F15BC0E386BFF /* Storage */,
 			);
 			path = App;
@@ -121,19 +200,50 @@
 			);
 			sourceTree = "<group>";
 		};
+		4747D6D5471FE7B50B88E195 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				864DD839CD137461C88AA9B1 /* BackupVerification.swift */,
+				DF783093A6A01360B234FA65 /* DeepSearch.swift */,
+				F814B6AA744374B48622FFB2 /* FolderDownloader.swift */,
+				DB1AA2BCD89784B002B615B8 /* FolderHistory.swift */,
+				ABCC8AE51F48E34BF8475F9F /* ImageMetadata.swift */,
+				554EAF94D2FBAB08846A6B82 /* ObjectChanges.swift */,
+				29C6546EF6ED325919C60AD2 /* ObjectListing.swift */,
+				5CABA9DDB550978A4CE40825 /* StorageScan.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		4A1342BBDDA65166643C9D50 /* Browser */ = {
 			isa = PBXGroup;
 			children = (
 				C1B385C52E15190191826676 /* BatchDownloader.swift */,
+				BFD816E27B8182AB7205F8FD /* BrowseAsOfSheet.swift */,
+				E4257A5832CA0FFD2ACF089C /* BrowserCommands.swift */,
+				D2B67FE53092C7F55D7FB6D3 /* BrowserController.swift */,
 				5BD851FFC71E254416662CC6 /* BrowserGridCard.swift */,
 				18FFFFDC367949AA81A87841 /* BrowserRow.swift */,
 				40A0DB88793D9A81759A4BF8 /* BrowserThumbnail.swift */,
+				B9EE166EE0EF57EA141910BC /* ChangeSheets.swift */,
 				B60D4E8CC17F9615D66E9AF7 /* ObjectBrowserView.swift */,
 				5A752271B4BBFDFACCA08E36 /* ObjectInspectorView.swift */,
 				7D64BE089D18AA0396391CE1 /* ObjectTableView.swift */,
 				C0E2B0C26FE30A89B9FC43E6 /* PreviewFileName.swift */,
+				8F91A8E141D620626C0A5849 /* QuickLookPanel.swift */,
+				EB965BCC11B097AC30F75D57 /* SearchResultsView.swift */,
+				A1C510250F2C922B9F31A9FB /* StorageClassName.swift */,
 			);
 			path = Browser;
+			sourceTree = "<group>";
+		};
+		622F92289C2DC203EC04CDF1 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				2720412B1B8F6768609994FD /* FavoriteEntity.swift */,
+				CBC24ECBC900A051CA2BB5A8 /* OpenBucketIntents.swift */,
+			);
+			path = Intents;
 			sourceTree = "<group>";
 		};
 		67CD54E60177F4ADECDB1296 /* Resources */ = {
@@ -152,6 +262,28 @@
 			path = Connections;
 			sourceTree = "<group>";
 		};
+		91EC8B45C4AA3F1F72F4A492 /* Inspector */ = {
+			isa = PBXGroup;
+			children = (
+				BBE21E30A3FA9169BA89D13D /* InlinePlayer.swift */,
+				EBF4B8FEE3667BC2320CB418 /* InspectorSections.swift */,
+				FC0F873316834119F67D8113 /* MetadataEditor.swift */,
+				D43CECD037AC88BF71881286 /* ShareLinkView.swift */,
+			);
+			path = Inspector;
+			sourceTree = "<group>";
+		};
+		976C1081881F2B2F499A3C7E /* Insight */ = {
+			isa = PBXGroup;
+			children = (
+				2149254C0E36EEB5EDFFB5CE /* BackupVerifyView.swift */,
+				6543CFDF7A80DCBAE012B785 /* InsightTarget.swift */,
+				9753D4E4D8B03462533C60A1 /* StorageOverviewView.swift */,
+				1E951DA6702BDB08733DF7D2 /* Treemap.swift */,
+			);
+			path = Insight;
+			sourceTree = "<group>";
+		};
 		BD8F99CBFFDB4FEC3280D644 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +296,7 @@
 		C93A6001A89F15BC0E386BFF /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				16D8A0C33F2C27C733201821 /* AWSConfigProfiles.swift */,
 				FFE9CC622E1E0D826A5A2818 /* KeychainCredentialStore.swift */,
 				D892EF569D3EA2E8A2236C7A /* ProfileStore.swift */,
 			);
@@ -219,7 +352,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 				};
 			};
@@ -262,20 +395,46 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1697075C68E3F76A4A1E2A6 /* AWSConfigProfiles.swift in Sources */,
 				A51FCA0293CF9A3FC2F34B14 /* AppModel.swift in Sources */,
+				B73EBB088458453F801CC209 /* BackupVerification.swift in Sources */,
+				E6804E73D2A16445534F8A76 /* BackupVerifyView.swift in Sources */,
 				8111B49B392055E29D326866 /* BatchDownloader.swift in Sources */,
+				191A84572DCBBF1C681F2B78 /* BrowseAsOfSheet.swift in Sources */,
+				AB1D649179D92B909BDDF412 /* BrowserCommands.swift in Sources */,
+				EB12EE6853D0AB4B616AB86D /* BrowserController.swift in Sources */,
 				2F47367288B737107B0DD557 /* BrowserGridCard.swift in Sources */,
 				09C760ABD3138CD34B53B278 /* BrowserRow.swift in Sources */,
 				D80C11FA476E02E511653697 /* BrowserThumbnail.swift in Sources */,
+				273390C883DB1A792F3609AE /* ChangeSheets.swift in Sources */,
 				1EBFD07A91677539D164286A /* ConnectionEditor.swift in Sources */,
 				15A16CB5F322D02535AED277 /* ContentView.swift in Sources */,
+				0EEB805E0C94383DBBD76540 /* DeepSearch.swift in Sources */,
+				1130AA57D88606970639AF9B /* FavoriteEntity.swift in Sources */,
+				867B18F22AA4BB67F3EA75F2 /* FolderDownloader.swift in Sources */,
+				AF2E61E46D5F5CA62F9E1EEA /* FolderHistory.swift in Sources */,
+				487A919504D4CD8308F723DA /* ImageMetadata.swift in Sources */,
+				0D0871B8C9433D7F98F20AA0 /* InlinePlayer.swift in Sources */,
+				F90B4027F9E4882C0CBBFF36 /* InsightTarget.swift in Sources */,
+				DB6623F38BD7B1BF1E111251 /* InspectorSections.swift in Sources */,
 				820E7F421BE9DD72CC7AD2D3 /* KeychainCredentialStore.swift in Sources */,
+				E36575214AEE982CEE18A358 /* MetadataEditor.swift in Sources */,
 				A2B30E7553E514A25A7783B8 /* ObjectBrowserView.swift in Sources */,
+				6CA9ABA211FAADB8FC6A87D5 /* ObjectChanges.swift in Sources */,
 				1C564A3BBFEBD322051CDC1D /* ObjectInspectorView.swift in Sources */,
+				487AF0727F47CBE849C7642E /* ObjectListing.swift in Sources */,
 				C826489C8EA4AB91CBEB137B /* ObjectTableView.swift in Sources */,
 				5085DB8C7173D9BBCFF0523C /* OpenBucketApp.swift in Sources */,
+				A3DBF6C8304A0F35BE6B8A6B /* OpenBucketIntents.swift in Sources */,
 				7FED78FBAC2BA182C03E1CDD /* PreviewFileName.swift in Sources */,
 				6AA5FF8C29DBD96854F64373 /* ProfileStore.swift in Sources */,
+				666AE8D353C3A02C7AF5B774 /* QuickLookPanel.swift in Sources */,
+				C9B9D3E894982103DFB5EA15 /* SearchResultsView.swift in Sources */,
+				96B7DB71AD07D3424A90103D /* ShareLinkView.swift in Sources */,
+				4A719EC037389126CD1CCFFD /* StorageClassName.swift in Sources */,
+				23183DF7A18D4B528AFEB542 /* StorageOverviewView.swift in Sources */,
+				220166B561E2D6502B78307B /* StorageScan.swift in Sources */,
+				180E06D589CD8E984E7E4A0A /* Treemap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,10 +442,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C4922818B8797A6E2D16307 /* AWSConfigProfilesTests.swift in Sources */,
 				F651B51B789D257D6C31F054 /* AppModelTests.swift in Sources */,
 				05EDC92FD9AD7F4B22CEC2C0 /* BatchDownloaderTests.swift in Sources */,
+				4457BC80A527EF9505749B43 /* BrowserControllerTests.swift in Sources */,
+				D0545CBB9D547946D2B0813A /* InsightTests.swift in Sources */,
+				C64D80226004CE652569808C /* ObjectChangesTests.swift in Sources */,
 				055FA9199BEBEA3C0BE4C87F /* PreviewFileNameTests.swift in Sources */,
+				CC0AF3C0CC8A78CA0680E789 /* ServicesTests.swift in Sources */,
+				D349749582F5BED353165BD5 /* ShareLinkExpiryTests.swift in Sources */,
 				985534263FD98CFF6B847369 /* StorageTests.swift in Sources */,
+				471A86BED871E4602DA48439 /* TestDoubles.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +475,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OpenBucket;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -361,6 +528,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OpenBucket;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -433,7 +601,6 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
@@ -491,7 +658,6 @@
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 			};
 			name = Release;

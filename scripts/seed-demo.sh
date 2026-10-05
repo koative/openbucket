@@ -23,15 +23,16 @@ case "$prefix" in */) ;; *) prefix="$prefix/" ;; esac
 
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 endpoint=${OPENBUCKET_DEMO_ENDPOINT%/}
+# Credentials reach curl as a config on stdin through the printf builtin, never on any argv.
+curl_user=$(printf '%s:%s' "$OPENBUCKET_DEMO_ACCESS_KEY" "$OPENBUCKET_DEMO_SECRET_KEY" | sed 's/[\\"]/\\&/g')
 
 for name in alpine-meadow.png city-after-rain.png coastal-cliffs.png desert-dunes.png fjord-dawn.png fjord-pan.mp4; do
   case "$name" in
     *.mp4) content_type=video/mp4 ;;
     *) content_type=image/png ;;
   esac
-  curl --fail --silent --show-error \
+  printf 'user = "%s"\n' "$curl_user" | curl --config - --fail --silent --show-error \
     --aws-sigv4 "aws:amz:$OPENBUCKET_DEMO_REGION:s3" \
-    --user "$OPENBUCKET_DEMO_ACCESS_KEY:$OPENBUCKET_DEMO_SECRET_KEY" \
     --header "Content-Type: $content_type" \
     --upload-file "$root/docs/demo-assets/travel/$name" \
     "$endpoint/$OPENBUCKET_DEMO_BUCKET/$prefix$name" \

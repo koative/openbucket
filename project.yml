@@ -1,11 +1,11 @@
 name: OpenBucket
 options:
+  xcodeVersion: "27.0"
   deploymentTarget:
     macOS: "26.0"
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    SWIFT_STRICT_CONCURRENCY: complete
     CODE_SIGNING_ALLOWED: NO
 packages:
   OpenBucketPackage:
@@ -20,6 +20,20 @@ targets:
         product: OpenBucketCore
       - package: OpenBucketPackage
         product: OpenBucketS3
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleURLTypes:
+          - CFBundleURLName: dev.openbucket.s3-location
+            CFBundleTypeRole: Viewer
+            CFBundleURLSchemes: [s3]
+        # Items dragged inside the app carry this type, so drops move them instead of downloading.
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: dev.openbucket.item
+            UTTypeDescription: OpenBucket item
+            UTTypeConformsTo: [public.data]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.openbucket.app

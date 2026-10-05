@@ -29,8 +29,8 @@ The project disables signing for ordinary local and CI builds. The release scrip
 
 ## Prepare a release
 
-1. Update the version and build number in `project.yml`, regenerate `OpenBucket.xcodeproj` with `xcodegen generate --spec project.yml`, and write release notes in `docs/releases/`.
-2. Run the format check and macOS tests shown in the main README. Commit and push a clean `main` branch.
+1. Set the new `MARKETING_VERSION` and a higher `CURRENT_PROJECT_VERSION` (build number) in `project.yml`, regenerate `OpenBucket.xcodeproj` with `xcodegen generate --spec project.yml`, and rename `docs/releases/unreleased.md` to `docs/releases/vVERSION.md`, adding the version heading and install section used by earlier notes.
+2. Run the format check, app tests, and package tests shown in the main README. Make sure `Packages/OpenBucket/Package.resolved` is committed; the release archive refuses to re-resolve packages, so it builds exactly those versions. Commit and push a clean `main` branch and wait for CI to pass.
 3. Build and notarize the DMG:
 
    ```sh
@@ -38,9 +38,9 @@ The project disables signing for ordinary local and CI builds. The release scrip
    scripts/package-release.sh "$VERSION"
    ```
 
-   The script refuses to put an unnotarized image in `dist/`. It verifies the app signature, waits for notarization to be accepted, staples the ticket to the DMG, verifies the DMG, and writes its SHA-256 checksum. `dist/` is ignored by Git.
+   The script refuses to run when the version you pass differs from `MARKETING_VERSION` in `project.yml`, and it refuses to put an unnotarized image in `dist/`. It prints the archived version and build number, checks that the app is a universal binary containing both `arm64` and `x86_64`, verifies the app signature, waits for notarization to be accepted, staples the ticket to the DMG, verifies the DMG, and writes its SHA-256 checksum. `dist/` is ignored by Git.
 
-4. Mount the DMG and test the app after copying it to Applications. Check a fresh connection, a known bucket and prefix, a media thumbnail, a download, and first launch from a downloaded copy. Test on another Mac when possible.
+4. Mount the DMG and test the app after copying it to Applications. Check a fresh connection, a known bucket and starting folder, a media thumbnail, a single and a batch download, and first launch from a downloaded copy. Test on another Mac when possible.
 5. Tag the exact tested commit and create a **draft** GitHub release:
 
    ```sh

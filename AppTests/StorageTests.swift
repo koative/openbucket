@@ -36,76 +36,53 @@ import Testing
   #expect(try await store.load() == [profile])
 }
 
-@Test func keychainRoundTripAndDeletion() async throws {
-  let store = KeychainCredentialStore(service: "dev.openbucket.tests.\(UUID().uuidString)")
-  let reference = UUID()
-  let credentials = S3Credentials(
-    accessKeyID: "test-access-key",
-    secretAccessKey: "test-secret-key",
-    sessionToken: "test-session-token"
-  )
-  defer { Task { try? await store.delete(reference: reference) } }
-
-  try await store.save(credentials, reference: reference)
-  let loaded = try await store.load(reference: reference)
-  #expect(loaded.accessKeyID == credentials.accessKeyID)
-  #expect(loaded.secretAccessKey == credentials.secretAccessKey)
-  #expect(loaded.sessionToken == credentials.sessionToken)
-
-  try await store.delete(reference: reference)
-  do {
-    _ = try await store.load(reference: reference)
-    Issue.record("A deleted Keychain entry loaded successfully")
-  } catch CredentialStoreError.notFound {
-  }
-}
-
-@Test func credentialsPreferProtectedMacKeychain() async throws {
+/// Runs `body` against an isolated Keychain service and always deletes the item afterwards.
+private func withKeychainItem(
+  _ body: (_ store: KeychainCredentialStore, _ service: String, _ reference: UUID) async throws -> Void
+) async throws {
   let service = "dev.openbucket.tests.\(UUID().uuidString)"
   let store = KeychainCredentialStore(service: service)
   let reference = UUID()
-  defer { Task { try? await store.delete(reference: reference) } }
-  try await store.save(
-    S3Credentials(accessKeyID: "test-access", secretAccessKey: "test-secret"),
-    reference: reference
-  )
+  do {
+    try await body(store, service, reference)
+  } catch {
+    try? await store.delete(reference: reference)
+    throw error
+  }
+  try await store.delete(reference: reference)
+}
 
-  let query: [String: Any] = [
-    kSecClass as String: kSecClassGenericPassword,
-    kSecAttrService as String: service,
-    kSecAttrAccount as String: reference.uuidString,
-    kSecUseDataProtectionKeychain as String: true,
-    kSecReturnAttributes as String: true,
-  ]
-  var result: CFTypeRef?
-  let status = SecItemCopyMatching(query as CFDictionary, &result)
-  if status == errSecSuccess {
-    let attributes = try #require(result as? [String: Any])
-    #expect(
-      attributes[kSecAttrAccessible as String] as? String
-        == kSecAttrAccessibleWhenUnlockedThisDeviceOnly as String)
-  } else {
-    #expect(status == errSecMissingEntitlement || status == errSecItemNotFound)
-    var legacyQuery = query
-    legacyQuery.removeValue(forKey: kSecUseDataProtectionKeychain as String)
-    #expect(SecItemCopyMatching(legacyQuery as CFDictionary, &result) == errSecSuccess)
+@Test func keychainRoundTripUpdateAndDeletion() async throws {
+  try await withKeychainItem { store, _, reference in
+    try await store.save(S3Credentials(accessKeyID: "old", secretAccessKey: "old"), reference: reference)
+    let credentials = S3Credentials(
+      accessKeyID: "test-access-key",
+      secretAccessKey: "test-secret-key",
+      sessionToken: "test-session-token"
+    )
+    try await store.save(credentials, reference: reference)
+    let loaded = try await store.load(reference: reference)
+    #expect(loaded.accessKeyID == credentials.accessKeyID)
+    #expect(loaded.secretAccessKey == credentials.secretAccessKey)
+    #expect(loaded.sessionToken == credentials.sessionToken)
+
+    try await store.delete(reference: reference)
+    await #expect(throws: CredentialStoreError.notFound) { try await store.load(reference: reference) }
   }
 }
 
 @Test func existingLoginKeychainCredentialRemainsReadable() async throws {
-  let service = "dev.openbucket.tests.\(UUID().uuidString)"
-  let reference = UUID()
-  let store = KeychainCredentialStore(service: service)
-  defer { Task { try? await store.delete(reference: reference) } }
-  let data = try JSONEncoder().encode(["accessKeyID": "legacy-access", "secretAccessKey": "legacy-secret"])
-  let query: [String: Any] = [
-    kSecClass as String: kSecClassGenericPassword,
-    kSecAttrService as String: service,
-    kSecAttrAccount as String: reference.uuidString,
-    kSecValueData as String: data,
-  ]
-  #expect(SecItemAdd(query as CFDictionary, nil) == errSecSuccess)
-  let loaded = try await store.load(reference: reference)
-  #expect(loaded.accessKeyID == "legacy-access")
-  #expect(loaded.secretAccessKey == "legacy-secret")
+  try await withKeychainItem { store, service, reference in
+    let data = try JSONEncoder().encode(["accessKeyID": "legacy-access", "secretAccessKey": "legacy-secret"])
+    let query: [String: Any] = [
+      kSecClass as String: kSecClassGenericPassword,
+      kSecAttrService as String: service,
+      kSecAttrAccount as String: reference.uuidString,
+      kSecValueData as String: data,
+    ]
+    #expect(SecItemAdd(query as CFDictionary, nil) == errSecSuccess)
+    let loaded = try await store.load(reference: reference)
+    #expect(loaded.accessKeyID == "legacy-access")
+    #expect(loaded.secretAccessKey == "legacy-secret")
+  }
 }

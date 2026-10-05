@@ -1,107 +1,133 @@
 import OpenBucketCore
 import SwiftUI
 
+/// List view: native multi-selection, double-click/Return opens, Space toggles Quick Look.
 struct ObjectTableView: View {
   let rows: [BrowserRow]
-  let model: AppModel
-  let thumbnailCache: ThumbnailCache
-  let nextToken: String?
-  @Binding var focusedRowID: BrowserRow.ID?
-  @Binding var checkedIDs: Set<BrowserRow.ID>
-  @Binding var sortOrder: [KeyPathComparator<BrowserRow>]
-  let loadNextPage: () -> Void
-
-  @State private var isNearBottom = false
+  @Bindable var browser: BrowserController
 
   var body: some View {
-    let items = sortedRows
-    return Table(items, selection: $focusedRowID, sortOrder: $sortOrder) {
-      TableColumn("") { row in
-        if row.object != nil {
-          Toggle(
-            "Select \(row.name) for download",
-            isOn: Binding(
-              get: { checkedIDs.contains(row.id) },
-              set: { isChecked in
-                if isChecked {
-                  checkedIDs.insert(row.id)
-                } else {
-                  checkedIDs.remove(row.id)
+    let lastID = rows.last?.id
+    ScrollViewReader { proxy in
+      Table(of: BrowserRow.self, selection: $browser.selection, sortOrder: $browser.sortOrder) {
+        TableColumn("Name", value: \.name) { row in
+          BrowserNameCell(row: row)
+            .onAppear { if row.id == lastID { browser.model.loadNextPage() } }
+        }
+        .width(min: 160, ideal: 320)
+
+        TableColumn("Size", value: \.sortSize) { row in
+          BrowserSizeCell(row: row)
+        }
+        .width(90)
+        .alignment(.numeric)
+
+        TableColumn("Modified", value: \.sortModified) { row in
+          BrowserModifiedCell(row: row)
+        }
+        .width(min: 150, ideal: 170)
+
+        TableColumn("Kind") { row in
+          BrowserKindCell(row: row)
+        }
+        .width(min: 80, ideal: 120)
+      } rows: {
+        ForEach(rows) { row in
+          // While changes are allowed every row takes drops, so a drop on a file row lands in the current folder
+          // instead of depending on the table passing it to the list behind it.
+          if browser.canModify {
+            TableRow(row)
+              .draggable(browser.dragItem(row))
+              .dropDestination(for: BrowserDrop.self) { drops in
+                if let folder = browser.location(of: row.id) ?? browser.model.browser.location {
+                  browser.accept(drops, into: folder)
                 }
               }
-            )
-          )
-          .toggleStyle(.checkbox)
-          .labelsHidden()
-        }
-      }
-      .width(38)
-
-      TableColumn("Name", value: \.name) { row in
-        nameCell(row)
-          .onAppear {
-            if row.id == items.last?.id, nextToken != nil { loadNextPage() }
-          }
-      }
-      .width(min: 160, ideal: 300)
-
-      TableColumn("Size", value: \.sortSize) { row in
-        Text(
-          row.object.map {
-            ByteCountFormatter.string(fromByteCount: $0.size, countStyle: .file)
-          } ?? "—"
-        )
-        .foregroundStyle(.secondary)
-        .frame(maxWidth: .infinity, alignment: .trailing)
-      }
-      .width(90)
-
-      TableColumn("Modified", value: \.sortModified) { row in
-        Group {
-          if let date = row.object?.lastModified {
-            Text(date, format: .dateTime.year().month().day())
           } else {
-            Text("—")
+            TableRow(row)
+              .draggable(browser.dragItem(row))
           }
         }
-        .foregroundStyle(.secondary)
       }
-      .width(145)
-    }
-    .tableStyle(.inset)
-    .alternatingRowBackgrounds(.disabled)
-    .onScrollGeometryChange(for: Bool.self) { geometry in
-      geometry.visibleRect.maxY >= geometry.contentSize.height - 240
-    } action: { _, nearBottom in
-      isNearBottom = nearBottom
-      if nearBottom, nextToken != nil { loadNextPage() }
-    }
-    .onChange(of: nextToken) { _, token in
-      if token != nil, isNearBottom { loadNextPage() }
+      .tableStyle(.inset)
+      .alternatingRowBackgrounds(.disabled)
+      .contextMenu(forSelectionType: BrowserRow.ID.self) { ids in
+        BrowserItemMenu(ids: ids, browser: browser)
+      } primaryAction: { ids in
+        if ids.count == 1, let id = ids.first { browser.open(id) }
+      }
+      .onKeyPress(.space) {
+        guard browser.quickLookTarget != nil || browser.previewURL != nil else { return .ignored }
+        browser.toggleQuickLook()
+        return .handled
+      }
+      .overlay(alignment: .bottom) {
+        LoadingMoreIndicator(model: browser.model)
+      }
+      .onChange(of: browser.revealedID) { _, id in
+        if let id { proxy.scrollTo(id) }
+      }
     }
   }
+}
 
-  private func nameCell(_ row: BrowserRow) -> some View {
-    HStack(spacing: 10) {
-      BrowserArtwork(
-        row: row, model: model, cache: thumbnailCache, symbolSize: 18,
-        cornerRadius: 6, showsVideoBadge: false
-      )
-      .frame(width: 32, height: 32)
-      .clipped()
-      .clipShape(.rect(cornerRadius: 6))
-      VStack(alignment: .leading, spacing: 2) {
-        Text(row.name).lineLimit(1)
-        Text(row.kindLabel).font(.caption).foregroundStyle(.secondary)
+/// Name column: artwork and name; deleted files are dimmed and marked with a trailing trash symbol.
+struct BrowserNameCell: View {
+  let row: BrowserRow
+
+  var body: some View {
+    HStack(spacing: 6) {
+      BrowserArtwork(row: row, symbolSize: 14, showsVideoBadge: false)
+        .frame(width: 18, height: 18)
+        .clipShape(.rect(cornerRadius: 4, style: .continuous))
+        .opacity(row.isDeleted ? 0.5 : 1)
+      Text(row.name)
+        .foregroundStyle(row.isDeleted ? .secondary : .primary)
+        .lineLimit(1)
+        .truncationMode(.middle)
+      if row.isDeleted {
+        Image(systemName: "trash")
+          .foregroundStyle(.secondary)
+          .accessibilityLabel("Deleted")
       }
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .help(row.fullKey)
+    .accessibilityElement(children: .combine)
   }
+}
 
-  private var sortedRows: [BrowserRow] {
-    let folders = rows.filter { $0.prefix != nil }.sorted(using: sortOrder)
-    let objects = rows.filter { $0.object != nil }.sorted(using: sortOrder)
-    return folders + objects
+struct BrowserSizeCell: View {
+  let row: BrowserRow
+
+  var body: some View {
+    Text(row.sizeLabel ?? "—")
+      .monospacedDigit()
+      .foregroundStyle(.secondary)
+  }
+}
+
+struct BrowserKindCell: View {
+  let row: BrowserRow
+
+  var body: some View {
+    Text(row.kindLabel)
+      .foregroundStyle(.secondary)
+      .lineLimit(1)
+  }
+}
+
+struct BrowserModifiedCell: View {
+  let row: BrowserRow
+
+  var body: some View {
+    Group {
+      if let date = row.object?.lastModified {
+        Text(date, format: Date.FormatStyle(date: .abbreviated, time: .shortened))
+      } else {
+        Text("—")
+      }
+    }
+    .foregroundStyle(.secondary)
   }
 }

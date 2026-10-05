@@ -11,112 +11,99 @@ public final class BrowseSession {
   public private(set) var failure: S3Failure?
 
   @ObservationIgnored private let repository: any S3Repository
-  @ObservationIgnored private var activeTask: Task<Void, Never>?
-  @ObservationIgnored private var activeProfileID: UUID?
-  @ObservationIgnored private var generation = 0
+  /// Internal so tests can await a load deterministically.
+  @ObservationIgnored private(set) var activeTask: Task<Void, Never>?
+  @ObservationIgnored private var connection: (profile: ConnectionProfile, credentials: S3Credentials)?
+  /// Continuation tokens already requested for `location`, so A→B→A cycles stop.
+  @ObservationIgnored private var seenTokens = Set<String>()
+  @ObservationIgnored private var seenPrefixes = Set<[UInt8]>()
+  @ObservationIgnored private var seenObjects = Set<[UInt8]>()
+
+  /// Consecutive empty pages followed before handing the token back to the user.
+  private static let emptyPageLimit = 16
 
   public init(repository: any S3Repository) {
     self.repository = repository
   }
 
   public func navigate(profile: ConnectionProfile, credentials: S3Credentials, to location: S3Location) {
-    stopRequest()
-    activeProfileID = profile.id
-    loadPage(profile: profile, credentials: credentials, location: location, token: nil, append: false)
+    activeTask?.cancel()
+    connection = (profile, credentials)
+    seenTokens = []
+    load(location, token: nil, append: false)
   }
 
-  public func loadNextPage(profile: ConnectionProfile, credentials: S3Credentials) {
-    guard activeProfileID == profile.id,
-      let location,
-      let token = nextToken,
-      !isLoading
-    else { return }
-    loadPage(profile: profile, credentials: credentials, location: location, token: token, append: true)
+  /// Loads the page after the current one with the connection given to `navigate`.
+  public func loadNextPage() {
+    guard let location, let token = nextToken, !isLoading else { return }
+    load(location, token: token, append: true)
+  }
+
+  /// Replaces the credentials later `loadNextPage` calls use, e.g. after temporary credentials refresh.
+  public func updateCredentials(_ credentials: S3Credentials) {
+    connection?.credentials = credentials
   }
 
   public func cancel() {
-    stopRequest()
-    location = nil
-    prefixes = []
-    objects = []
-    nextToken = nil
+    activeTask?.cancel()
+    activeTask = nil
+    connection = nil
+    seenTokens = []
+    show(nil)
     failure = nil
     isLoading = false
   }
 
-  private func stopRequest() {
-    generation &+= 1
-    activeTask?.cancel()
-    activeTask = nil
-    activeProfileID = nil
+  private func show(_ location: S3Location?) {
+    self.location = location
+    prefixes = []
+    objects = []
+    nextToken = nil
+    seenPrefixes = []
+    seenObjects = []
   }
 
-  private func loadPage(
-    profile: ConnectionProfile,
-    credentials: S3Credentials,
-    location: S3Location,
-    token: String?,
-    append: Bool
-  ) {
+  private func load(_ location: S3Location, token: String?, append: Bool) {
+    guard let connection else { return }
     isLoading = true
     failure = nil
-    let requestGeneration = generation
+    // The task runs on the MainActor, so `navigate`/`cancel` mark it cancelled before it can resume;
+    // checking `Task.isCancelled` after each await is enough to drop stale responses.
     activeTask = Task {
       do {
-        var currentToken = token
-        var seenTokens = Set<String>()
+        var token = token
         var emptyPages = 0
         while true {
-          if let currentToken { seenTokens.insert(currentToken) }
           let page = try await repository.listObjects(
-            profile: profile,
-            credentials: credentials,
+            profile: connection.profile,
+            credentials: connection.credentials,
             bucket: location.bucket,
             prefix: location.prefix,
-            continuationToken: currentToken
+            continuationToken: token
           )
-          guard requestGeneration == generation, !Task.isCancelled else { return }
-          if page.prefixes.isEmpty && page.objects.isEmpty,
-            let continuation = page.nextToken,
-            !seenTokens.contains(continuation)
-          {
+          guard !Task.isCancelled else { return }
+          if let token { seenTokens.insert(token) }
+          let next = page.nextToken.flatMap { seenTokens.contains($0) ? nil : $0 }
+          if page.prefixes.isEmpty, page.objects.isEmpty, let next {
             emptyPages += 1
-            guard emptyPages < 16 else {
-              throw S3Failure(category: .unknown, message: "S3 returned too many empty pages.")
+            if emptyPages < Self.emptyPageLimit {
+              token = next
+              continue
             }
-            currentToken = continuation
-            continue
           }
-          if append {
-            var seenPrefixes = Set(prefixes.map { Array($0.utf8) })
-            prefixes.append(contentsOf: page.prefixes.filter { seenPrefixes.insert(Array($0.utf8)).inserted })
-            var seenObjects = Set(objects.map(\.id))
-            objects.append(contentsOf: page.objects.filter { seenObjects.insert($0.id).inserted })
-          } else {
-            self.location = location
-            prefixes = page.prefixes
-            objects = page.objects
-          }
-          nextToken = page.nextToken.flatMap { seenTokens.contains($0) ? nil : $0 }
+          if !append { show(location) }
+          prefixes.append(contentsOf: page.prefixes.filter { seenPrefixes.insert(Array($0.utf8)).inserted })
+          objects.append(contentsOf: page.objects.filter { seenObjects.insert($0.id).inserted })
+          nextToken = next
           isLoading = false
           return
         }
       } catch {
-        guard requestGeneration == generation, !Task.isCancelled else { return }
-        if !append {
-          self.location = location
-          prefixes = []
-          objects = []
-          nextToken = nil
-        }
-        failure = Self.failure(for: error)
+        guard !Task.isCancelled else { return }
+        if !append { show(location) }
+        failure = error as? S3Failure ?? S3Failure(category: .unknown, message: "S3 request failed.")
         isLoading = false
       }
     }
-  }
-
-  private static func failure(for error: Error) -> S3Failure {
-    if let failure = error as? S3Failure { return failure }
-    return S3Failure(category: .unknown, message: "S3 request failed.")
   }
 }

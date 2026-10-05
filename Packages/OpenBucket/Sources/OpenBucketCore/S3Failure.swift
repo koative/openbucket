@@ -1,14 +1,18 @@
 import Foundation
 
 public struct S3Failure: Error, Equatable, Sendable {
-  public enum Category: String, Sendable {
+  public enum Category: Sendable {
     case network
     case tls
+    case timeout
     case authentication
-    case regionOrEndpoint
     case authorization
+    case regionOrEndpoint
+    case notFound
+    case service
     case unsupportedOperation
     case missingCredentials
+    case localFile
     case unknown
   }
 

@@ -10,9 +10,9 @@ let package = Package(
     .library(name: "OpenBucketS3", targets: ["OpenBucketS3"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/swift-server/async-http-client.git", exact: "1.36.1"),
-    .package(url: "https://github.com/soto-project/soto.git", exact: "7.15.0"),
-    .package(url: "https://github.com/soto-project/soto-core.git", exact: "7.15.0"),
+    .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.36.2"),
+    .package(url: "https://github.com/soto-project/soto.git", from: "7.17.0"),
+    .package(url: "https://github.com/soto-project/soto-core.git", from: "7.17.0"),
   ],
   targets: [
     .target(name: "OpenBucketCore"),

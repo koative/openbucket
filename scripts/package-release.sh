@@ -7,6 +7,14 @@ if [[ ! $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   exit 2
 fi
 
+root=$(cd "$(dirname "$0")/.." && pwd)
+project_version=$(/usr/bin/sed -n 's/^[[:space:]]*MARKETING_VERSION:[[:space:]]*//p' "$root/project.yml")
+project_version=${project_version//\"/}
+if [[ $project_version != "$version" ]]; then
+  echo "project.yml has MARKETING_VERSION ${project_version:-<missing>}; set it to $version and regenerate the project first." >&2
+  exit 1
+fi
+
 : "${OPENBUCKET_SIGNING_IDENTITY:?Set OPENBUCKET_SIGNING_IDENTITY to your Developer ID Application SHA-1 fingerprint}"
 : "${OPENBUCKET_TEAM_ID:?Set OPENBUCKET_TEAM_ID to your Apple Developer team ID}"
 : "${OPENBUCKET_NOTARY_PROFILE:?Set OPENBUCKET_NOTARY_PROFILE to a notarytool Keychain profile}"
@@ -22,7 +30,6 @@ if [[ $identity_record != *'"Developer ID Application:'* ]]; then
   exit 1
 fi
 
-root=$(cd "$(dirname "$0")/.." && pwd)
 if [[ -n $(git -C "$root" status --porcelain) ]]; then
   echo "Commit or discard local changes before packaging a release." >&2
   exit 1
@@ -48,7 +55,7 @@ xcodebuild archive \
   -destination 'generic/platform=macOS' \
   -derivedDataPath "$root/DerivedData/Release" \
   -archivePath "$work/OpenBucket.xcarchive" \
-  MARKETING_VERSION="$version" \
+  -disableAutomaticPackageResolution \
   CODE_SIGNING_ALLOWED=YES \
   CODE_SIGN_STYLE=Manual \
   CODE_SIGN_IDENTITY="$OPENBUCKET_SIGNING_IDENTITY" \
@@ -66,6 +73,15 @@ fi
 actual_version=$(/usr/bin/plutil -extract CFBundleShortVersionString raw -o - "$app/Contents/Info.plist")
 if [[ $actual_version != "$version" ]]; then
   echo "Archive version $actual_version does not match requested version $version." >&2
+  exit 1
+fi
+
+build_number=$(/usr/bin/plutil -extract CFBundleVersion raw -o - "$app/Contents/Info.plist")
+echo "Archived OpenBucket $actual_version (build $build_number)."
+
+archs=" $(/usr/bin/lipo -archs "$app/Contents/MacOS/OpenBucket") "
+if [[ $archs != *" arm64 "* || $archs != *" x86_64 "* ]]; then
+  echo "The archived app is not universal (architectures:$archs); expected arm64 and x86_64." >&2
   exit 1
 fi
 

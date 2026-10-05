@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 
 @testable import OpenBucket
@@ -17,4 +18,22 @@ import Testing
   #expect(!name.contains(":"))
   #expect(!name.contains("\\"))
   #expect(!name.contains("\n"))
+}
+
+@Test(arguments: ["a/../\u{301}x.png", "a/..", "a/.", "photos/", "/\u{301}", "../\u{301}..\u{301}/x"])
+func fileNamesAreOneLocalPathComponent(key: String) {
+  var used = Set<String>()
+  let names = [
+    PreviewFileName.from(objectKey: key),
+    BatchDownloadNames.uniqueName(for: key, usedNames: &used),
+    BatchDownloadNames.uniqueName(for: key, usedNames: &used),
+  ]
+
+  for name in names {
+    #expect(!name.unicodeScalars.contains("/"))
+    #expect(!["", ".", ".."].contains(name))
+    let directory = URL(fileURLWithPath: "/openbucket-export", isDirectory: true)
+    let parent = directory.appendingPathComponent(name).standardizedFileURL.deletingLastPathComponent()
+    #expect(parent.path == directory.path)
+  }
 }

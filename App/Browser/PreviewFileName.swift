@@ -1,33 +1,30 @@
 import Foundation
 
 enum PreviewFileName {
-  static func from(objectKey: String) -> String {
-    let component = String(objectKey.split(separator: "/").last ?? "object")
-    let safe = String(
-      component.filter { character in
-        character != ":" && character != "\\" && !character.isNewline
-          && !character.unicodeScalars.contains { CharacterSet.controlCharacters.contains($0) }
-      })
-    let extensionStart = safe.lastIndex(of: ".")
-    let extensionText = extensionStart.map { String(safe[safe.index(after: $0)...]) } ?? ""
-    let hasExtension =
-      !extensionText.isEmpty && extensionText.utf8.count <= 16
-      && extensionText.unicodeScalars.allSatisfy {
-        $0.value < 128 && CharacterSet.alphanumerics.contains($0)
-      }
-    let suffix = hasExtension ? ".\(extensionText)" : ""
-    let stem: String
-    if hasExtension, let extensionStart {
-      stem = String(safe[..<extensionStart])
-    } else {
-      stem = safe
+  /// One safe local path component for the last segment of `objectKey`, at most 120 UTF-8 bytes.
+  /// `suffix` (e.g. " (2)") goes before the extension and counts toward the same budget.
+  static func from(objectKey: String, suffix: String = "") -> String {
+    // Unicode scalars, not Characters: a "/" fused with a combining mark is still a path separator.
+    let key = objectKey.unicodeScalars
+    let lastSegment = key[(key.lastIndex(of: "/").map(key.index(after:)) ?? key.startIndex)...]
+    let scalars: [Unicode.Scalar] = lastSegment.filter {
+      $0 != ":" && $0 != "\\" && !CharacterSet.controlCharacters.contains($0)
+        && !CharacterSet.newlines.contains($0)
     }
-    let byteLimit = 120 - suffix.utf8.count
+    let extensionScalars = scalars.lastIndex(of: ".").map { scalars[($0 + 1)...] } ?? []
+    let hasExtension =
+      !extensionScalars.isEmpty && extensionScalars.count <= 16
+      && extensionScalars.allSatisfy { $0.isASCII && CharacterSet.alphanumerics.contains($0) }
+    let fileExtension = hasExtension ? "." + String(String.UnicodeScalarView(extensionScalars)) : ""
+    let stem = String(
+      String.UnicodeScalarView(scalars.dropLast(hasExtension ? extensionScalars.count + 1 : 0)))
+    let byteLimit = 120 - suffix.utf8.count - fileExtension.utf8.count
     var shortened = ""
     for character in stem {
-      guard shortened.utf8.count + String(character).utf8.count <= byteLimit else { break }
+      guard shortened.utf8.count + character.utf8.count <= byteLimit else { break }
       shortened.append(character)
     }
-    return (shortened.isEmpty || shortened == "." || shortened == ".." ? "object" : shortened) + suffix
+    let safeStem = shortened.isEmpty || shortened == "." || shortened == ".." ? "object" : shortened
+    return safeStem + suffix + fileExtension
   }
 }

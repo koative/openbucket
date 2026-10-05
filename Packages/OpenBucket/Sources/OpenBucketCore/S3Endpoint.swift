@@ -15,6 +15,12 @@ public struct S3Endpoint: Codable, Hashable, Sendable {
 
   public var url: URL { URL(string: absoluteString)! }
 
+  /// True for `amazonaws.com` / `amazonaws.com.cn` hosts and their subdomains.
+  public var isAmazon: Bool {
+    guard let host = url.host()?.lowercased() else { return false }
+    return ["amazonaws.com", "amazonaws.com.cn"].contains { host == $0 || host.hasSuffix("." + $0) }
+  }
+
   public init(_ value: String) throws {
     guard let components = URLComponents(string: value), let url = components.url else {
       throw ValidationError.invalidURL

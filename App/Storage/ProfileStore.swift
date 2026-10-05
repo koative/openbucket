@@ -2,6 +2,11 @@ import Darwin
 import Foundation
 import OpenBucketCore
 
+/// profiles.json existed but couldn't be decoded; it was moved aside to `backupName` in the same directory.
+struct UnreadableProfilesError: Error {
+  let backupName: String
+}
+
 actor ProfileStore {
   private let fileURL: URL
 
@@ -12,7 +17,17 @@ actor ProfileStore {
   func load() throws -> [ConnectionProfile] {
     guard FileManager.default.fileExists(atPath: fileURL.path) else { return [] }
     let data = try Data(contentsOf: fileURL)
-    return try JSONDecoder().decode([ConnectionProfile].self, from: data)
+    do {
+      return try JSONDecoder().decode([ConnectionProfile].self, from: data)
+    } catch {
+      let formatter = DateFormatter()
+      formatter.locale = Locale(identifier: "en_US_POSIX")
+      formatter.dateFormat = "yyyyMMdd-HHmmss"
+      let backupName = "profiles.unreadable-\(formatter.string(from: Date())).json"
+      try FileManager.default.moveItem(
+        at: fileURL, to: fileURL.deletingLastPathComponent().appendingPathComponent(backupName))
+      throw UnreadableProfilesError(backupName: backupName)
+    }
   }
 
   func save(_ profiles: [ConnectionProfile]) throws {
