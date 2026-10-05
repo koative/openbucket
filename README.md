@@ -6,9 +6,9 @@
 
 **A native S3 browser for macOS. Browse, preview, share, and manage the objects in your buckets.**
 
-<a href="https://github.com/raelsei/openbucket/releases/latest/download/OpenBucket-macOS.dmg"><img src="https://img.shields.io/badge/Download_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white" height="40" alt="Download OpenBucket for macOS"></a>
+<a href="https://github.com/koative/openbucket/releases/latest/download/OpenBucket-macOS.dmg"><img src="https://img.shields.io/badge/Download_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white" height="40" alt="Download OpenBucket for macOS"></a>
 
-![Latest release](https://img.shields.io/github/v/release/raelsei/openbucket?label=latest&color=18181b)
+![Latest release](https://img.shields.io/github/v/release/koative/openbucket?label=latest&color=18181b)
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-18181b?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-f05138?logo=swift&logoColor=white)
 ![MIT license](https://img.shields.io/badge/license-MIT-8b8bd4)
@@ -19,7 +19,7 @@ OpenBucket is an early macOS app for Amazon S3 and S3-compatible object stores. 
 
 ## Download
 
-Use the **Download for macOS** button above: it always fetches the newest signed and notarized `OpenBucket-macOS.dmg` from [GitHub Releases](https://github.com/raelsei/openbucket/releases/latest). Open the DMG, drag OpenBucket to Applications, and launch it from there. OpenBucket runs on Apple silicon and Intel Macs with macOS 26 or later; every release lists its changes and a SHA-256 checksum. See [how releases are prepared](docs/RELEASING.md).
+Use the **Download for macOS** button above: it always fetches the newest signed and notarized `OpenBucket-macOS.dmg` from [GitHub Releases](https://github.com/koative/openbucket/releases/latest). Open the DMG, drag OpenBucket to Applications, and launch it from there. OpenBucket runs on Apple silicon and Intel Macs with macOS 26 or later; every release lists its changes and a SHA-256 checksum. See [how releases are prepared](docs/RELEASING.md).
 
 ## See it in action
 

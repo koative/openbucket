@@ -1,6 +1,6 @@
 # Releasing OpenBucket for macOS
 
-Users download the app from [GitHub Releases](https://github.com/raelsei/openbucket/releases). Each published release has a version tag, release notes, a DMG named `OpenBucket-macOS.dmg`, and a matching `.sha256` file. Because the name never changes, `https://github.com/raelsei/openbucket/releases/latest/download/OpenBucket-macOS.dmg` (the README's download button) always downloads the newest release. The DMG contains a universal Apple silicon and Intel `OpenBucket.app` and an Applications shortcut. GitHub's source archives are for developers; they are not the app installer.
+Users download the app from [GitHub Releases](https://github.com/koative/openbucket/releases). Each published release has a version tag, release notes, a DMG named `OpenBucket-macOS.dmg`, and a matching `.sha256` file. Because the name never changes, `https://github.com/koative/openbucket/releases/latest/download/OpenBucket-macOS.dmg` (the README's download button) always downloads the newest release. The DMG contains a universal Apple silicon and Intel `OpenBucket.app` and an Applications shortcut. GitHub's source archives are for developers; they are not the app installer.
 
 Publish only after the DMG is signed with Developer ID, accepted by Apple's notary service, stapled, and tested from the downloaded file. [Apple's direct-distribution guidance](https://developer.apple.com/documentation/technologyoverviews/distribution) explains why this matters for Gatekeeper.
 
@@ -55,6 +55,6 @@ The project disables signing for ordinary local and CI builds. The release scrip
      --notes-file "docs/releases/v$VERSION.md"
    ```
 
-6. Review the draft's assets, notes, and download on GitHub, then publish it. The stable link for users is `https://github.com/raelsei/openbucket/releases/latest`.
+6. Review the draft's assets, notes, and download on GitHub, then publish it. The stable link for users is `https://github.com/koative/openbucket/releases/latest`.
 
 Do not reuse a version tag for different app bits. Fixes after publishing get a new version and a new tag.
