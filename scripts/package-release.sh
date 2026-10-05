@@ -35,8 +35,9 @@ if [[ -n $(git -C "$root" status --porcelain) ]]; then
   exit 1
 fi
 
-distribution="$root/dist"
-filename="OpenBucket-v${version}-macOS.dmg"
+# The DMG keeps one name across releases, so releases/latest/download/OpenBucket-macOS.dmg is a stable link.
+distribution="$root/dist/v$version"
+filename="OpenBucket-macOS.dmg"
 destination="$distribution/$filename"
 
 mkdir -p "$distribution"

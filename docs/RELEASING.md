@@ -1,6 +1,6 @@
 # Releasing OpenBucket for macOS
 
-Users download the app from [GitHub Releases](https://github.com/raelsei/openbucket/releases). Each published release has a version tag, release notes, a versioned DMG, and a matching `.sha256` file. The DMG contains a universal Apple silicon and Intel `OpenBucket.app` and an Applications shortcut. GitHub's source archives are for developers; they are not the app installer.
+Users download the app from [GitHub Releases](https://github.com/raelsei/openbucket/releases). Each published release has a version tag, release notes, a DMG named `OpenBucket-macOS.dmg`, and a matching `.sha256` file. Because the name never changes, `https://github.com/raelsei/openbucket/releases/latest/download/OpenBucket-macOS.dmg` (the README's download button) always downloads the newest release. The DMG contains a universal Apple silicon and Intel `OpenBucket.app` and an Applications shortcut. GitHub's source archives are for developers; they are not the app installer.
 
 Publish only after the DMG is signed with Developer ID, accepted by Apple's notary service, stapled, and tested from the downloaded file. [Apple's direct-distribution guidance](https://developer.apple.com/documentation/technologyoverviews/distribution) explains why this matters for Gatekeeper.
 
@@ -34,22 +34,22 @@ The project disables signing for ordinary local and CI builds. The release scrip
 3. Build and notarize the DMG:
 
    ```sh
-   VERSION=0.1.1
+   VERSION=0.2.0
    scripts/package-release.sh "$VERSION"
    ```
 
-   The script refuses to run when the version you pass differs from `MARKETING_VERSION` in `project.yml`, and it refuses to put an unnotarized image in `dist/`. It prints the archived version and build number, checks that the app is a universal binary containing both `arm64` and `x86_64`, verifies the app signature, waits for notarization to be accepted, staples the ticket to the DMG, verifies the DMG, and writes its SHA-256 checksum. `dist/` is ignored by Git.
+   The script refuses to run when the version you pass differs from `MARKETING_VERSION` in `project.yml`, and it refuses to put an unnotarized image in `dist/`. It prints the archived version and build number, checks that the app is a universal binary containing both `arm64` and `x86_64`, verifies the app signature, waits for notarization to be accepted, staples the ticket to the DMG, verifies the DMG, and writes it with its SHA-256 checksum to `dist/vVERSION/`. `dist/` is ignored by Git.
 
 4. Mount the DMG and test the app after copying it to Applications. Check a fresh connection, a known bucket and starting folder, a media thumbnail, a single and a batch download, and first launch from a downloaded copy. On a disposable bucket with **Allow changes** on, also check an upload, a drag-to-move, a delete and Update Mac in Compare with Local Folder. Test on another Mac when possible.
 5. Tag the exact tested commit and create a **draft** GitHub release:
 
    ```sh
-   VERSION=0.1.1
+   VERSION=0.2.0
    git tag -a "v$VERSION" -m "OpenBucket v$VERSION"
    git push origin "v$VERSION"
    gh release create "v$VERSION" \
-     "dist/OpenBucket-v$VERSION-macOS.dmg" \
-     "dist/OpenBucket-v$VERSION-macOS.dmg.sha256" \
+     "dist/v$VERSION/OpenBucket-macOS.dmg" \
+     "dist/v$VERSION/OpenBucket-macOS.dmg.sha256" \
      --draft --verify-tag \
      --title "OpenBucket v$VERSION" \
      --notes-file "docs/releases/v$VERSION.md"

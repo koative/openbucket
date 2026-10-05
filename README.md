@@ -6,9 +6,11 @@
 
 **A native S3 browser for macOS. Browse, preview, share, and manage the objects in your buckets.**
 
+<a href="https://github.com/raelsei/openbucket/releases/latest/download/OpenBucket-macOS.dmg"><img src="https://img.shields.io/badge/Download_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white" height="40" alt="Download OpenBucket for macOS"></a>
+
+![Latest release](https://img.shields.io/github/v/release/raelsei/openbucket?label=latest&color=18181b)
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-18181b?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-f05138?logo=swift&logoColor=white)
-![S3 focused](https://img.shields.io/badge/S3-focused-54b6cb)
 ![MIT license](https://img.shields.io/badge/license-MIT-8b8bd4)
 
 </div>
@@ -17,11 +19,11 @@ OpenBucket is an early macOS app for Amazon S3 and S3-compatible object stores. 
 
 ## Download
 
-Download the latest signed and notarized build from [GitHub Releases](https://github.com/raelsei/openbucket/releases/latest). Open the macOS DMG, drag OpenBucket to Applications, and launch it there. The release includes a SHA-256 checksum; the app supports Apple silicon and Intel Macs running macOS 26 or later. See [how releases are prepared](docs/RELEASING.md).
+Use the **Download for macOS** button above: it always fetches the newest signed and notarized `OpenBucket-macOS.dmg` from [GitHub Releases](https://github.com/raelsei/openbucket/releases/latest). Open the DMG, drag OpenBucket to Applications, and launch it from there. OpenBucket runs on Apple silicon and Intel Macs with macOS 26 or later; every release lists its changes and a SHA-256 checksum. See [how releases are prepared](docs/RELEASING.md).
 
 ## See it in action
 
-The screenshots show a real OpenBucket window connected to a local Garage bucket seeded with the [included demo objects](#demo-data).
+The screenshots show a real OpenBucket window connected to a local Garage bucket with the demo images and video from [`docs/demo-assets`](docs/demo-assets).
 
 ![Grid view of the demo travel folder with image and video thumbnails, a selected photo, and the Info panel with details and photo dimensions](docs/media/browser-grid.jpg)
 
@@ -57,21 +59,6 @@ After installing the app:
 4. Test the connection, save it, and browse. Use the toolbar's location action to jump directly to `s3://bucket/folder/`. To upload or change files, edit the connection and turn on **Allow changes**.
 
 The endpoint URL path and the starting folder are separate. For example, endpoint `https://store.example.com/s3/`, known bucket `photos`, and starting folder `2026/travel/` address objects under the bucket without dropping `/s3/` from the signed request. A proxy must preserve the signed request path. See [endpoint behavior](docs/compatibility.md#endpoint-paths).
-
-## Demo data
-
-The repository includes six small demo objects in [`docs/demo-assets/travel`](docs/demo-assets/travel) and an opt-in [seed script](scripts/seed-demo.sh). It uploads them to a **bucket you specify**, under `openbucket-demo/travel/` by default; set `OPENBUCKET_DEMO_PREFIX` to choose another isolated prefix. The script needs `curl` with SigV4 support and these environment variables:
-
-| Variable | Example or purpose |
-| --- | --- |
-| `OPENBUCKET_DEMO_ENDPOINT` | `http://127.0.0.1:3900` |
-| `OPENBUCKET_DEMO_REGION` | `garage` or your provider's region |
-| `OPENBUCKET_DEMO_BUCKET` | An existing bucket you can write to |
-| `OPENBUCKET_DEMO_ACCESS_KEY` | Access key ID |
-| `OPENBUCKET_DEMO_SECRET_KEY` | Secret access key |
-| `OPENBUCKET_DEMO_PREFIX` | Optional destination prefix |
-
-After setting them in your shell, run `scripts/seed-demo.sh` and open the printed `s3://` location in OpenBucket. The script replaces any objects with the same six names under that prefix, so use a disposable location. Credentials and local profile files are never part of the repository. The README screenshots show these objects under `travel/` in a local Garage bucket.
 
 ## Build and test
 
