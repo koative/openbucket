@@ -1,0 +1,14 @@
+## Fixes
+
+- Rename, Move To, ⌥-copy, metadata and tag edits and version restores keep the object's storage class and server-side encryption (including its KMS key) instead of turning it into a STANDARD object with the bucket's default encryption.
+- Files stored with a gzip or deflate Content-Encoding download byte for byte instead of being unzipped on the way.
+- Redirects from an endpoint are reported as an endpoint or region problem instead of being followed with a request whose signature no longer matches.
+- Thumbnails of empty or very short objects no longer fail on services that answer an out-of-range read without an error body.
+- An endpoint host that doesn't exist, a deleted version and an archived (Glacier) object each get an accurate error message instead of a generic failure.
+- Update Mac in Compare with Local Folder no longer moves a local file to the Trash just because its name differs only in case from a new S3 file, and refuses to write through a folder that is a symbolic link.
+- Uploading or moving several items whose names would collide within the same batch keeps both as “name 2” instead of one overwriting the other.
+- Refreshing after a change while a folder is still loading reloads that folder instead of going back to the previous one.
+- A delete confirmation or metadata editor that finishes loading after you switch connections or folders no longer appears for the new one.
+- New Folder, rename, Move To, delete and metadata prompts and the share sheet close when you leave the folder they were opened in.
+- Compare with Local Folder checks **Allow changes** as currently saved, so turning it off stops Update S3 in an already open window.
+- Quick Look's temporary copy is removed when you quit while a preview is open.
