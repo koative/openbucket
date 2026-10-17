@@ -8,3 +8,13 @@ dist/
 .env.*
 !.env.example
 credentials.env
+
+# Website build output (dist/ above also covers site/dist)
+node_modules/
+.astro/
+
+# Local design exploration and review captures
+.impeccable/questions/
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/direction-options.json

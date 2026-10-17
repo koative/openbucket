@@ -1,0 +1,236 @@
+---
+import Layout from '../layouts/Layout.astro';
+import {
+  ArrowUpRight,
+  Check,
+  Command,
+  Download,
+  Eye,
+  FolderSync,
+  KeyRound,
+  Link,
+  Search,
+  ShieldCheck,
+  SquareDashedMousePointer,
+  Timer,
+} from '@lucide/astro';
+import icon from '../../../App/Resources/Assets.xcassets/AppIcon.appiconset/icon-256.png';
+import grid from '../../../docs/media/browser-grid.jpg';
+import listDetail from '../assets/list-detail.jpg';
+import gridPhone from '../assets/grid-phone.jpg';
+import overviewPhone from '../assets/overview-phone.jpg';
+import overview from '../../../docs/media/storage-overview.jpg';
+
+const repo = 'https://github.com/koative/openbucket';
+const dmg = `${repo}/releases/latest/download/OpenBucket-macOS.dmg`;
+const docs = `${repo}/blob/main/docs`;
+
+// The label shows the newest published release; if GitHub can't be reached at build time
+// it says "Latest release" rather than guessing from an unreleased project.yml.
+let version: string | null = null;
+try {
+  const response = await fetch(`https://api.github.com/repos/koative/openbucket/releases/latest`, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
+    },
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (response.ok) version = ((await response.json()) as { tag_name: string }).tag_name.replace(/^v/, '');
+} catch {}
+const release = version ? `Version ${version}` : 'Latest release';
+
+const native = [
+  { Icon: Eye, title: 'Quick Look', text: 'Press Space or ⌘Y to Quick Look images, video and documents straight from the bucket.' },
+  { Icon: Search, title: 'Spotlight and Shortcuts', text: 'Favorite folders show up in Spotlight. App Intents open locations and copy share links.' },
+  { Icon: Link, title: 's3:// links', text: 'Open s3:// links from any app, or paste an S3 console URL into Go to Location.' },
+  { Icon: Command, title: 'Keyboard first', text: '⌘1 and ⌘2 switch grid and list, ⌘↑ goes up a folder, ⌘F finds, ⌥⌘I shows Info.' },
+  { Icon: SquareDashedMousePointer, title: 'Selection you know', text: '⌘A, ⇧-click and ⌘-click in grid and list. Drag files straight out to Finder.' },
+  { Icon: KeyRound, title: 'Keychain', text: 'Access keys and session tokens you enter are stored in your macOS Keychain.' },
+];
+
+const work = [
+  { title: 'Preview', text: 'Image and video thumbnails, inline playback, and an Info panel with headers, metadata, tags and photo EXIF.' },
+  { title: 'Share', text: 'Presigned links that expire after 15 minutes to 7 days, with a QR code for your phone.' },
+  { title: 'Versions', text: 'On versioned buckets: version history for each file, deleted files you can bring back, and Browse As Of any date.' },
+  { title: 'Transfers', text: 'Files, selections and whole folders up and down side by side, with progress and cancel. Large files go in parts.' },
+  { title: 'Storage Overview', text: 'A treemap of any folder by size and kind, its storage classes and its largest files.' },
+  { title: 'Compare with Local Folder', text: 'Check a local copy by size and checksum, then update S3 or your Mac. Nothing is deleted on either side.' },
+];
+
+const providers = [
+  { name: 'Garage 2.4.1', status: 'Tested', note: 'Browsing and the full write round trip pass live tests. The screenshots use it.' },
+  { name: 'Adobe S3Mock', status: 'Tested', note: 'The write round trip passes.' },
+  { name: 'Amazon S3', status: 'Implemented', note: 'Built on Soto; no account-backed live test in the repository yet.' },
+  { name: 'MinIO, RustFS and others', status: 'Not yet tested', note: 'No live result yet.' },
+];
+---
+
+<Layout>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <img class="app-icon" src={icon.src} alt="" width="28" height="28" />
+        OpenBucket
+      </a>
+      <nav aria-label="Sections">
+        <a href="#features">Features</a>
+        <a href="#storage">Compatibility</a>
+        <a href="#security">Security</a>
+        <a href={repo}>GitHub</a>
+      </nav>
+      <a class="pill pill-small" href={dmg}>Download</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <img class="app-icon hero-icon" src={icon.src} alt="OpenBucket app icon" width="112" height="112" />
+      <h1 id="hero-title">Your S3 buckets,<br />right on your Mac.</h1>
+      <p class="lede">
+        OpenBucket is a free, open-source S3 browser, built with SwiftUI, for browsing, previewing, sharing and
+        managing files in Amazon S3 and S3‑compatible storage.
+      </p>
+      <div class="actions">
+        <a class="pill" href={dmg}><Download size={19} stroke-width={2.2} /> Download for macOS</a>
+        <a class="text-link" href={repo}>View on GitHub <ArrowUpRight size={17} /></a>
+      </div>
+      <p class="fine">{release} · macOS 26 or later · Apple silicon and Intel · Signed and notarized</p>
+      <figure class="window hero-window">
+        <picture>
+          <source media="(max-width: 734px)" srcset={gridPhone.src} width={gridPhone.width} height={gridPhone.height} />
+          <img src={grid.src} width={grid.width} height={grid.height} alt="OpenBucket in grid view: thumbnails of a travel folder, with the Info panel showing a selected photo's S3 URI, size, ETag and dimensions." fetchpriority="high" />
+        </picture>
+        <figcaption>A real OpenBucket window, connected to a local Garage bucket of demo files.</figcaption>
+      </figure>
+    </section>
+
+    <section class="band" id="features" aria-labelledby="native-title">
+      <div class="section-head">
+        <h2 id="native-title">Made for the Mac.<br /><span>Not a web console in a window.</span></h2>
+        <p class="lede">OpenBucket uses SwiftUI and the macOS 26 look, and it works with the parts of macOS you already know.</p>
+      </div>
+      <ul class="facts">
+        {native.map(({ Icon, title, text }) => (
+          <li>
+            <Icon size={28} stroke-width={1.7} />
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ul>
+      <figure class="window detail">
+        <img src={listDetail.src} width={listDetail.width} height={listDetail.height} alt="List view up close: name, size, modified and kind columns with a selected photo, and the Info panel's preview, Download and Share buttons." loading="lazy" />
+      </figure>
+    </section>
+
+    <section class="plain" id="storage" aria-labelledby="storage-title">
+      <div class="split">
+        <div>
+          <h2 id="storage-title">Amazon S3, and the S3 storage you run yourself.</h2>
+          <ul class="checks">
+            <li><Check size={18} stroke-width={2.4} />Custom HTTP or HTTPS endpoints, with path-style or virtual-host addressing and your region.</li>
+            <li><Check size={18} stroke-width={2.4} />Access keys with an optional session token, or a named AWS CLI profile, including roles and IAM Identity Center.</li>
+            <li><Check size={18} stroke-width={2.4} />Open a bucket you know even when your key can't list every bucket, and start in any folder.</li>
+          </ul>
+        </div>
+        <div class="status" role="region" aria-labelledby="status-title">
+          <h3 id="status-title">Where it's been tested</h3>
+          <dl>
+            {providers.map(({ name, status, note }) => (
+              <div>
+                <dt>{name}</dt>
+                <dd class:list={['badge', status.toLowerCase().replaceAll(' ', '-')]}>{status}</dd>
+                <dd class="note">{note}</dd>
+              </div>
+            ))}
+          </dl>
+          <a class="text-link" href={`${docs}/compatibility.md`}>Compatibility details <ArrowUpRight size={16} /></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="work-title">
+      <div class="split split-media">
+        <h2 id="work-title">Everything you do with files.<br /><span>Now in your buckets.</span></h2>
+        <div>
+          <dl class="feature-list">
+            {work.map(({ title, text }) => (
+              <div>
+                <dt>{title}</dt>
+                <dd>{text}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <figure class="window">
+          <picture>
+            <source media="(max-width: 734px)" srcset={overviewPhone.src} width={overviewPhone.width} height={overviewPhone.height} />
+            <img class="tall" src={overview.src} width={overview.width} height={overview.height} alt="Storage Overview of the travel folder: a treemap of its files by size and kind, the storage class, and the largest files." loading="lazy" />
+          </picture>
+        </figure>
+      </div>
+    </section>
+
+    <section class="dark" id="security" aria-labelledby="security-title">
+      <ShieldCheck class="dark-mark" size={44} stroke-width={1.5} />
+      <h2 id="security-title">Read-only until you say so.</h2>
+      <p class="lede">
+        Every connection starts read-only. Uploads, moves, renames and deletes appear only after you turn on
+        Allow changes for that connection, and OpenBucket checks the setting again before each change.
+      </p>
+      <ul class="trio">
+        <li>
+          <KeyRound size={26} stroke-width={1.7} />
+          <h3>Keys stay in Keychain</h3>
+          <p>Connection settings hold only a reference to your credentials.</p>
+        </li>
+        <li>
+          <FolderSync size={26} stroke-width={1.7} />
+          <h3>Updates never delete</h3>
+          <p>Compare updates new and changed files only. A replaced file on your Mac goes to the Trash.</p>
+        </li>
+        <li>
+          <Timer size={26} stroke-width={1.7} />
+          <h3>Links expire</h3>
+          <p>Share links are signed on your Mac and stop working after the time you choose.</p>
+        </li>
+      </ul>
+      <a class="text-link" href={`${docs}/security.md`}>How OpenBucket handles your data <ArrowUpRight size={16} /></a>
+    </section>
+
+    <section class="plain open" aria-labelledby="open-title">
+      <h2 id="open-title">Free and open source.</h2>
+      <p class="lede">
+        OpenBucket is MIT-licensed and built in the open with Swift 6, SwiftUI and Soto. Every release is signed
+        with a Developer ID, notarized by Apple, and published with its SHA-256 checksum.
+      </p>
+      <div class="actions">
+        <a class="text-link" href={repo}>Source code <ArrowUpRight size={17} /></a>
+        <a class="text-link" href={`${repo}/releases`}>Release notes <ArrowUpRight size={17} /></a>
+        <a class="text-link" href={`${repo}/blob/main/CONTRIBUTING.md`}>Contribute <ArrowUpRight size={17} /></a>
+      </div>
+    </section>
+
+    <section class="get" aria-labelledby="get-title">
+      <img class="app-icon" src={icon.src} alt="" width="96" height="96" loading="lazy" />
+      <h2 id="get-title">Get OpenBucket.</h2>
+      <a class="pill" href={dmg}><Download size={19} stroke-width={2.2} /> Download for macOS</a>
+      <p class="fine">{release} · macOS 26 or later · An early release: please report what breaks on GitHub.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>OpenBucket is made by <a href="https://github.com/koative">Koative</a> and released under the MIT license.</p>
+      <nav aria-label="Footer">
+        <a href={repo}>GitHub</a>
+        <a href={`${repo}/releases`}>Releases</a>
+        <a href={`${docs}/compatibility.md`}>Compatibility</a>
+        <a href={`${docs}/security.md`}>Security</a>
+        <a href="https://maco.koative.com/">More open-source Mac apps</a>
+      </nav>
+      <p class="legal">Amazon S3 is a trademark of Amazon.com, Inc. Mac and macOS are trademarks of Apple Inc. OpenBucket is not affiliated with Amazon or Apple.</p>
+    </div>
+  </footer>
+</Layout>

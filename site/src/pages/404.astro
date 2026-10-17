@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+import icon from '../../../App/Resources/Assets.xcassets/AppIcon.appiconset/icon-256.png';
+---
+
+<Layout title="Page not found — OpenBucket" noindex>
+  <main id="main" class="get not-found">
+    <img class="app-icon" src={icon.src} alt="" width="96" height="96" />
+    <h1>This page isn't here.</h1>
+    <p class="lede">The link may be broken, or the page may have moved.</p>
+    <a class="pill" href="/">Go to OpenBucket</a>
+  </main>
+</Layout>
