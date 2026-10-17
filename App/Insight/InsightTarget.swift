@@ -20,4 +20,12 @@ extension AppModel {
     return DownloadSource(
       profile: profile, bucket: target.location.bucket, credentials: try await credentials(for: profile))
   }
+
+  /// `source` with the target's connection settings as saved now, nil once it was deleted. Syncs use it, so
+  /// turning off Allow changes stops writes from windows that connected before.
+  func current(_ source: DownloadSource, for target: InsightTarget) -> DownloadSource? {
+    profiles.first { $0.id == target.profileID }.map {
+      DownloadSource(profile: $0, bucket: source.bucket, credentials: source.credentials)
+    }
+  }
 }

@@ -8,8 +8,8 @@ import Testing
 /// AWS profiles resolve to `testCredentials` expiring `credentialLifetime` after each resolution; versions
 /// and details are unsupported. With `keys`, `listAllObjects` serves those (size 1) and writes update them;
 /// uploads and copies of keys ending in "bad.txt" fail, deletes of keys ending in "locked.txt" are refused. With
-/// `delay`, downloads, uploads, copies and deletes take that long (cancellable), so parallel calls overlap and
-/// `inFlight`/`maxInFlight` count them.
+/// `delay`, downloads, uploads, copies, deletes and versioning reads take that long (cancellable), so parallel
+/// calls overlap and `inFlight`/`maxInFlight` count them.
 actor StubRepository: S3Repository {
   struct Download: Sendable {
     let profileID: UUID
@@ -165,8 +165,11 @@ actor StubRepository: S3Repository {
   }
 
   func bucketVersioning(profile: ConnectionProfile, credentials: S3Credentials, bucket: String)
-    -> BucketVersioning
-  { .enabled }
+    async throws -> BucketVersioning
+  {
+    try await pause()
+    return .enabled
+  }
 
   func uploadFile(
     profile: ConnectionProfile, credentials: S3Credentials, bucket: String, key: String, from source: URL,

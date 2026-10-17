@@ -456,7 +456,7 @@ struct BackupVerifyView: View {
       FolderSync.plan(
         $0, entries: verification.entries, location: location, localFolder: verification.localFolder)
     }
-    let canWrite = source?.profile.allowsChanges == true
+    let canWrite = source.flatMap { model.current($0, for: target) }?.profile.allowsChanges == true
     if !plans[0].items.isEmpty {
       Button("Update S3…") { requestSync(plans[0]) }
         .disabled(!canWrite)
@@ -529,7 +529,7 @@ struct BackupVerifyView: View {
   }
 
   private func runSync(_ plan: FolderSync.Plan) {
-    guard let source, !isRunning else { return }
+    guard let source = source.flatMap({ model.current($0, for: target) }), !isRunning else { return }
     let sync = FolderSync(plan: plan, repository: model.repository, source: source)
     self.sync = sync
     sync.start()

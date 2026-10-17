@@ -26,6 +26,8 @@ final class AppModel {
   @ObservationIgnored private let credentialStore: any CredentialStore
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private var connectionTask: Task<Void, Never>?
+  /// The location last asked for, which `browser.location` becomes only once its first page has loaded.
+  @ObservationIgnored private var requestedLocation: S3Location?
   /// Re-resolves temporary credentials shortly before they expire; see `adopt(_:)`.
   @ObservationIgnored private var credentialRefreshTask: Task<Void, Never>?
   /// Temporary credentials are re-resolved this many seconds before they expire.
@@ -159,12 +161,14 @@ final class AppModel {
     if let profile = selectedProfile, let bucket = profile.knownBucket, !bucket.isEmpty,
       let start = try? S3Location(bucket: bucket, prefix: profile.startingPrefix)
     {
+      requestedLocation = start
       record(start)
     }
   }
 
   func open(_ location: S3Location) {
     guard selectedProfile != nil else { return }
+    requestedLocation = location
     record(location)
     connect { profile, credentials in
       self.browser.navigate(profile: profile, credentials: credentials, to: location)
@@ -177,6 +181,7 @@ final class AppModel {
     guard id != selectedProfileID else { return open(location) }
     resetSelection(id)
     guard selectedProfile != nil else { return }
+    requestedLocation = location
     record(location)
     connect { profile, credentials in
       if (profile.knownBucket ?? "").isEmpty {
@@ -285,6 +290,7 @@ final class AppModel {
     credentialRefreshTask?.cancel()
     credentialRefreshTask = nil
     selectedProfileID = id
+    requestedLocation = nil
     selectedCredentials = nil
     buckets = []
     let stored = id.flatMap { defaults.stringArray(forKey: Self.recentsKey($0)) } ?? []
@@ -356,7 +362,12 @@ final class AppModel {
       Task { await loadProfiles() }
       return
     }
-    if let location = browser.location { open(location) } else { selectProfile(selectedProfileID) }
+    // The folder still loading, not the one it replaces: a write finishing mid-navigation mustn't go back.
+    if let location = requestedLocation ?? browser.location {
+      open(location)
+    } else {
+      selectProfile(selectedProfileID)
+    }
   }
 
   func loadNextPage() {

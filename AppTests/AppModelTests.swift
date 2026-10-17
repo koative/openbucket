@@ -380,3 +380,44 @@ func expiringCredentialsResolveAgainOnRefresh(expiresIn: TimeInterval, resolutio
   #expect(model.selectedProfileID == any.id)
   #expect(model.buckets == ["a", "b"])
 }
+
+@MainActor
+@Test func refreshWhileAFolderLoadsReloadsThatFolderNotTheOneShown() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let model = await makeModel(in: directory)
+  try await model.save(try garageProfile(bucket: "bucket"), credentials: testCredentials)
+  let root = try S3Location(bucket: "bucket")
+  try await waitUntil { !model.isConnecting && model.browser.location == root && !model.browser.isLoading }
+
+  // A finished write refreshes; it must not cancel the navigation and go back to the folder shown.
+  let photos = try S3Location(bucket: "bucket", prefix: "photos/")
+  model.open(photos)
+  #expect(model.browser.location == root)
+  model.refresh()
+  try await waitUntil { !model.isConnecting && !model.browser.isLoading }
+
+  #expect(model.browser.location == photos)
+}
+
+@MainActor
+@Test func compareWindowSyncsUseTheConnectionAsSavedNow() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let model = await makeModel(in: directory)
+  var profile = try garageProfile(bucket: "bucket")
+  profile.allowsChanges = true
+  try await model.save(profile, credentials: testCredentials)
+  let target = InsightTarget(profileID: profile.id, location: try S3Location(bucket: "bucket"))
+  let opened = try await model.downloadSource(for: target)
+  #expect(model.current(opened, for: target)?.profile.allowsChanges == true)
+
+  profile.allowsChanges = false
+  try await model.save(profile, credentials: testCredentials)
+  let current = try #require(model.current(opened, for: target))
+  #expect(!current.profile.allowsChanges)
+  #expect(current.bucket == "bucket")
+
+  try await model.delete(profile)
+  #expect(model.current(opened, for: target) == nil)
+}

@@ -240,6 +240,12 @@ final class BrowserController {
 
   init(model: AppModel) {
     self.model = model
+    // Quitting doesn't close the Quick Look panel, so its temporary copy would outlive the app.
+    NotificationCenter.default.addObserver(
+      forName: NSApplication.willTerminateNotification, object: nil, queue: .main
+    ) { [weak self] _ in
+      MainActor.assumeIsolated { self?.previewURL = nil }
+    }
   }
 
   var isSheetPresented: Bool {
@@ -458,6 +464,13 @@ final class BrowserController {
     previewFailure = nil
     searchText = ""
     revealedID = nil
+    // Their items, folders and links belong to the location (and connection) being left.
+    newFolderParent = nil
+    renameTarget = nil
+    moveTarget = nil
+    deleteConfirmation = nil
+    metadataTarget = nil
+    shareTarget = nil
     loadHistory()
   }
 
@@ -863,6 +876,9 @@ final class BrowserController {
     return source
   }
 
+  /// Connection and folder a write prompt was asked for; an answer arriving after either changed is dropped.
+  private var writeContext: (UUID?, S3Location?) { (model.selectedProfileID, model.browser.location) }
+
   private func changes(_ source: AppModel.DownloadSource) -> ObjectChanges {
     ObjectChanges(repository: model.repository, source: source)
   }
@@ -1048,10 +1064,11 @@ final class BrowserController {
     let rows = listedRows(for: ids)
     guard canModify, !rows.isEmpty, let source = writeSource() else { return }
     let title = rows.count == 1 ? "Delete “\(rows[0].name)”?" : "Delete \(rows.count.formatted()) items?"
+    let context = writeContext
     Task {
       let versioning = try? await model.repository.bucketVersioning(
         profile: source.profile, credentials: source.credentials, bucket: source.bucket)
-      guard canModify else { return }
+      guard canModify, writeContext == context else { return }
       deleteConfirmation = DeleteConfirmation(ids: Set(rows.map(\.id)), title: title, versioning: versioning)
     }
   }
@@ -1118,11 +1135,13 @@ final class BrowserController {
   /// Loads the object's headers and tags, then opens `metadataTarget`.
   func requestEditMetadata(_ object: ObjectSummary) {
     guard canModify, let source = writeSource() else { return }
+    let context = writeContext
     Task {
       do {
         let details = try await model.repository.objectDetails(
           profile: source.profile, credentials: source.credentials, bucket: source.bucket, key: object.key,
           versionID: nil)
+        guard writeContext == context else { return }
         metadataTarget = MetadataTarget(object: object, headers: ObjectHeaders(details), tags: details.tags)
       } catch {
         showFailure(

@@ -157,3 +157,70 @@ private func dropped(_ provider: NSItemProvider) async throws -> BrowserDrop {
   }
   #expect(url.standardizedFileURL == file.standardizedFileURL)
 }
+
+/// A browser on `repository`, connected to "test-bucket" with a profile that allows changes.
+@MainActor
+private func writableBrowser(_ repository: StubRepository, in directory: URL) async throws
+  -> BrowserController
+{
+  try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+  let model = AppModel(
+    repository: repository,
+    profileStore: ProfileStore(fileURL: directory.appendingPathComponent("profiles.json")),
+    credentialStore: MemoryCredentialStore(), defaults: scratchDefaults())
+  await model.loadProfiles()
+  var profile = try garageProfile(bucket: "test-bucket")
+  profile.allowsChanges = true
+  try await model.save(profile, credentials: testCredentials)
+  try await waitUntil { model.downloadSource() != nil && !model.isConnecting }
+  return BrowserController(model: model)
+}
+
+@MainActor
+@Test func deleteConfirmationArrivingAfterAConnectionSwitchIsDropped() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let repository = StubRepository(keys: ["first.txt"], delay: .milliseconds(500))
+  let browser = try await writableBrowser(repository, in: directory)
+
+  browser.requestDelete([fileID("first.txt")])
+  try await waitUntil { browser.deleteConfirmation != nil }
+  browser.deleteConfirmation = nil
+
+  // While the versioning read is out, switch to another connection with a bucket of the same name (staging and
+  // production, say): confirming the old prompt would delete the same key there.
+  browser.requestDelete([fileID("first.txt")])
+  var other = try garageProfile("Other", bucket: "test-bucket")
+  other.allowsChanges = true
+  try await browser.model.save(other, credentials: testCredentials)
+  try await waitUntil {
+    browser.model.downloadSource()?.profile.id == other.id && !browser.model.isConnecting
+  }
+  #expect(await repository.inFlight == 1)
+  try await waitUntil { await repository.inFlight == 0 }
+  try await Task.sleep(for: .milliseconds(100))
+
+  #expect(browser.deleteConfirmation == nil)
+}
+
+@MainActor
+@Test func leavingAFolderDismissesItsWritePromptsAndShareSheet() async throws {
+  let directory = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: directory) }
+  let browser = try await writableBrowser(StubRepository(keys: ["first.txt"]), in: directory)
+  let location = try #require(browser.model.browser.location)
+  let id = fileID("first.txt")
+  let object = ObjectSummary(key: "first.txt", size: 1, lastModified: nil, eTag: nil)
+
+  browser.newFolderParent = location
+  browser.renameTarget = RenameTarget(id: id, name: "first.txt", isFolder: false)
+  browser.moveTarget = MoveTarget(ids: [id], names: ["first.txt"])
+  browser.deleteConfirmation = DeleteConfirmation(ids: [id], title: "Delete “first.txt”?", versioning: nil)
+  browser.metadataTarget = MetadataTarget(object: object, headers: ObjectHeaders(), tags: nil)
+  browser.shareTarget = ShareTarget(object: object, versionID: nil)
+  #expect(browser.isSheetPresented)
+
+  browser.locationChanged(to: try S3Location(bucket: "test-bucket", prefix: "other/"))
+
+  #expect(!browser.isSheetPresented)
+}
