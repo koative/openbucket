@@ -21,10 +21,11 @@ Changes are sent only for connections with **Allow changes** turned on. They use
 | --- | --- |
 | Upload | `PutObject` up to 16 MiB; above that `CreateMultipartUpload`, `UploadPart` (parts of at least 16 MiB, at most 10,000 parts) and `CompleteMultipartUpload`, or `AbortMultipartUpload` after a failure or cancel. Content-Type comes from the file extension |
 | New Folder | `PutObject` of an empty `folder/` marker |
-| Rename, Move To, drag to a folder | `CopyObject` (multipart `UploadPartCopy` above 5 GiB) then `DeleteObjects` for each copied source; a source whose copy failed is kept. ⌥-drop copies without the delete |
+| Rename, Move To, drag to a folder | `HeadObject` and `CopyObject` (multipart `UploadPartCopy` above 5 GiB) then `DeleteObjects` for each copied source; a source whose copy failed is kept. ⌥-drop copies without the delete |
 | Delete | `DeleteObjects` in batches of 1,000 without version IDs, so versioned buckets keep the data behind a delete marker |
 | Restore | `CopyObject` of the chosen version onto its own key, which makes it the newest version |
-| Metadata and tags | `CopyObject` onto the same key with replaced headers, then `PutObjectTagging` or `DeleteObjectTagging` when tags changed |
+| Metadata and tags | `HeadObject` and `CopyObject` onto the same key with replaced headers, then `PutObjectTagging` or `DeleteObjectTagging` when tags changed |
+| Every copy above | Keeps the source's tags, storage class and server-side encryption (SSE-S3, or SSE-KMS with its key and Bucket Key setting), read with `HeadObject`. Copies don't carry ACLs, Object Lock retention or legal holds, and objects encrypted with customer-provided keys (SSE-C) can't be copied |
 | Update S3 (Compare window) | Upload as above for files that are new or changed on this Mac; nothing is deleted |
 
 Transfers run side by side, and each works on up to four files (or four `DeleteObjects` batches) at a time.

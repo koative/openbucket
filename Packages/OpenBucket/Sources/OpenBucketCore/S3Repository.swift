@@ -51,6 +51,8 @@ public struct ObjectDetails: Sendable {
   public let eTag: String?
   public let lastModified: Date?
   public let storageClass, serverSideEncryption, kmsKeyID, versionID, restore, replicationStatus: String?
+  /// Whether SSE-KMS uses an S3 Bucket Key; nil when the response didn't say.
+  public let bucketKeyEnabled: Bool?
   public let objectLockMode: String?
   public let objectLockRetainUntil: Date?
   public let legalHold: String?
@@ -63,8 +65,9 @@ public struct ObjectDetails: Sendable {
     contentType: String? = nil, cacheControl: String? = nil, contentEncoding: String? = nil,
     contentDisposition: String? = nil, contentLanguage: String? = nil, contentLength: Int64? = nil,
     eTag: String? = nil, lastModified: Date? = nil, storageClass: String? = nil,
-    serverSideEncryption: String? = nil, kmsKeyID: String? = nil, versionID: String? = nil,
-    restore: String? = nil, replicationStatus: String? = nil, objectLockMode: String? = nil,
+    serverSideEncryption: String? = nil, kmsKeyID: String? = nil, bucketKeyEnabled: Bool? = nil,
+    versionID: String? = nil, restore: String? = nil, replicationStatus: String? = nil,
+    objectLockMode: String? = nil,
     objectLockRetainUntil: Date? = nil, legalHold: String? = nil, metadata: [String: String] = [:],
     tags: [String: String]? = nil
   ) {
@@ -79,6 +82,7 @@ public struct ObjectDetails: Sendable {
     self.storageClass = storageClass
     self.serverSideEncryption = serverSideEncryption
     self.kmsKeyID = kmsKeyID
+    self.bucketKeyEnabled = bucketKeyEnabled
     self.versionID = versionID
     self.restore = restore
     self.replicationStatus = replicationStatus
@@ -305,8 +309,10 @@ public protocol S3Repository: Sendable {
     async throws
 
   /// Server-side copy inside `bucket`. `headers == nil` keeps the source's metadata (COPY);
-  /// non-nil replaces it (REPLACE). Tags are kept either way. `size` is the source's size: above 5 GiB the
-  /// copy is multipart. `sourceVersionID` copies that version (restore = copy a version onto its own key).
+  /// non-nil replaces it (REPLACE). Tags, storage class and server-side encryption (SSE-S3 or SSE-KMS key) are
+  /// kept either way, read with a HEAD of the source; ACLs and Object Lock settings are not. `size` is the
+  /// source's size: above 5 GiB the copy is multipart. `sourceVersionID` copies that version (restore = copy a
+  /// version onto its own key).
   func copyObject(
     profile: ConnectionProfile,
     credentials: S3Credentials,

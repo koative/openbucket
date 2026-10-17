@@ -1,5 +1,6 @@
 import AsyncHTTPClient
 import Foundation
+import Network
 import OpenBucketCore
 import SotoCore
 
@@ -30,8 +31,10 @@ enum S3ErrorMapper {
         category: .tls, message: "TLS verification failed. Check the endpoint certificate.",
         technicalDetail: "SDK error: NWTLSError")
     }
-    if error is HTTPClient.NWPOSIXError {
-      return S3Failure(category: .network, message: unreachable, technicalDetail: "SDK error: NWPOSIXError")
+    // DNS failures arrive as Network's own NWError; AsyncHTTPClient only wraps its TLS and POSIX cases.
+    if error is HTTPClient.NWPOSIXError || error is NWError {
+      return S3Failure(
+        category: .network, message: unreachable, technicalDetail: "SDK error: \(type(of: error))")
     }
     if let httpError = error as? HTTPClientError {
       return httpError == .deadlineExceeded
@@ -70,8 +73,10 @@ enum S3ErrorMapper {
         (.authentication, "S3 rejected the request time. Check this Mac's date and time.")
       case "AuthorizationHeaderMalformed", "PermanentRedirect", "IncorrectEndpoint":
         (.regionOrEndpoint, "Check the bucket, region, and endpoint address.")
-      case "NoSuchKey":
+      case "NoSuchKey", "NoSuchVersion":
         (.notFound, objectMissing)
+      case "InvalidObjectState":
+        (.service, "This object is archived. Restore it in S3 before reading or copying it.")
       case "NoSuchUpload":
         (.notFound, "The upload was interrupted on the server. Try again.")
       case "EntityTooLarge":
@@ -90,6 +95,8 @@ enum S3ErrorMapper {
       default:
         switch status ?? 0 {
         case 401, 403: (.authorization, writing ? writeDenied : denied)
+        // Redirects aren't followed (they break the signature); S3 sends a bare 301 for a HEAD in the wrong region.
+        case 300..<400: (.regionOrEndpoint, "Check the bucket, region, and endpoint address.")
         // A bare 404 (Soto reports it as "NotFound") usually means a wrong endpoint path or bucket.
         case 404: (.notFound, "The endpoint returned Not Found. Check the endpoint URL and bucket.")
         case 501: (.unsupportedOperation, unsupported)

@@ -1,5 +1,6 @@
 import AsyncHTTPClient
 import Foundation
+import Network
 import OpenBucketCore
 import SotoCore
 import Testing
@@ -208,6 +209,70 @@ private func temporaryURL() -> URL {
   #expect(failure?.technicalDetail?.contains("missing-folder") == false)
 }
 
+/// A loopback HTTP server that answers every connection with `response`, then closes it.
+private func serve(_ response: String) async throws -> NWListener {
+  let parameters = NWParameters.tcp
+  parameters.requiredLocalEndpoint = .hostPort(host: "127.0.0.1", port: .any)
+  let listener = try NWListener(using: parameters)
+  listener.newConnectionHandler = { connection in
+    connection.start(queue: .global())
+    connection.receive(minimumIncompleteLength: 1, maximumLength: 65_536) { _, _, _, _ in
+      connection.send(
+        content: Data(response.utf8), completion: .contentProcessed { _ in connection.cancel() })
+    }
+  }
+  await withCheckedContinuation { continuation in
+    listener.stateUpdateHandler = { state in
+      switch state {
+      case .ready, .failed, .cancelled:
+        listener.stateUpdateHandler = nil
+        continuation.resume()
+      default: break
+      }
+    }
+    listener.start(queue: .global())
+  }
+  return listener
+}
+
+@Test func downloadKeepsTheStoredBytesOfAContentEncodedObject() async throws {
+  // Not valid gzip: a client that decompressed would fail; one that inflated real gzip would change the file.
+  let listener = try await serve(
+    "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 6\r\nConnection: close\r\n\r\nstored")
+  defer { listener.cancel() }
+  let port = try #require(listener.port?.rawValue)
+  let destination = temporaryURL()
+  defer { try? FileManager.default.removeItem(at: destination) }
+
+  try await SotoS3Repository().downloadObject(
+    profile: profile("http://127.0.0.1:\(port)"), credentials: credentials, bucket: "photos", key: "a.js.gz",
+    versionID: nil, to: destination, maximumBytes: .max, progress: { _ in })
+
+  #expect(try String(contentsOf: destination, encoding: .utf8) == "stored")
+}
+
+@Test func redirectsAreReportedInsteadOfFollowed() async throws {
+  let target = try await serve("HTTP/1.1 200 OK\r\nContent-Length: 5\r\nConnection: close\r\n\r\nmoved")
+  defer { target.cancel() }
+  let targetPort = try #require(target.port?.rawValue)
+  let redirect = try await serve(
+    "HTTP/1.1 307 Temporary Redirect\r\nLocation: http://127.0.0.1:\(targetPort)/photos/a.txt\r\n"
+      + "Content-Length: 0\r\nConnection: close\r\n\r\n")
+  defer { redirect.cancel() }
+  let port = try #require(redirect.port?.rawValue)
+  let destination = temporaryURL()
+  defer { try? FileManager.default.removeItem(at: destination) }
+
+  let redirected = await failure {
+    try await SotoS3Repository().downloadObject(
+      profile: profile("http://127.0.0.1:\(port)"), credentials: credentials, bucket: "photos", key: "a.txt",
+      versionID: nil, to: destination, maximumBytes: .max, progress: { _ in })
+  }
+
+  #expect(redirected?.category == .regionOrEndpoint)
+  #expect(!FileManager.default.fileExists(atPath: destination.path))
+}
+
 @Test func cancellationPassesThroughUnmapped() async throws {
   let transport = RecordingHTTPClient(result: .failure(CancellationError()))
   await #expect(throws: CancellationError.self) {
@@ -229,6 +294,8 @@ private func temporaryURL() -> URL {
     ("KeyTooLong", .unknown),
     ("InvalidObjectName", .unknown),
     ("NoSuchUpload", .notFound),
+    ("NoSuchVersion", .notFound),
+    ("InvalidObjectState", .service),
   ]
   for (code, category) in cases {
     #expect(S3ErrorMapper.map(AWSResponseError(errorCode: code)).category == category, "\(code)")
@@ -266,6 +333,8 @@ private func temporaryURL() -> URL {
   #expect(refused.category == .network)
   #expect(tls.technicalDetail?.contains("secret") == false)
   #expect(refused.technicalDetail?.contains("secret") == false)
+  // An unknown host name is a DNS error that AsyncHTTPClient passes through as Network's NWError.
+  #expect(S3ErrorMapper.map(NWError.dns(-65554)).category == .network)
 }
 
 @Test func decodesURLEncodedListingKeysExactlyOnce() async throws {
@@ -407,6 +476,7 @@ private func presign(
   #expect(try await read(RecordingHTTPClient("0123456789"), 2..<6) == Data("2345".utf8))
 
   let invalid = "<Error><Code>InvalidRange</Code><Message>secret</Message></Error>"
+  #expect(try await read(RecordingHTTPClient(result: reply(416)), 20..<30).isEmpty)
   #expect(try await read(RecordingHTTPClient(result: reply(416, invalid)), 20..<30).isEmpty)
 
   let unused = RecordingHTTPClient()
@@ -633,44 +703,77 @@ private let completedUpload = reply(
 
 @Test func copyKeepsOrReplacesMetadataAndEncodesTheVersionedSource() async throws {
   let copied = reply(200, "<CopyObjectResult><ETag>\"e\"</ETag></CopyObjectResult>")
-  let keep = RecordingHTTPClient(result: copied)
+  let keep = RecordingHTTPClient(results: [reply(200), copied])
   try await copy(keep, headers: nil)
-  let kept = try #require(await keep.headers().first)
+  #expect(await keep.methods() == ["HEAD", "PUT"])
+  #expect(await keep.queries().first?.contains("versionId=v%201") == true)
+  let kept = try #require(await keep.headers().last)
   #expect(kept["x-amz-copy-source"] == ["photos/a%20b%2Bc.txt?versionId=v%201"])
   #expect(kept["x-amz-metadata-directive"] == ["COPY"])
-  #expect(await keep.paths() == ["/photos/copy.txt"])
+  // A STANDARD source without its own encryption leaves both to the bucket's defaults.
+  #expect(kept["x-amz-storage-class"].isEmpty && kept["x-amz-server-side-encryption"].isEmpty)
+  #expect(await keep.paths().last == "/photos/copy.txt")
 
-  let replace = RecordingHTTPClient(result: copied)
+  let replace = RecordingHTTPClient(results: [reply(200), copied])
   try await copy(
     replace, versionID: nil, headers: ObjectHeaders(contentType: "image/png", metadata: ["owner": "rael"]))
-  let replaced = try #require(await replace.headers().first)
+  let replaced = try #require(await replace.headers().last)
   #expect(replaced["x-amz-copy-source"] == ["photos/a%20b%2Bc.txt"])
   #expect(replaced["x-amz-metadata-directive"] == ["REPLACE"])
   #expect(replaced["content-type"] == ["image/png"])
   #expect(replaced["x-amz-meta-owner"] == ["rael"])
 }
 
-@Test func copyOntoItsOwnKeyReplacesWithTheSourceVersionHeaders() async throws {
-  let head = reply(200, headers: ["Content-Type": "text/plain", "x-amz-meta-Owner": "rael"])
+@Test func copyKeepsTheSourceStorageClassAndKMSEncryption() async throws {
+  let head = reply(
+    200,
+    headers: [
+      "x-amz-storage-class": "STANDARD_IA", "x-amz-server-side-encryption": "aws:kms",
+      "x-amz-server-side-encryption-aws-kms-key-id": "arn:aws:kms:us-east-1:1:key/k",
+      "x-amz-server-side-encryption-bucket-key-enabled": "true",
+    ])
   let copied = reply(200, "<CopyObjectResult><ETag>\"e\"</ETag></CopyObjectResult>")
-  let transport = RecordingHTTPClient(results: [head, reply(501), copied])
+  for headers in [nil, ObjectHeaders(contentType: "text/plain")] {
+    let transport = RecordingHTTPClient(results: [head, copied])
+    try await copy(transport, headers: headers)
+
+    let sent = try #require(await transport.headers().last)
+    #expect(sent["x-amz-storage-class"] == ["STANDARD_IA"])
+    #expect(sent["x-amz-server-side-encryption"] == ["aws:kms"])
+    #expect(sent["x-amz-server-side-encryption-aws-kms-key-id"] == ["arn:aws:kms:us-east-1:1:key/k"])
+    #expect(sent["x-amz-server-side-encryption-bucket-key-enabled"] == ["true"])
+  }
+}
+
+@Test func copyOntoItsOwnKeyReplacesWithTheSourceVersionHeaders() async throws {
+  let head = reply(
+    200,
+    headers: ["Content-Type": "text/plain", "x-amz-meta-Owner": "rael", "x-amz-storage-class": "GLACIER_IR"])
+  let copied = reply(200, "<CopyObjectResult><ETag>\"e\"</ETag></CopyObjectResult>")
+  let transport = RecordingHTTPClient(results: [head, copied])
 
   try await SotoS3Repository(httpClient: transport).copyObject(
     profile: try profile("http://storage.example.com"), credentials: credentials, bucket: "photos",
     sourceKey: "a.txt", sourceVersionID: "old", size: 3, destinationKey: "a.txt", headers: nil)
 
-  #expect(await transport.methods() == ["HEAD", "GET", "PUT"])
+  #expect(await transport.methods() == ["HEAD", "PUT"])
   #expect(await transport.queries()[0].contains("versionId=old"))
   let headers = try #require(await transport.headers().last)
   #expect(headers["x-amz-copy-source"] == ["photos/a.txt?versionId=old"])
   #expect(headers["x-amz-metadata-directive"] == ["REPLACE"])
   #expect(headers["content-type"] == ["text/plain"])
   #expect(headers["x-amz-meta-owner"] == ["rael"])
+  #expect(headers["x-amz-storage-class"] == ["GLACIER_IR"])
 }
 
-@Test func copyAboveFiveGiBIsMultipartWithTheSourceHeadersAndTags() async throws {
+@Test func copyAboveFiveGiBIsMultipartWithTheSourceHeadersTagsClassAndEncryption() async throws {
   let size = SotoS3Repository.singleCopyLimit + 1
-  let head = reply(200, headers: ["Content-Type": "video/mp4", "x-amz-meta-Owner": "rael"])
+  let head = reply(
+    200,
+    headers: [
+      "Content-Type": "video/mp4", "x-amz-meta-Owner": "rael", "x-amz-storage-class": "GLACIER_IR",
+      "x-amz-server-side-encryption": "AES256",
+    ])
   let tagging = reply(
     200, "<Tagging><TagSet><Tag><Key>team</Key><Value>a&amp;b</Value></Tag></TagSet></Tagging>")
   let part = reply(200, "<CopyPartResult><ETag>\"p\"</ETag></CopyPartResult>")
@@ -685,6 +788,9 @@ private let completedUpload = reply(
   #expect(headers[2]["content-type"] == ["video/mp4"])
   #expect(headers[2]["x-amz-meta-owner"] == ["rael"])
   #expect(headers[2]["x-amz-tagging"] == ["team=a%26b"])
+  #expect(headers[2]["x-amz-storage-class"] == ["GLACIER_IR"])
+  #expect(headers[2]["x-amz-server-side-encryption"] == ["AES256"])
+  #expect(headers[2]["x-amz-server-side-encryption-aws-kms-key-id"].isEmpty)
   #expect(headers[3]["x-amz-copy-source"] == ["photos/a%20b%2Bc.txt?versionId=v%201"])
   #expect(headers[3]["x-amz-copy-source-range"] == ["bytes=0-536870911"])
   #expect(headers[13]["x-amz-copy-source-range"] == ["bytes=5368709120-5368709120"])

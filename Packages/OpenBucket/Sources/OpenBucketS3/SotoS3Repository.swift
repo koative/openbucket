@@ -10,8 +10,19 @@ public struct SotoS3Repository: S3Repository {
   private let httpClient: any AWSHTTPClient
 
   public init() {
-    self.init(httpClient: HTTPClient.shared)
+    self.init(httpClient: Self.sharedHTTPClient)
   }
+
+  /// `HTTPClient.shared` without two of its browser defaults. No decompression: objects stored with a
+  /// Content-Encoding must download and range-read as their stored bytes. No redirects: a redirected request
+  /// no longer matches its SigV4 signature, and following one would re-read a streamed upload body.
+  /// Lives as long as the process, so it's never shut down.
+  private static let sharedHTTPClient: HTTPClient = {
+    var configuration = HTTPClient.Configuration.singletonConfiguration
+    configuration.decompression = .disabled
+    configuration.redirectConfiguration = .disallow
+    return HTTPClient(configuration: configuration)
+  }()
 
   init(httpClient: any AWSHTTPClient) {
     self.httpClient = httpClient
@@ -137,36 +148,46 @@ public struct SotoS3Repository: S3Repository {
     versionID: String?
   ) async throws -> ObjectDetails {
     try await withService(profile: profile, credentials: credentials, bucket: bucket) { service in
-      let head: S3.HeadObjectOutput
-      do {
-        head = try await service.headObject(bucket: bucket, key: key, versionId: versionID)
-      } catch {
-        // HEAD responses have no body, so a deleted key or version arrives as a bare 404 ("NotFound").
-        let failure = S3ErrorMapper.map(error)
-        guard failure.category == .notFound else { throw error }
-        throw S3Failure(
-          category: .notFound, message: S3ErrorMapper.objectMissing, technicalDetail: failure.technicalDetail)
-      }
-      // Tagging is often denied or unimplemented; that must not hide the HEAD result.
-      let tagging = try? await service.getObjectTagging(bucket: bucket, key: key, versionId: versionID)
-      try Task.checkCancellation()
-      return ObjectDetails(
-        contentType: head.contentType, cacheControl: head.cacheControl, contentEncoding: head.contentEncoding,
-        contentDisposition: head.contentDisposition, contentLanguage: head.contentLanguage,
-        contentLength: head.contentLength, eTag: head.eTag, lastModified: head.lastModified,
-        storageClass: head.storageClass?.rawValue, serverSideEncryption: head.serverSideEncryption?.rawValue,
-        kmsKeyID: head.ssekmsKeyId, versionID: head.versionId, restore: head.restore,
-        replicationStatus: head.replicationStatus?.rawValue, objectLockMode: head.objectLockMode?.rawValue,
-        objectLockRetainUntil: head.objectLockRetainUntilDate,
-        legalHold: head.objectLockLegalHoldStatus?.rawValue,
-        metadata: Dictionary(
-          (head.metadata ?? [:]).map { ($0.key.lowercased(), $0.value) },
-          uniquingKeysWith: { first, _ in first }),
-        tags: tagging.map {
-          Dictionary($0.tagSet.map { ($0.key, $0.value) }, uniquingKeysWith: { first, _ in first })
-        }
-      )
+      try await Self.details(service, bucket: bucket, key: key, versionID: versionID, tags: true)
     }
+  }
+
+  /// HEAD, plus best-effort tags when `tags` is true.
+  private static func details(
+    _ service: S3, bucket: String, key: String, versionID: String?, tags: Bool
+  ) async throws -> ObjectDetails {
+    let head: S3.HeadObjectOutput
+    do {
+      head = try await service.headObject(bucket: bucket, key: key, versionId: versionID)
+    } catch {
+      // HEAD responses have no body, so a deleted key or version arrives as a bare 404 ("NotFound").
+      let failure = S3ErrorMapper.map(error)
+      guard failure.category == .notFound else { throw error }
+      throw S3Failure(
+        category: .notFound, message: S3ErrorMapper.objectMissing, technicalDetail: failure.technicalDetail)
+    }
+    // Tagging is often denied or unimplemented; that must not hide the HEAD result.
+    let tagging: S3.GetObjectTaggingOutput? =
+      if tags { try? await service.getObjectTagging(bucket: bucket, key: key, versionId: versionID) } else {
+        nil
+      }
+    try Task.checkCancellation()
+    return ObjectDetails(
+      contentType: head.contentType, cacheControl: head.cacheControl, contentEncoding: head.contentEncoding,
+      contentDisposition: head.contentDisposition, contentLanguage: head.contentLanguage,
+      contentLength: head.contentLength, eTag: head.eTag, lastModified: head.lastModified,
+      storageClass: head.storageClass?.rawValue, serverSideEncryption: head.serverSideEncryption?.rawValue,
+      kmsKeyID: head.ssekmsKeyId, bucketKeyEnabled: head.bucketKeyEnabled, versionID: head.versionId,
+      restore: head.restore, replicationStatus: head.replicationStatus?.rawValue,
+      objectLockMode: head.objectLockMode?.rawValue, objectLockRetainUntil: head.objectLockRetainUntilDate,
+      legalHold: head.objectLockLegalHoldStatus?.rawValue,
+      metadata: Dictionary(
+        (head.metadata ?? [:]).map { ($0.key.lowercased(), $0.value) },
+        uniquingKeysWith: { first, _ in first }),
+      tags: tagging.map {
+        Dictionary($0.tagSet.map { ($0.key, $0.value) }, uniquingKeysWith: { first, _ in first })
+      }
+    )
   }
 
   public func readObjectBytes(
@@ -186,6 +207,8 @@ public struct SotoS3Repository: S3Repository {
         where error.errorCode == "InvalidRange" || error.context?.responseCode.code == 416
       {
         return Data()  // the range starts past the end of the object
+      } catch let error as AWSRawError where error.context.responseCode.code == 416 {
+        return Data()  // the same, from a service that sends no error body
       }
       // A server that ignores Range sends the whole object from byte 0.
       var skip = output.contentRange == nil ? Int(range.lowerBound) : 0
@@ -443,30 +466,35 @@ public struct SotoS3Repository: S3Repository {
     headers: ObjectHeaders?
   ) async throws {
     let source = Self.copySource(bucket: bucket, key: sourceKey, versionID: sourceVersionID)
-    // UploadPartCopy carries neither metadata nor tags, and services reject an unchanged copy onto its own key
-    // (even from an older version, which is how restore works), so both send the source's headers explicitly.
-    let details =
-      size > Self.singleCopyLimit || (headers == nil && sourceKey == destinationKey)
-      ? try await objectDetails(
-        profile: profile, credentials: credentials, bucket: bucket, key: sourceKey, versionID: sourceVersionID
-      )
-      : nil
-    let headers = headers ?? details.map(ObjectHeaders.init)
-    guard size > Self.singleCopyLimit else {
+    let multipart = size > Self.singleCopyLimit
+    // A copy is written as STANDARD with the bucket's default encryption unless the request names the source's
+    // storage class and encryption, which only HEAD reports. UploadPartCopy also carries no tags.
+    let details = try await withService(profile: profile, credentials: credentials, bucket: bucket) {
+      service in
+      try await Self.details(
+        service, bucket: bucket, key: sourceKey, versionID: sourceVersionID, tags: multipart)
+    }
+    let storageClass = details.storageClass.flatMap(S3.StorageClass.init(rawValue:))
+    let encryption = details.serverSideEncryption.flatMap(S3.ServerSideEncryption.init(rawValue:))
+    // UploadPartCopy carries no metadata, and services reject an unchanged copy onto its own key (even from an
+    // older version, which is how restore works), so both send the source's headers explicitly.
+    let headers = headers ?? (multipart || sourceKey == destinationKey ? ObjectHeaders(details) : nil)
+    guard multipart else {
       try await withService(
         profile: profile, credentials: credentials, bucket: bucket, timeout: .seconds(3600), writing: true
       ) { service in
         _ = try await service.copyObject(
           S3.CopyObjectRequest(
-            bucket: bucket, cacheControl: headers?.cacheControl,
+            bucket: bucket, bucketKeyEnabled: details.bucketKeyEnabled, cacheControl: headers?.cacheControl,
             contentDisposition: headers?.contentDisposition,
             contentEncoding: headers?.contentEncoding, contentLanguage: headers?.contentLanguage,
             contentType: headers?.contentType, copySource: source, key: destinationKey,
-            metadata: headers?.metadata, metadataDirective: headers == nil ? .copy : .replace))
+            metadata: headers?.metadata, metadataDirective: headers == nil ? .copy : .replace,
+            serverSideEncryption: encryption, ssekmsKeyId: details.kmsKeyID, storageClass: storageClass))
       }
       return
     }
-    let tagging = details?.tags.flatMap { tags -> String? in
+    let tagging = details.tags.flatMap { tags -> String? in
       tags.isEmpty
         ? nil
         : tags.sorted { $0.key < $1.key }.map { "\(Self.formEncoded($0))=\(Self.formEncoded($1))" }
@@ -477,10 +505,11 @@ public struct SotoS3Repository: S3Repository {
     ) { service in
       let upload = try await service.createMultipartUpload(
         S3.CreateMultipartUploadRequest(
-          bucket: bucket, cacheControl: headers?.cacheControl,
+          bucket: bucket, bucketKeyEnabled: details.bucketKeyEnabled, cacheControl: headers?.cacheControl,
           contentDisposition: headers?.contentDisposition,
           contentEncoding: headers?.contentEncoding, contentLanguage: headers?.contentLanguage,
           contentType: headers?.contentType, key: destinationKey, metadata: headers?.metadata,
+          serverSideEncryption: encryption, ssekmsKeyId: details.kmsKeyID, storageClass: storageClass,
           tagging: tagging))
       // Server-side parts are cheap to request, so they are large to keep the request count low.
       let partSize = Self.partSize(for: size, minimum: 512 * 1024 * 1024)
