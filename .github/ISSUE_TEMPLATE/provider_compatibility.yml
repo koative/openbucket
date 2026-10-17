@@ -1,0 +1,61 @@
+name: Provider compatibility report
+description: Tell us how OpenBucket works with an S3 provider or configuration.
+labels: [compatibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        [S3 compatibility](https://github.com/koative/openbucket/blob/main/docs/compatibility.md) lists the providers tested so far, the S3 operations each action uses, and the [live compatibility test](https://github.com/koative/openbucket/blob/main/docs/compatibility.md#live-compatibility-test) you can run against your own bucket.
+
+        **Never paste access keys, secret keys, session tokens, presigned share links or authorization headers.**
+  - type: input
+    id: provider
+    attributes:
+      label: Provider and version
+      placeholder: Garage 2.4.1, MinIO with its release tag, Amazon S3
+    validations:
+      required: true
+  - type: input
+    id: endpoint
+    attributes:
+      label: Endpoint type
+      description: Direct, behind a proxy, with a path prefix, regional Amazon endpoint, … Replace private hosts with placeholders.
+      placeholder: https://store.example.com/s3/ behind nginx
+    validations:
+      required: true
+  - type: dropdown
+    id: addressing
+    attributes:
+      label: Bucket addressing
+      options:
+        - Automatic
+        - Path style
+        - Virtual host
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: OpenBucket version
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked
+      description: For example listing, known bucket, thumbnails, downloads, share links, versions, uploads, moves, deletes, metadata and tags.
+    validations:
+      required: true
+  - type: textarea
+    id: failed
+    attributes:
+      label: What failed
+      description: The action, the exact error message, and any provider-side log line with credentials removed.
+  - type: checkboxes
+    id: tests
+    attributes:
+      label: Live tests
+      options:
+        - label: I ran `listsKnownBucketAndNestedPrefix` against this provider and it passed.
+        - label: I ran the opt-in `writeRoundTrip` test against this provider and it passed.

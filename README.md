@@ -8,6 +8,8 @@
 
 <a href="https://github.com/koative/openbucket/releases/latest/download/OpenBucket-macOS.dmg"><img src="https://img.shields.io/badge/Download_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white" height="40" alt="Download OpenBucket for macOS"></a>
 
+**Website:** [openbucket.koative.com](https://openbucket.koative.com)
+
 ![Latest release](https://img.shields.io/github/v/release/koative/openbucket?label=latest&color=18181b)
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-18181b?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-f05138?logo=swift&logoColor=white)
@@ -74,7 +76,17 @@ xcodebuild test -project OpenBucket.xcodeproj -scheme OpenBucket -destination 'p
 swift test --package-path Packages/OpenBucket
 ```
 
-Unit tests need no AWS account. The optional live S3 test uses an isolated bucket and environment variables documented in [compatibility testing](docs/compatibility.md#live-compatibility-test). GitHub Actions runs the format check, app tests, package tests, and a check that the committed Xcode project matches `project.yml` on an Xcode 27 runner.
+Unit tests need no AWS account. The optional live S3 test uses an isolated bucket and environment variables documented in [compatibility testing](docs/compatibility.md#live-compatibility-test). For every change outside `site/`, GitHub Actions runs the format check, app tests, package tests, and a check that the committed Xcode project matches `project.yml` on an Xcode 27 runner.
+
+### Website
+
+The website at [openbucket.koative.com](https://openbucket.koative.com) lives in `site/` and is built with [Astro](https://astro.build) and [Bun](https://bun.sh) 1.4.3 or later:
+
+```sh
+cd site && bun install && bun run dev
+```
+
+[`.github/workflows/site.yml`](.github/workflows/site.yml) builds it and deploys it to GitHub Pages on pushes to `main` that touch `site/` (or the screenshots and app icon it uses), and again when a release is published so the page shows the newest version.
 
 ## How the code is organized
 
@@ -90,4 +102,4 @@ flowchart LR
 
 `OpenBucketCore` owns S3 values and browsing state. `OpenBucketS3` adapts Soto and keeps SDK types outside the UI. `App` contains SwiftUI and macOS storage; `OpenBucketApp` wires them together. The adapter boundary allows the SDK implementation to change without reshaping the browser.
 
-Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). OpenBucket is licensed under [MIT](LICENSE).
+Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). OpenBucket is licensed under [MIT](LICENSE).

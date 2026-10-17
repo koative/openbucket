@@ -1,0 +1,64 @@
+name: Bug report
+description: Something in OpenBucket doesn't work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste access keys, secret keys, session tokens, presigned share links or authorization headers.** Replace bucket names, hosts and object keys with placeholders if they are private. Security problems go to a [private advisory](https://github.com/koative/openbucket/security/advisories/new), not an issue.
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: macOS 26.1
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: OpenBucket version
+      description: OpenBucket → About OpenBucket, or the commit if you built from source.
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: Provider and endpoint type
+      description: The S3 service and how you reach it, for example Amazon S3 regional endpoint, Garage direct, MinIO behind a reverse proxy with a path.
+      placeholder: Garage 2.4.1, https://store.example.com/s3/
+    validations:
+      required: true
+  - type: dropdown
+    id: addressing
+    attributes:
+      label: Bucket addressing
+      options:
+        - Automatic
+        - Path style
+        - Virtual host
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Connect with a known bucket and starting folder
+        2. Open …
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the exact error message. Screenshots help; check that they show no credentials or links.
+    validations:
+      required: true

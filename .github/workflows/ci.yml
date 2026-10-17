@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
+    paths-ignore: ['site/**']
   pull_request:
+    paths-ignore: ['site/**']
 
 permissions:
   contents: read

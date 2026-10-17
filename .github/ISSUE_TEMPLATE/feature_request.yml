@@ -1,0 +1,27 @@
+name: Feature request
+description: Suggest something OpenBucket should do.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        OpenBucket stays focused on S3. Continuous or two-way sync, Finder mounting, bucket management and non-S3 protocols are currently outside its scope.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: How it could work in the app. For a change to S3 data, say what should happen on versioned buckets and when something fails halfway.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Workarounds or other tools you use for this today.
