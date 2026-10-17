@@ -149,7 +149,8 @@ struct ObjectChanges {
   }
 
   /// The final key of each planned key. Keys in `existing` go to `ask` (with how many conflicts follow) unless
-  /// an earlier answer applied to all: Replace keeps the key, Keep Both picks a free name, Skip gives nil.
+  /// an earlier answer applied to all: Replace keeps the key, Keep Both picks a free name, Skip gives nil. A key
+  /// an earlier item of the batch already writes keeps both without asking, so the batch never overwrites itself.
   /// Folder markers merge without asking. Nil when `ask` returns nil (cancelled).
   static func resolveConflicts(
     _ keys: [String], existing: Set<[UInt8]>,
@@ -157,31 +158,39 @@ struct ObjectChanges {
   ) async -> [String?]? {
     let conflicts = keys.filter { !isMarker($0) && existing.contains(Array($0.utf8)) }.count
     var taken = existing.union(keys.map { Array($0.utf8) })
+    var planned = Set<[UInt8]>()
     var asked = 0
     var always: ConflictChoice?
     var resolved: [String?] = []
     for key in keys {
-      guard !isMarker(key), existing.contains(Array(key.utf8)) else {
+      let bytes = Array(key.utf8)
+      guard !isMarker(key), existing.contains(bytes) || planned.contains(bytes) else {
+        planned.insert(bytes)
         resolved.append(key)
         continue
       }
-      asked += 1
       let choice: ConflictChoice
-      if let always {
+      if planned.contains(bytes) {
+        choice = .keepBoth
+      } else if let always {
+        asked += 1
         choice = always
       } else {
+        asked += 1
         guard let answer = await ask(key, conflicts - asked) else { return nil }
         choice = answer.choice
         if answer.applyToAll { always = choice }
       }
       switch choice {
       case .replace:
+        planned.insert(bytes)
         resolved.append(key)
       case .skip:
         resolved.append(nil)
       case .keepBoth:
         let renamed = keepBothKey(key, taken: taken)
         taken.insert(Array(renamed.utf8))
+        planned.insert(Array(renamed.utf8))
         resolved.append(renamed)
       }
     }

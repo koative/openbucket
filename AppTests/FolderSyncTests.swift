@@ -128,6 +128,42 @@ private func trash(into folder: URL) -> @Sendable (URL) throws -> Void {
 }
 
 @MainActor
+@Test func updateMacReplacesOnlyPlannedFilesAndNeverWritesThroughALinkedFolder() async throws {
+  let root = scratchDirectory()
+  defer { try? FileManager.default.removeItem(at: root) }
+  let folder = root.appending(path: "local")
+  let outside = root.appending(path: "outside")
+  let trashed = root.appending(path: "trash")
+  try write("mine", to: "Photo.jpg", in: folder)
+  try write("appeared after the comparison", to: "late.txt", in: folder)
+  try write("theirs", to: "x.txt", in: outside)
+  try FileManager.default.createSymbolicLink(
+    at: folder.appending(path: "link"), withDestinationURL: outside)
+  let plan = FolderSync.plan(
+    .toMac,
+    entries: [
+      // A case variant of a local-only file, a file that showed up since, and keys below a linked folder.
+      entry("Photo.jpg", .missingInS3), entry("photo.jpg", .onlyInS3), entry("late.txt", .onlyInS3),
+      entry("link/x.txt", .onlyInS3), entry("link/new.txt", .onlyInS3),
+    ],
+    location: location, localFolder: folder)
+
+  let sync = FolderSync(
+    plan: plan, repository: StubRepository(), source: try source(allowsChanges: false),
+    trash: trash(into: trashed))
+  sync.start()
+  await sync.task?.value
+
+  #expect(try read("Photo.jpg", in: folder) == "mine")
+  #expect(try read("late.txt", in: folder) == "appeared after the comparison")
+  #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path) == ["x.txt"])
+  #expect(try read("x.txt", in: outside) == "theirs")
+  #expect(!FileManager.default.fileExists(atPath: trashed.path))
+  #expect(sync.failedPaths.contains("late.txt"))
+  #expect(sync.failedPaths.contains("link/x.txt") && sync.failedPaths.contains("link/new.txt"))
+}
+
+@MainActor
 @Test func updateS3UploadsNewAndChangedFilesOnlyWhenChangesAreAllowed() async throws {
   let folder = scratchDirectory()
   defer { try? FileManager.default.removeItem(at: folder) }

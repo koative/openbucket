@@ -89,6 +89,20 @@ private func bytes(_ keys: [String]) -> Set<[UInt8]> {
   #expect(cancelled == nil)
 }
 
+@MainActor
+@Test func twoItemsOfOneBatchNeverWriteTheSameKey() async {
+  // E.g. two "x.txt" dropped from different Finder folders; the second keeps both without a prompt.
+  let asked = Recorder<String>()
+  let resolved = await ObjectChanges.resolveConflicts(
+    ["d/x.txt", "d/x.txt", "d/y.txt", "d/y.txt"], existing: bytes(["d/y.txt", "d/x 2.txt"])
+  ) { key, _ in
+    asked.values.append(key)
+    return (.replace, false)
+  }
+  #expect(asked.values == ["d/y.txt"])
+  #expect(resolved == ["d/x.txt", "d/x 3.txt", "d/y.txt", "d/y 2.txt"])
+}
+
 @Test func moveMapsKeysBelowTheDestinationAndRefusesFolderIntoItself() {
   let objects = ["a/b/", "a/b/x.txt", "a/b/c/y.txt"].map {
     ObjectSummary(key: $0, size: 1, lastModified: nil, eTag: nil)

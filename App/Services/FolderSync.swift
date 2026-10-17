@@ -143,7 +143,9 @@ final class FolderSync {
   }
 
   /// Update Mac downloads next to the destination first, so a failed or cancelled download leaves the local file
-  /// in place; then it moves whatever is at the destination to the Trash and puts the download there.
+  /// in place; then it moves the file the plan replaces to the Trash and puts the download there. A new file never
+  /// replaces anything (e.g. a case variant of a local-only file), and a parent folder that is a symbolic link is
+  /// refused, since the file would land outside the chosen folder.
   private nonisolated static func transfer(
     _ item: Item, direction: Direction, repository: any S3Repository, source: AppModel.DownloadSource,
     trash: @Sendable (URL) throws -> Void, progress: @escaping @Sendable (Int64) -> Void
@@ -159,6 +161,18 @@ final class FolderSync {
       return
     }
     let fileManager = FileManager.default
+    // attributesOfItem doesn't follow a symbolic link in the last component, so links show up as links.
+    func type(_ url: URL) -> FileAttributeType? {
+      (try? fileManager.attributesOfItem(atPath: url.path))?[.type] as? FileAttributeType
+    }
+    var parent = localURL.deletingLastPathComponent()
+    for _ in item.relativePath.split(separator: "/").dropLast() {
+      guard type(parent) ?? .typeDirectory == .typeDirectory else {
+        throw S3Failure(
+          category: .localFile, message: "“\(parent.lastPathComponent)” on this Mac isn't a folder.")
+      }
+      parent.deleteLastPathComponent()
+    }
     try fileManager.createDirectory(
       at: localURL.deletingLastPathComponent(), withIntermediateDirectories: true)
     let staging = try fileManager.url(
@@ -169,9 +183,11 @@ final class FolderSync {
       profile: source.profile, credentials: source.credentials, bucket: source.bucket, key: item.key,
       versionID: nil, to: downloaded, maximumBytes: .max, progress: progress)
     try Task.checkCancellation()
-    // attributesOfItem doesn't follow symbolic links, so a link in the way is trashed, not its target.
-    if let type = (try? fileManager.attributesOfItem(atPath: localURL.path))?[.type] as? FileAttributeType {
-      guard type != .typeDirectory else {
+    if let existing = type(localURL) {
+      guard item.replaces else {
+        throw S3Failure(category: .localFile, message: "A file on this Mac already has this name.")
+      }
+      guard existing != .typeDirectory else {
         throw S3Failure(category: .localFile, message: "A folder on this Mac has the same name.")
       }
       try trash(localURL)
