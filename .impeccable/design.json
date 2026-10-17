@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T21:42:45+00:00",
+  "title": "Design System: OpenBucket",
+  "extensions": {
+    "colorMeta": {
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15.0% 0.0000 0.00)",
+          "oklch(26.4% 0.0000 0.00)",
+          "oklch(37.9% 0.0000 0.00)",
+          "oklch(49.3% 0.0000 0.00)",
+          "oklch(60.7% 0.0000 0.00)",
+          "oklch(72.1% 0.0000 0.00)",
+          "oklch(83.6% 0.0000 0.00)",
+          "oklch(95.0% 0.0000 0.00)"
+        ]
+      },
+      "band": {
+        "role": "neutral",
+        "displayName": "Band Grey",
+        "canonical": "#f5f5f7",
+        "tonalRamp": [
+          "oklch(15.0% 0.0027 286.35)",
+          "oklch(26.4% 0.0027 286.35)",
+          "oklch(37.9% 0.0027 286.35)",
+          "oklch(49.3% 0.0027 286.35)",
+          "oklch(60.7% 0.0027 286.35)",
+          "oklch(72.1% 0.0027 286.35)",
+          "oklch(83.6% 0.0027 286.35)",
+          "oklch(95.0% 0.0027 286.35)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#1d1d1f",
+        "tonalRamp": [
+          "oklch(15.0% 0.0038 286.10)",
+          "oklch(26.4% 0.0038 286.10)",
+          "oklch(37.9% 0.0038 286.10)",
+          "oklch(49.3% 0.0038 286.10)",
+          "oklch(60.7% 0.0038 286.10)",
+          "oklch(72.1% 0.0038 286.10)",
+          "oklch(83.6% 0.0038 286.10)",
+          "oklch(95.0% 0.0038 286.10)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "canonical": "#6e6e73",
+        "tonalRamp": [
+          "oklch(15.0% 0.0077 286.14)",
+          "oklch(26.4% 0.0077 286.14)",
+          "oklch(37.9% 0.0077 286.14)",
+          "oklch(49.3% 0.0077 286.14)",
+          "oklch(60.7% 0.0077 286.14)",
+          "oklch(72.1% 0.0077 286.14)",
+          "oklch(83.6% 0.0077 286.14)",
+          "oklch(95.0% 0.0077 286.14)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgb(0 0 0 / 0.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.0000 0.00)",
+          "oklch(26.4% 0.0000 0.00)",
+          "oklch(37.9% 0.0000 0.00)",
+          "oklch(49.3% 0.0000 0.00)",
+          "oklch(60.7% 0.0000 0.00)",
+          "oklch(72.1% 0.0000 0.00)",
+          "oklch(83.6% 0.0000 0.00)",
+          "oklch(95.0% 0.0000 0.00)"
+        ]
+      },
+      "action": {
+        "role": "primary",
+        "displayName": "Action Blue",
+        "canonical": "#0071e3",
+        "tonalRamp": [
+          "oklch(15.0% 0.1933 256.16)",
+          "oklch(26.4% 0.1933 256.16)",
+          "oklch(37.9% 0.1933 256.16)",
+          "oklch(49.3% 0.1933 256.16)",
+          "oklch(60.7% 0.1933 256.16)",
+          "oklch(72.1% 0.1933 256.16)",
+          "oklch(83.6% 0.1933 256.16)",
+          "oklch(95.0% 0.1933 256.16)"
+        ]
+      },
+      "action-hover": {
+        "role": "primary",
+        "displayName": "Action Blue Hover",
+        "canonical": "#0077ed",
+        "tonalRamp": [
+          "oklch(15.0% 0.1989 255.97)",
+          "oklch(26.4% 0.1989 255.97)",
+          "oklch(37.9% 0.1989 255.97)",
+          "oklch(49.3% 0.1989 255.97)",
+          "oklch(60.7% 0.1989 255.97)",
+          "oklch(72.1% 0.1989 255.97)",
+          "oklch(83.6% 0.1989 255.97)",
+          "oklch(95.0% 0.1989 255.97)"
+        ]
+      },
+      "on-action": {
+        "role": "neutral",
+        "displayName": "On Action White",
+        "canonical": "#fff",
+        "tonalRamp": [
+          "oklch(15.0% 0.0000 0.00)",
+          "oklch(26.4% 0.0000 0.00)",
+          "oklch(37.9% 0.0000 0.00)",
+          "oklch(49.3% 0.0000 0.00)",
+          "oklch(60.7% 0.0000 0.00)",
+          "oklch(72.1% 0.0000 0.00)",
+          "oklch(83.6% 0.0000 0.00)",
+          "oklch(95.0% 0.0000 0.00)"
+        ]
+      },
+      "link": {
+        "role": "primary",
+        "displayName": "Link Blue",
+        "canonical": "#0066cc",
+        "tonalRamp": [
+          "oklch(15.0% 0.1771 255.83)",
+          "oklch(26.4% 0.1771 255.83)",
+          "oklch(37.9% 0.1771 255.83)",
+          "oklch(49.3% 0.1771 255.83)",
+          "oklch(60.7% 0.1771 255.83)",
+          "oklch(72.1% 0.1771 255.83)",
+          "oklch(83.6% 0.1771 255.83)",
+          "oklch(95.0% 0.1771 255.83)"
+        ]
+      },
+      "night": {
+        "role": "neutral",
+        "displayName": "Night",
+        "canonical": "#000000",
+        "tonalRamp": [
+          "oklch(15.0% 0.0000 0.00)",
+          "oklch(26.4% 0.0000 0.00)",
+          "oklch(37.9% 0.0000 0.00)",
+          "oklch(49.3% 0.0000 0.00)",
+          "oklch(60.7% 0.0000 0.00)",
+          "oklch(72.1% 0.0000 0.00)",
+          "oklch(83.6% 0.0000 0.00)",
+          "oklch(95.0% 0.0000 0.00)"
+        ]
+      },
+      "night-ink": {
+        "role": "neutral",
+        "displayName": "Night Ink",
+        "canonical": "#f5f5f7",
+        "tonalRamp": [
+          "oklch(15.0% 0.0027 286.35)",
+          "oklch(26.4% 0.0027 286.35)",
+          "oklch(37.9% 0.0027 286.35)",
+          "oklch(49.3% 0.0027 286.35)",
+          "oklch(60.7% 0.0027 286.35)",
+          "oklch(72.1% 0.0027 286.35)",
+          "oklch(83.6% 0.0027 286.35)",
+          "oklch(95.0% 0.0027 286.35)"
+        ]
+      },
+      "night-ink-2": {
+        "role": "neutral",
+        "displayName": "Night Secondary Ink",
+        "canonical": "#a1a1a6",
+        "tonalRamp": [
+          "oklch(15.0% 0.0072 286.22)",
+          "oklch(26.4% 0.0072 286.22)",
+          "oklch(37.9% 0.0072 286.22)",
+          "oklch(49.3% 0.0072 286.22)",
+          "oklch(60.7% 0.0072 286.22)",
+          "oklch(72.1% 0.0072 286.22)",
+          "oklch(83.6% 0.0072 286.22)",
+          "oklch(95.0% 0.0072 286.22)"
+        ]
+      },
+      "night-link": {
+        "role": "secondary",
+        "displayName": "Night Link Blue",
+        "canonical": "#2997ff",
+        "tonalRamp": [
+          "oklch(15.0% 0.1808 251.84)",
+          "oklch(26.4% 0.1808 251.84)",
+          "oklch(37.9% 0.1808 251.84)",
+          "oklch(49.3% 0.1808 251.84)",
+          "oklch(60.7% 0.1808 251.84)",
+          "oklch(72.1% 0.1808 251.84)",
+          "oklch(83.6% 0.1808 251.84)",
+          "oklch(95.0% 0.1808 251.84)"
+        ]
+      },
+      "nav-glass": {
+        "role": "neutral",
+        "displayName": "Nav Glass",
+        "canonical": "rgb(255 255 255 / 0.76)",
+        "tonalRamp": [
+          "oklch(15.0% 0.0000 0.00)",
+          "oklch(26.4% 0.0000 0.00)",
+          "oklch(37.9% 0.0000 0.00)",
+          "oklch(49.3% 0.0000 0.00)",
+          "oklch(60.7% 0.0000 0.00)",
+          "oklch(72.1% 0.0000 0.00)",
+          "oklch(83.6% 0.0000 0.00)",
+          "oklch(95.0% 0.0000 0.00)"
+        ]
+      },
+      "selection": {
+        "role": "primary",
+        "displayName": "Selection Tint",
+        "canonical": "rgb(0 113 227 / 0.22)",
+        "tonalRamp": [
+          "oklch(15.0% 0.1933 256.16)",
+          "oklch(26.4% 0.1933 256.16)",
+          "oklch(37.9% 0.1933 256.16)",
+          "oklch(49.3% 0.1933 256.16)",
+          "oklch(60.7% 0.1933 256.16)",
+          "oklch(72.1% 0.1933 256.16)",
+          "oklch(83.6% 0.1933 256.16)",
+          "oklch(95.0% 0.1933 256.16)"
+        ]
+      },
+      "footer-link": {
+        "role": "neutral",
+        "displayName": "Footer Link Grey",
+        "canonical": "#424245",
+        "tonalRamp": [
+          "oklch(15.0% 0.0050 286.16)",
+          "oklch(26.4% 0.0050 286.16)",
+          "oklch(37.9% 0.0050 286.16)",
+          "oklch(49.3% 0.0050 286.16)",
+          "oklch(60.7% 0.0050 286.16)",
+          "oklch(72.1% 0.0050 286.16)",
+          "oklch(83.6% 0.0050 286.16)",
+          "oklch(95.0% 0.0050 286.16)"
+        ]
+      },
+      "badge-tested-fill": {
+        "role": "tertiary",
+        "displayName": "Tested Green Fill",
+        "canonical": "#e3f4e7",
+        "tonalRamp": [
+          "oklch(15.0% 0.0249 152.88)",
+          "oklch(26.4% 0.0249 152.88)",
+          "oklch(37.9% 0.0249 152.88)",
+          "oklch(49.3% 0.0249 152.88)",
+          "oklch(60.7% 0.0249 152.88)",
+          "oklch(72.1% 0.0249 152.88)",
+          "oklch(83.6% 0.0249 152.88)",
+          "oklch(95.0% 0.0249 152.88)"
+        ]
+      },
+      "badge-tested-ink": {
+        "role": "tertiary",
+        "displayName": "Tested Green",
+        "canonical": "#1a6b33",
+        "tonalRamp": [
+          "oklch(15.0% 0.1165 149.28)",
+          "oklch(26.4% 0.1165 149.28)",
+          "oklch(37.9% 0.1165 149.28)",
+          "oklch(49.3% 0.1165 149.28)",
+          "oklch(60.7% 0.1165 149.28)",
+          "oklch(72.1% 0.1165 149.28)",
+          "oklch(83.6% 0.1165 149.28)",
+          "oklch(95.0% 0.1165 149.28)"
+        ]
+      },
+      "badge-implemented-fill": {
+        "role": "tertiary",
+        "displayName": "Implemented Blue Fill",
+        "canonical": "#e5effb",
+        "tonalRamp": [
+          "oklch(15.0% 0.0194 252.88)",
+          "oklch(26.4% 0.0194 252.88)",
+          "oklch(37.9% 0.0194 252.88)",
+          "oklch(49.3% 0.0194 252.88)",
+          "oklch(60.7% 0.0194 252.88)",
+          "oklch(72.1% 0.0194 252.88)",
+          "oklch(83.6% 0.0194 252.88)",
+          "oklch(95.0% 0.0194 252.88)"
+        ]
+      },
+      "badge-implemented-ink": {
+        "role": "tertiary",
+        "displayName": "Implemented Blue",
+        "canonical": "#0058b0",
+        "tonalRamp": [
+          "oklch(15.0% 0.1576 255.52)",
+          "oklch(26.4% 0.1576 255.52)",
+          "oklch(37.9% 0.1576 255.52)",
+          "oklch(49.3% 0.1576 255.52)",
+          "oklch(60.7% 0.1576 255.52)",
+          "oklch(72.1% 0.1576 255.52)",
+          "oklch(83.6% 0.1576 255.52)",
+          "oklch(95.0% 0.1576 255.52)"
+        ]
+      },
+      "badge-untested-fill": {
+        "role": "tertiary",
+        "displayName": "Untested Grey Fill",
+        "canonical": "#ebebef",
+        "tonalRamp": [
+          "oklch(15.0% 0.0053 286.30)",
+          "oklch(26.4% 0.0053 286.30)",
+          "oklch(37.9% 0.0053 286.30)",
+          "oklch(49.3% 0.0053 286.30)",
+          "oklch(60.7% 0.0053 286.30)",
+          "oklch(72.1% 0.0053 286.30)",
+          "oklch(83.6% 0.0053 286.30)",
+          "oklch(95.0% 0.0053 286.30)"
+        ]
+      },
+      "badge-untested-ink": {
+        "role": "tertiary",
+        "displayName": "Untested Grey",
+        "canonical": "#56565c",
+        "tonalRamp": [
+          "oklch(15.0% 0.0097 286.01)",
+          "oklch(26.4% 0.0097 286.01)",
+          "oklch(37.9% 0.0097 286.01)",
+          "oklch(49.3% 0.0097 286.01)",
+          "oklch(60.7% 0.0097 286.01)",
+          "oklch(72.1% 0.0097 286.01)",
+          "oklch(83.6% 0.0097 286.01)",
+          "oklch(95.0% 0.0097 286.01)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Every section h2, the get block and the 404 headline; two-tone variant sets its second line in Secondary Ink."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "One-sentence subheads under headlines, max 34em, centred."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Fact titles, feature-list terms, trio titles."
+      },
+      "link-large": {
+        "displayName": "Link Large",
+        "purpose": "Standalone text links with a trailing arrow."
+      },
+      "check": {
+        "displayName": "Check",
+        "purpose": "Endpoint checks list; 17px on phones."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running copy."
+      },
+      "brand": {
+        "displayName": "Brand",
+        "purpose": "App name beside the nav icon."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Primary pill label."
+      },
+      "nav": {
+        "displayName": "Nav",
+        "purpose": "Nav links."
+      },
+      "callout": {
+        "displayName": "Callout",
+        "purpose": "Status panel notes."
+      },
+      "panel-label": {
+        "displayName": "Panel Label",
+        "purpose": "Status panel title in Secondary Ink."
+      },
+      "fine": {
+        "displayName": "Fine",
+        "purpose": "Release line under the pill and window captions; tabular numerals."
+      },
+      "button-small": {
+        "displayName": "Button Small",
+        "purpose": "Nav Download pill label."
+      },
+      "badge": {
+        "displayName": "Badge",
+        "purpose": "Compatibility status badges."
+      },
+      "footer": {
+        "displayName": "Footer",
+        "purpose": "Footer copy and links."
+      }
+    },
+    "shadows": [
+      {
+        "name": "window",
+        "value": "0 2px 6px rgb(0 0 0 / 0.12), 0 34px 70px -18px rgb(0 0 0 / 0.42)",
+        "purpose": "box-shadow on every screenshot window."
+      },
+      {
+        "name": "hero-icon-glow",
+        "value": "drop-shadow(0 12px 22px rgb(0 40 120 / 0.28))",
+        "purpose": "CSS filter on the 112px hero app icon."
+      },
+      {
+        "name": "get-icon-glow",
+        "value": "drop-shadow(0 10px 18px rgb(0 40 120 / 0.25))",
+        "purpose": "CSS filter on the 96px get-block and 404 app icon."
+      },
+      {
+        "name": "nav-glass",
+        "value": "backdrop-filter: saturate(1.8) blur(20px)",
+        "purpose": "Sticky nav over Nav Glass with a Hairline bottom border."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid #0071e3; outline-offset: 3px; border-radius: 4px",
+        "purpose": ":focus-visible on every focusable element."
+      }
+    ],
+    "motion": [
+      {
+        "name": "settle",
+        "value": "animation: settle linear both; animation-timeline: view(); animation-range: entry 10% cover 45%; from transform: perspective(1600px) rotateX(9deg) translateY(28px) scale(0.94) to none",
+        "purpose": "Signature: the hero window settles as it scrolls into view. Only under prefers-reduced-motion: no-preference and @supports (animation-timeline: view()); otherwise still."
+      },
+      {
+        "name": "pill-fill",
+        "value": "background-color 0.2s",
+        "purpose": "Pill hover from Action Blue to Action Blue Hover."
+      },
+      {
+        "name": "smooth-scroll",
+        "value": "scroll-behavior: smooth; scroll-padding-top: 64px",
+        "purpose": "Anchor jumps clear the sticky nav."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "scroll-behavior: auto; * { transition: none !important }",
+        "purpose": "Under prefers-reduced-motion: reduce; the settle animation is never declared."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet",
+        "value": "1068px"
+      },
+      {
+        "name": "phone",
+        "value": "734px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Pill",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Action Blue download pill; the one filled button colour on the page.",
+      "html": "<a class=\"ds-pill\" href=\"#\"><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 15V3\"/><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><path d=\"m7 10 5 5 5-5\"/></svg> Download for macOS</a>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-pill{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;background:var(--action);color:#fff;font-size:17px;font-weight:500;text-decoration:none;transition:background-color 0.2s;}.ds-pill:hover{background:var(--action-hover);text-decoration:none;}:focus-visible{outline:2px solid var(--action);outline-offset:3px;border-radius:4px;}@media (prefers-reduced-motion:reduce){*{transition:none !important;}}"
+    },
+    {
+      "name": "Small Pill",
+      "kind": "button",
+      "refersTo": "button-small",
+      "description": "Compact Download pill at the right end of the nav.",
+      "html": "<a class=\"ds-pill ds-pill-small\" href=\"#\">Download</a>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-pill{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;background:var(--action);color:#fff;font-size:17px;font-weight:500;text-decoration:none;transition:background-color 0.2s;}.ds-pill:hover{background:var(--action-hover);text-decoration:none;}.ds-pill-small{min-height:28px;padding:0 14px;font-size:13px;}:focus-visible{outline:2px solid var(--action);outline-offset:3px;border-radius:4px;}@media (prefers-reduced-motion:reduce){*{transition:none !important;}}"
+    },
+    {
+      "name": "Text Link",
+      "kind": "button",
+      "refersTo": "text-link",
+      "description": "Secondary path beside the pill or closing a section: Link Blue, 19px, arrow-up-right.",
+      "html": "<a class=\"ds-text-link\" href=\"#\">View on GitHub <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-text-link{display:inline-flex;align-items:center;gap:2px;color:var(--link);font-size:19px;text-decoration:none;}.ds-text-link:hover{text-decoration:underline;text-underline-offset:0.16em;}:focus-visible{outline:2px solid var(--action);outline-offset:3px;border-radius:4px;}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Sticky 52px glass bar: masked icon + name, section links, small Download pill.",
+      "html": "<header class=\"ds-nav\"><div class=\"ds-nav-inner\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-icon\"></span>OpenBucket</a><nav><a href=\"#\">Features</a><a href=\"#\">Compatibility</a><a href=\"#\">Security</a><a href=\"#\">GitHub</a></nav><a class=\"ds-pill ds-pill-small\" href=\"#\">Download</a></div></header>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-pill{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;background:var(--action);color:#fff;font-size:17px;font-weight:500;text-decoration:none;transition:background-color 0.2s;}.ds-pill:hover{background:var(--action-hover);text-decoration:none;}.ds-pill-small{min-height:28px;padding:0 14px;font-size:13px;}.ds-nav{position:sticky;top:0;background:rgb(255 255 255 / 0.76);border-bottom:1px solid var(--hairline);-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);}.ds-nav-inner{display:flex;align-items:center;gap:28px;max-width:1080px;height:52px;margin:0 auto;padding:0 22px;}.ds-brand{display:inline-flex;align-items:center;gap:9px;margin-right:auto;color:var(--ink);font-size:17px;font-weight:600;text-decoration:none;}.ds-icon{width:28px;height:28px;border-radius:22.5%;background:linear-gradient(#2a6bff,#0a2a7a);}.ds-nav nav{display:flex;gap:26px;font-size:14px;}.ds-nav nav a{color:var(--ink);opacity:0.8;text-decoration:none;}.ds-nav nav a:hover{opacity:1;}:focus-visible{outline:2px solid var(--action);outline-offset:3px;border-radius:4px;}"
+    },
+    {
+      "name": "Window Figure",
+      "kind": "custom",
+      "refersTo": "window",
+      "description": "A real screenshot with the measured 18px-of-1224px window radius, the two-layer window shadow and a truthful Fine caption.",
+      "html": "<figure class=\"ds-window\"><div class=\"ds-shot\" role=\"img\" aria-label=\"Screenshot placeholder\"></div><figcaption>A real OpenBucket window, connected to a local Garage bucket of demo files.</figcaption></figure>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-window{display:grid;justify-items:center;gap:18px;margin:0;}.ds-shot{width:100%;max-width:1100px;aspect-ratio:1224/768;background:#2b2b2d;border-radius:var(--window-radius);box-shadow:0 2px 6px rgb(0 0 0 / 0.12),0 34px 70px -18px rgb(0 0 0 / 0.42);}.ds-window figcaption{color:var(--ink-2);font-size:13px;}"
+    },
+    {
+      "name": "Status Panel",
+      "kind": "card",
+      "refersTo": "status-panel",
+      "description": "Band Grey 24px panel listing providers with a test-status badge and a note per row.",
+      "html": "<div class=\"ds-status\"><h3>Where it's been tested</h3><dl><div><dt>Garage 2.4.1</dt><dd class=\"ds-badge tested\">Tested</dd><dd class=\"note\">Browsing and the full write round trip pass live tests.</dd></div><div><dt>Amazon S3</dt><dd class=\"ds-badge implemented\">Implemented</dd><dd class=\"note\">Built on Soto; no account-backed live test in the repository yet.</dd></div><div><dt>MinIO, RustFS and others</dt><dd class=\"ds-badge not-yet-tested\">Not yet tested</dd><dd class=\"note\">No live result yet.</dd></div></dl></div>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-status{padding:32px 32px 28px;border-radius:24px;background:var(--band);}.ds-status h3{margin:0 0 10px;color:var(--ink-2);font-size:14px;font-weight:600;}.ds-status dl{margin:0;}.ds-status dl>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--hairline);}.ds-status dt{font-weight:600;}.ds-status dd{margin:0;}.ds-status .note{grid-column:1/-1;color:var(--ink-2);font-size:14px;line-height:1.4;}.ds-badge{align-self:center;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;}.ds-badge.tested{background:#e3f4e7;color:#1a6b33;}.ds-badge.implemented{background:#e5effb;color:#0058b0;}.ds-badge.not-yet-tested{background:#ebebef;color:#56565c;}"
+    },
+    {
+      "name": "Fact",
+      "kind": "custom",
+      "refersTo": "fact",
+      "description": "Facts-grid cell: 28px Action Blue Lucide icon, 19px semibold title, Secondary Ink body.",
+      "html": "<div class=\"ds-fact\"><svg width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg><h3>Quick Look</h3><p>Press Space or ⌘Y to Quick Look images, video and documents straight from the bucket.</p></div>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-fact{max-width:330px;}.ds-fact svg{color:var(--action);}.ds-fact h3{margin:14px 0 6px;font-size:19px;font-weight:600;letter-spacing:-0.016em;}.ds-fact p{margin:0;color:var(--ink-2);}"
+    },
+    {
+      "name": "Checks List",
+      "kind": "custom",
+      "refersTo": "check",
+      "description": "19px endpoint checks with an Action Blue check in a 26px gutter column.",
+      "html": "<ul class=\"ds-checks\"><li><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg>Custom HTTP or HTTPS endpoints, with path-style or virtual-host addressing and your region.</li><li><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg>Open a bucket you know even when your key can't list every bucket.</li></ul>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-checks{display:grid;gap:18px;margin:0;padding:0;list-style:none;font-size:19px;line-height:1.42;}.ds-checks li{display:grid;grid-template-columns:26px minmax(0,1fr);align-items:start;}.ds-checks svg{margin-top:4px;color:var(--action);}"
+    },
+    {
+      "name": "Feature Row",
+      "kind": "custom",
+      "refersTo": "feature-row",
+      "description": "Feature-list term and description under a Hairline top rule.",
+      "html": "<dl class=\"ds-features\"><div><dt>Share</dt><dd>Presigned links that expire after 15 minutes to 7 days, with a QR code for your phone.</dd></div><div><dt>Versions</dt><dd>On versioned buckets: version history for each file and deleted files you can bring back.</dd></div></dl>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:56px;margin:0;}.ds-features>div{padding:16px 0;border-top:1px solid var(--hairline);}.ds-features dt{font-size:19px;font-weight:600;letter-spacing:-0.016em;}.ds-features dd{margin:4px 0 0;color:var(--ink-2);}"
+    },
+    {
+      "name": "Dark Band Trio",
+      "kind": "custom",
+      "refersTo": "dark-band",
+      "description": "The single Night band: Night Ink headline, Night Secondary Ink copy, Night Link Blue icons and link.",
+      "html": "<section class=\"ds-dark\"><h2>Read-only until you say so.</h2><ul class=\"ds-trio\"><li><svg width=\"26\" height=\"26\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4\"/><path d=\"m21 2-9.6 9.6\"/><circle cx=\"7.5\" cy=\"15.5\" r=\"5.5\"/></svg><h3>Keys stay in Keychain</h3><p>Connection settings hold only a reference to your credentials.</p></li></ul><a class=\"ds-text-link\" href=\"#\">How OpenBucket handles your data <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a></section>",
+      "css": ":host{--ink:#1d1d1f;--ink-2:#6e6e73;--canvas:#ffffff;--band:#f5f5f7;--hairline:rgb(0 0 0 / 0.1);--action:#0071e3;--action-hover:#0077ed;--link:#0066cc;--night:#000000;--night-ink:#f5f5f7;--night-ink-2:#a1a1a6;--night-link:#2997ff;--window-radius:1.47% / 2.34%;--font:system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;color-scheme:light;font:400 17px/1.47 var(--font);letter-spacing:-0.012em;color:var(--ink);}.ds-text-link{display:inline-flex;align-items:center;gap:2px;color:var(--link);font-size:19px;text-decoration:none;}.ds-text-link:hover{text-decoration:underline;text-underline-offset:0.16em;}.ds-dark{display:grid;justify-items:center;gap:22px;padding:120px 22px;background:var(--night);color:var(--night-ink);text-align:center;}.ds-dark h2{margin:0;font-size:clamp(36px,5vw,56px);font-weight:600;line-height:1.07;letter-spacing:-0.022em;}.ds-trio{margin:48px auto 16px;padding:0;list-style:none;max-width:300px;text-align:left;}.ds-trio svg{color:var(--night-link);}.ds-trio h3{margin:12px 0 6px;font-size:19px;font-weight:600;}.ds-trio p{margin:0;color:var(--night-ink-2);}.ds-dark .ds-text-link{color:var(--night-link);}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Straight Mac Page",
+    "overview": "**Creative North Star: \"The Straight Mac Page\"**\n\nOpenBucket's site is the category-standard Mac app landing page executed without a concept or costume, at the craft level of culturedcode.com/things and apple.com product pages. One product, one blue glass bucket icon, real app windows, one signed download. The page is a vertical stack of full-bleed sections on a white canvas, alternating with soft grey bands and a single black band, all set in the system face (SF Pro on Macs) with large semibold, slightly tightened headlines and generous whitespace.\n\nThe product itself is the only imagery. Every visual of OpenBucket is a genuine screenshot of a real window against a local Garage bucket of demo files, shown at its own corner radius with a soft offset window shadow, and the hero window settles into place as it scrolls into view. Colour is restrained to Apple's neutral greys plus one action blue; the only other hues are the three compatibility badges, which carry evidence, not decoration.\n\nThe voice of the layout is calm and confident: centred heroes and section heads, two- and three-column grids of short facts, and claims that never outrun the documented evidence. It rejects novelty concepts and the dark developer-tool look.",
+    "keyCharacteristics": [
+      "White canvas, #f5f5f7 bands, exactly one black band; light colour scheme only.",
+      "System type, semibold headlines with negative tracking, 17px body.",
+      "One action blue for the download pill; link blue for text links.",
+      "Real screenshots with radii that match the window's own 18px corners and a soft two-layer shadow.",
+      "The app icon is the only illustration; Lucide line icons are the only glyphs.",
+      "Scroll-driven settle on the hero window, still under reduced motion."
+    ],
+    "rules": [
+      {
+        "name": "The One Blue Rule",
+        "body": "Action Blue fills only the download-path pill and marks icons; every other link is Link Blue text. Never introduce a second filled button colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Evidence Colour Rule",
+        "body": "Green, blue and grey badges exist only to state test status. No other surface borrows their hues.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Night Rule",
+        "body": "The page carries exactly one black band, for the security story. Everything else alternates Canvas White and Band Grey.",
+        "section": "colors"
+      },
+      {
+        "name": "The System Face Rule",
+        "body": "Use the system stack only; SF Pro is the point on a Mac app's own page. No web fonts.",
+        "section": "typography"
+      },
+      {
+        "name": "The Semibold Ceiling Rule",
+        "body": "Headings top out at 600. Nothing on the page is bold (700).",
+        "section": "typography"
+      },
+      {
+        "name": "The Product Floats Rule",
+        "body": "Only the app's own windows and icon carry shadow. Panels, pills and sections stay flat.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Measured Corner Rule",
+        "body": "A screenshot's radius matches the window's own 18px corner at the image's scale. Never round a real window with an arbitrary token.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** show only real OpenBucket screenshots, with the measured window radius and the Window shadow, and caption them truthfully.",
+      "**Do** cut phone crops from the same real window at native scale and serve them through `<picture>` at `(max-width: 734px)`, recomputing the 18px corner at crop scale.",
+      "**Do** keep every claim inside the documented evidence: Garage 2.4.1 and Adobe S3Mock as Tested, Amazon S3 as Implemented, MinIO, RustFS and others as Not yet tested.",
+      "**Do** keep one obvious download path: an Action Blue pill, with the source one text link away.",
+      "**Do** use the system font stack, semibold (600) headlines with negative tracking, and 17px body.",
+      "**Do** alternate Canvas White and Band Grey sections at 120px (80px on phones), with exactly one Night band.",
+      "**Do** keep the settle animation still under reduced motion."
+    ],
+    "donts": [
+      "**Don't** use mockups, illustrations, renders or stock imagery; the app icon is the only illustration.",
+      "**Don't** show or invent adoption numbers, stars, downloads, testimonials, ratings, press or benchmarks.",
+      "**Don't** say or imply \"works with every provider\".",
+      "**Don't** imply affiliation with or endorsement by Amazon or Apple; keep the trademark and non-affiliation line in the footer.",
+      "**Don't** add a second filled button colour, gradients, or the dark developer-tool look.",
+      "**Don't** round screenshots with an arbitrary radius or put shadows on panels, pills or sections."
+    ]
+  }
+}
