@@ -43,10 +43,10 @@ ffmpeg -loop 1 -i aw26-lake-mirror.jpg -vf "scale=3840:-2,zoompan=z='1+0.0012*on
 
 The README and website show real windows. To keep them sharp and their corners clean:
 
-1. Run a disposable Garage (any S3 store works) and seed it with `scripts/seed-demo.sh`.
+1. Run a disposable Garage (any S3 store works) and seed it with `scripts/seed-demo.sh`. The website's restore screenshot needs a versioned bucket, which Garage doesn't have: use MinIO with versioning on, upload a file again to give it versions, and delete one or two files.
 2. Add two connections: **Kestrel Studio** (known bucket `kestrel-studio`, Allow changes on) and **Kestrel Platform** (known bucket `kestrel-platform`, read-only). Favorite `campaigns/2026-autumn/`, `backups/postgres/` and `releases/desktop/`.
 3. Run the app in US English so sizes and dates read `2.1 MB` and `Oct 28, 2026`: `defaults write dev.openbucket.app AppleLocale en_US` and `defaults write dev.openbucket.app AppleLanguages -array en-US`. If the Mac's accent color is Graphite, the traffic lights and selections turn grey; give the app the blue accent with `defaults write dev.openbucket.app AppleAccentColor -int 4` and `defaults write dev.openbucket.app AppleAquaColorVariant -int 1`. Delete all four keys afterwards.
-4. Size the main window to 1440×880 points, keep it the active window (colored traffic lights), and capture it on a Retina display with `screencapture -o -l <window-id> shot.png`. `-o` drops the system shadow; the PNG keeps the window's transparent corners.
+4. Size the main window to 1440×880 points, keep it the active window (colored traffic lights), and capture it on a Retina display with `screencapture -o -l <window-id> shot.png`. `-o` drops the system shadow; the PNG keeps the window's transparent corners. The website's job screenshots (`site/src/assets/job-*.png`) are whole windows at a compact size, about 1000×800 points with the sidebar hidden, so their text stays legible at 600px wide.
 5. Save the full windows as PNG in `docs/media/`. **Never convert them to JPEG**: JPEG fills the transparent corners with white, and no CSS radius matches the macOS corner curve. The website turns them into 1x and 2x WebP at build time and keeps the alpha.
 6. Cut the website's crops from those PNGs with ffmpeg, which keeps the alpha:
 

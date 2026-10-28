@@ -301,7 +301,7 @@ Apple's neutral ladder with one blue for action, one link blue per ground, and t
 - **Band Grey** (band): alternating feature bands, the status panel, the footer.
 - **Ink** (ink): headlines, body copy, nav links (at 0.8 opacity, 1 on hover), brand name.
 - **Secondary Ink** (ink-2): ledes, fact and feature descriptions, second line of two-tone headlines, captions, fine print, panel label.
-- **Hairline** (hairline): nav bottom border, feature-list and status-row dividers, footer top rule.
+- **Hairline** (hairline): nav bottom border, FAQ and status-row dividers, footer top rule.
 - **Nav Glass** (nav-glass): the sticky nav's translucent white, always paired with its backdrop blur.
 - **Night** (night): the single black security band. **Night Ink** (night-ink) for its headline and titles, **Night Secondary Ink** (night-ink-2) for its lede and trio copy.
 - **Footer Link Grey** (footer-link): footer links, a step darker than the footer's Secondary Ink text.
@@ -325,7 +325,8 @@ Apple's neutral ladder with one blue for action, one link blue per ground, and t
 - **Display** (600, clamp(44px, 7vw, 80px), 1.05, -0.025em): the hero headline only; 404 headline uses Headline.
 - **Headline** (600, clamp(36px, 5vw, 56px), 1.07, -0.022em): every section h2 and the get block. Balanced wrapping. A two-tone variant sets its second line in Secondary Ink ("Not a web console in a window.").
 - **Lede** (400, clamp(19px, 1.6vw, 21px), 1.4): one-sentence subheads under headlines, max 34em, centred, pretty wrapping, Secondary Ink (Night Secondary Ink in the black band).
-- **Title** (600, 19px, -0.016em): fact titles, feature-list terms, trio titles.
+- **Title** (600, 19px, -0.016em): fact titles, FAQ questions, trio titles.
+- **Job title** (600, clamp(26px, 2.8vw, 34px), 1.12, -0.02em): the four job headings, balanced wrapping; their body is 19px Secondary Ink (17px on phones).
 - **Check** (400, 19px, 1.42): the endpoint checks list; drops to 17px on phones.
 - **Large link** (400, 19px): standalone text links with a trailing arrow; 17px inside the status panel.
 - **Body** (400, 17px, 1.47, -0.012em): all running copy.
@@ -345,8 +346,8 @@ A single centred column of full-bleed sections. Content width is the 1080px meas
 
 - **Section rhythm:** bands, plain sections, the black band and the get block pad 120px vertically (80px on phones). The get block starts at 40px so it reads as the close of the section above it. Hero: 72px top (48px on phones), window 46px below the actions (28px on phones), 96px under the window (64px on phones).
 - **Stacks:** centred blocks (hero, black band, open-source block, get block) stack with a 22px gap. Section heads stack at 20px and sit 72px above their grid (48px on phones).
-- **Grids:** facts run 3 columns at 56px × 48px gaps; feature list 2 columns with a 56px column gap; trio 3 columns at 48px; the compatibility split is 1.05fr / 1fr at a 72px gap, vertically centred. The "everything you do" split stacks headline, feature list and the full-width Storage Overview window at 56px so the window's text stays legible.
-- **Breakpoints:** at 1068px the facts grid drops to 2 columns and splits stack at 48px. At 734px the nav links hide (brand and Download pill remain), facts, feature list and trio go to 1 column at 36px, section padding drops to 80px, the status panel tightens, and screenshots swap to phone crops.
+- **Grids:** facts run 3 columns at 56px × 48px gaps; trio 3 columns at 48px; the compatibility split is 1.05fr / 1fr at a 72px gap, vertically centred. Job rows split 5fr text / 7fr window at a 64px gap, alternating sides, 112px apart (72px on phones).
+- **Breakpoints:** at 1068px the facts grid drops to 2 columns, and splits and job rows stack at 48px with the text first. At 734px the nav links hide (brand and Download pill remain), facts and trio go to 1 column at 36px, section padding drops to 80px, the status panel tightens, and screenshots swap to phone crops.
 - **Phone crops:** each wide screenshot is a `<picture>` with a `(max-width: 734px)` source pointing at a native-scale crop of the same real window (the right of the grid view, the treemap half of Storage Overview), so phones see legible UI rather than a shrunken desktop.
 - **Anchors:** smooth scrolling with a 64px scroll padding so section titles clear the sticky nav.
 
@@ -390,7 +391,7 @@ Soft, Apple-standard geometry. Buttons and badges are full pills (999px). The st
 - **Pairing:** next to the primary pill for the secondary path ("View on GitHub"), or alone at the end of a section.
 
 ### Hero
-Centred stack: 112px app icon, Display headline in two lines, Lede, actions row (pill + text link, 18px × 32px gaps), Fine release line ("Version x · macOS 26 or later · Apple silicon and Intel · Signed and notarized"), then the hero window, which starts inside the first viewport and continues below the fold.
+Centred stack: 112px app icon, Display headline in two lines that names the audience ("The S3 browser for people who live in buckets."), Lede naming the services and the read-only default, actions row (pill + text link, 18px × 32px gaps), Fine release line ("Version x · Free and open source · macOS 26 or later · Signed and notarized") and a second Fine line with the live-tested servers, then the hero window, which starts inside the first viewport and continues below the fold.
 
 ### Window figure + caption
 - **Image:** a real screenshot with its own transparent corners and the Window shadow, up to 1100px wide, served as 1x and 2x WebP.
@@ -409,8 +410,11 @@ Single column, 18px apart, 19px copy with an 18px Action Blue check (2.4 stroke)
 - **Badges:** pill, 2px 10px, 12px/600: Tested (green), Implemented (blue), Not yet tested (grey). A badge states exactly what the compatibility document states.
 - **Close:** a 17px text link to the compatibility details, 20px above.
 
-### Feature list
-Two columns of term (Title) + description (Body, Secondary Ink), each row 16px padded under a Hairline top rule; one column on phones.
+### Job rows
+The section after the hero answers "why not the web console?" with four everyday jobs (restore a deleted file, send an expiring link, see what fills a bucket, check a local copy). Each row is a Job title and body beside a real window at its own corners, captured at a compact window size so its text stays legible at 600px; a Fine note under the rows says which servers the windows used. Jobs never name or compare competing apps.
+
+### FAQ
+Band section with a centred Headline and up to 820px of native `<details>` rows: question in Title weight with a +/− marker, answer in Secondary Ink, Hairline between rows. Every answer stays inside the documented evidence and is repeated as `FAQPage` structured data.
 
 ### Dark band trio
 - **Band:** Night ground, centred, 44px shield icon (1.5 stroke) in Night Link Blue, Headline in Night Ink, Lede in Night Secondary Ink.

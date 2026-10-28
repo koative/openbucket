@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import {
+  ArrowDownUp,
   ArrowUpRight,
   Check,
   Command,
@@ -21,18 +22,25 @@ import listDetailShot from '../assets/list-detail.png';
 import gridPhoneShot from '../assets/grid-phone.png';
 import overviewPhoneShot from '../assets/overview-phone.png';
 import overviewShot from '../../../docs/media/storage-overview.png';
+import restoreShot from '../assets/job-restore.png';
+import shareShot from '../assets/job-share.png';
+import compareShot from '../assets/job-compare.png';
 
 // Screenshots keep the window's own transparent corners; WebP at 1x and 2x keeps that alpha.
 const webp = (src: ImageMetadata, width: number) =>
   getImage({ src, format: 'webp', width, densities: [1, 2], quality: 88 });
-const [grid, gridPhone, listDetail, overview, overviewPhone] = await Promise.all([
+const [grid, gridPhone, listDetail, overview, overviewPhone, restore, share, compare] = await Promise.all([
   webp(gridShot, 1100),
   webp(gridPhoneShot, 690),
   webp(listDetailShot, 1014),
-  webp(overviewShot, 900),
+  webp(overviewShot, 600),
   webp(overviewPhoneShot, 459),
+  webp(restoreShot, 600),
+  webp(shareShot, 600),
+  webp(compareShot, 600),
 ]);
 
+const site = 'https://openbucket.koative.com/';
 const repo = 'https://github.com/koative/openbucket';
 const dmg = `${repo}/releases/latest/download/OpenBucket-macOS.dmg`;
 const docs = `${repo}/blob/main/docs`;
@@ -52,34 +60,111 @@ try {
 } catch {}
 const release = version ? `Version ${version}` : 'Latest release';
 
+// The everyday S3 jobs a web console makes slow, each shown in a real window.
+const jobs = [
+  {
+    title: 'Bring back the file someone deleted.',
+    text: 'On a versioned bucket, Show Deleted Files lists what’s gone and Restore puts it back. Each file’s history opens in the Info panel, and Browse As Of shows a folder as it was on any date.',
+    image: restore,
+    alt: 'Show Deleted Files in a campaign folder: two deleted photos marked with a trash icon, and the Info panel showing the selected photo as deleted with its version history.',
+  },
+  {
+    title: 'Send a link that expires on its own.',
+    text: 'Create a presigned link that works for 15 minutes up to 7 days. It’s signed on your Mac, so no server sees your keys. Copy it, share it, or scan its QR code with your phone.',
+    image: share,
+    alt: 'The Share Link sheet for a photo: a link that expires in one day, Copy Link and Share buttons, and a QR code for the link.',
+  },
+  {
+    title: 'See what’s filling the bucket.',
+    text: 'Storage Overview draws any bucket or folder as a treemap by size and kind, with its storage classes and largest files, so two weeks of database backups stand out at a glance.',
+    image: overview,
+    phone: overviewPhone,
+    alt: 'Storage Overview of a whole bucket, 13.5 GB in 3,287 objects: a treemap of its folders with backups taking 76%, its storage class, and the largest files.',
+  },
+  {
+    title: 'Check a local copy against S3.',
+    text: 'Compare with Local Folder matches files by path, size and checksum, then updates S3 or your Mac with only what’s new or changed. Nothing is deleted on either side.',
+    image: compare,
+    alt: 'Compare with Local Folder: 17 files compared, filters for size differs, missing in S3, only in S3 and identical, and Update S3 and Update Mac buttons.',
+  },
+];
+
 const native = [
   { Icon: Eye, title: 'Quick Look', text: 'Press Space or ⌘Y to Quick Look images, video and documents straight from the bucket.' },
   { Icon: Search, title: 'Spotlight and Shortcuts', text: 'Favorite folders show up in Spotlight. App Intents open locations and copy share links.' },
   { Icon: Link, title: 's3:// links', text: 'Open s3:// links from any app, or paste an S3 console URL into Go to Location.' },
   { Icon: Command, title: 'Keyboard first', text: '⌘1 and ⌘2 switch grid and list, ⌘↑ goes up a folder, ⌘F finds, ⌥⌘I shows Info.' },
   { Icon: SquareDashedMousePointer, title: 'Selection you know', text: '⌘A, ⇧-click and ⌘-click in grid and list. Drag files straight out to Finder.' },
-  { Icon: KeyRound, title: 'Keychain', text: 'Access keys and session tokens you enter are stored in your macOS Keychain.' },
-];
-
-const work = [
-  { title: 'Preview', text: 'Image and video thumbnails, inline playback, and an Info panel with headers, metadata, tags and photo EXIF.' },
-  { title: 'Share', text: 'Presigned links that expire after 15 minutes to 7 days, with a QR code for your phone.' },
-  { title: 'Versions', text: 'On versioned buckets: version history for each file, deleted files you can bring back, and Browse As Of any date.' },
-  { title: 'Transfers', text: 'Files, selections and whole folders up and down side by side, with progress and cancel. Large files go in parts.' },
-  { title: 'Storage Overview', text: 'A treemap of any folder by size and kind, its storage classes and its largest files.' },
-  { title: 'Compare with Local Folder', text: 'Check a local copy by size and checksum, then update S3 or your Mac. Nothing is deleted on either side.' },
+  { Icon: ArrowDownUp, title: 'Transfers', text: 'Files, selections and whole folders up and down side by side, with progress and cancel. Large files go in parts.' },
 ];
 
 const providers = [
-  { name: 'Garage 2.4.1', status: 'Tested', note: 'Browsing and the full write round trip pass live tests. The screenshots use it.' },
+  { name: 'Garage 2.4.1', status: 'Tested', note: 'Browsing and the full write round trip pass live tests.' },
   { name: 'MinIO, RustFS and SeaweedFS', status: 'Tested', note: 'Browsing and the full write round trip pass live tests on each.' },
   { name: 'Adobe S3Mock', status: 'Tested', note: 'The write round trip passes.' },
   { name: 'Amazon S3', status: 'Implemented', note: 'Built on Soto; no account-backed live test in the repository yet.' },
   { name: 'Ceph, Cloudflare R2, Backblaze B2 and others', status: 'Not yet tested', note: 'No live result yet.' },
 ];
+
+const faq = [
+  {
+    q: 'Is OpenBucket free?',
+    a: 'Yes. OpenBucket is free and open source under the MIT license. Every release is signed with a Developer ID and notarized by Apple.',
+  },
+  {
+    q: 'Does it work with MinIO, Cloudflare R2 or Backblaze B2?',
+    a: 'Browsing and changing files pass live tests on Garage, MinIO, RustFS and SeaweedFS. Amazon S3 support is implemented, and Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces and Hetzner Object Storage have ready-made endpoint settings, but none of those has a live test result yet.',
+  },
+  {
+    q: 'Is it safe to connect to a production bucket?',
+    a: 'Every connection starts read-only. Uploads, moves, renames and deletes only appear after you turn on Allow changes for that connection, and Compare with Local Folder never deletes files on either side.',
+  },
+  {
+    q: 'Where are my access keys stored?',
+    a: 'Access keys and session tokens you enter are stored in the macOS Keychain. You can also sign in with a named AWS CLI profile, including roles and IAM Identity Center after aws sso login.',
+  },
+  {
+    q: 'Can I open a bucket my key can’t list?',
+    a: 'Yes. Set Known bucket in the connection, and optionally a starting folder, to browse without permission to list every bucket in the account.',
+  },
+  {
+    q: 'Does it mount buckets in Finder or sync them?',
+    a: 'No. OpenBucket is a browser: it doesn’t mount buckets or sync in the background. Compare with Local Folder updates S3 or your Mac once, when you ask.',
+  },
+  {
+    q: 'Which Macs does it run on?',
+    a: 'macOS 26 or later, on Apple silicon and Intel Macs.',
+  },
+];
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'OpenBucket',
+    description:
+      'A free, open-source S3 browser for Mac to browse, preview, share and restore files in Amazon S3 and S3-compatible storage.',
+    url: site,
+    downloadUrl: dmg,
+    image: new URL('/og.png', site).href,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'macOS 26 or later',
+    ...(version ? { softwareVersion: version } : {}),
+    license: 'https://opensource.org/license/mit',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    publisher: { '@type': 'Organization', name: 'Koative', url: 'https://github.com/koative' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+];
 ---
 
 <Layout>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <header class="nav">
     <div class="nav-inner">
       <a class="brand" href="/">
@@ -90,6 +175,7 @@ const providers = [
         <a href="#features">Features</a>
         <a href="#storage">Compatibility</a>
         <a href="#security">Security</a>
+        <a href="#faq">FAQ</a>
         <a href={repo}>GitHub</a>
       </nav>
       <a class="pill pill-small" href={dmg}>Download</a>
@@ -99,16 +185,17 @@ const providers = [
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
       <img class="app-icon hero-icon" src={icon.src} alt="OpenBucket app icon" width="112" height="112" />
-      <h1 id="hero-title">Your S3 buckets,<br />right on your Mac.</h1>
+      <h1 id="hero-title">The S3 browser for people<br />who live in buckets.</h1>
       <p class="lede">
-        OpenBucket is a free, open-source S3 browser, built with SwiftUI, for browsing, previewing, sharing and
-        managing files in Amazon S3 and S3‑compatible storage.
+        Browse, preview, share and restore files in Amazon S3, MinIO and other S3‑compatible storage, in a native
+        Mac app that stays read-only until you allow changes.
       </p>
       <div class="actions">
         <a class="pill" href={dmg}><Download size={19} stroke-width={2.2} /> Download for macOS</a>
         <a class="text-link" href={repo}>View on GitHub <ArrowUpRight size={17} /></a>
       </div>
-      <p class="fine">{release} · macOS 26 or later · Apple silicon and Intel · Signed and notarized</p>
+      <p class="fine">{release} · Free and open source · macOS 26 or later · Signed and notarized</p>
+      <p class="fine trust">Live-tested with Garage, MinIO, RustFS and SeaweedFS</p>
       <figure class="window hero-window">
         <picture>
           <source media="(max-width: 734px)" srcset={gridPhone.srcSet.attribute} width={gridPhone.attributes.width} height={gridPhone.attributes.height} />
@@ -118,23 +205,27 @@ const providers = [
       </figure>
     </section>
 
-    <section class="band" id="features" aria-labelledby="native-title">
+    <section class="band" id="features" aria-labelledby="jobs-title">
       <div class="section-head">
-        <h2 id="native-title">Made for the Mac.<br /><span>Not a web console in a window.</span></h2>
-        <p class="lede">OpenBucket uses SwiftUI and the macOS 26 look, and it works with the parts of macOS you already know.</p>
+        <h2 id="jobs-title">The S3 jobs a web console makes slow.<br /><span>A few clicks on your Mac.</span></h2>
       </div>
-      <ul class="facts">
-        {native.map(({ Icon, title, text }) => (
-          <li>
-            <Icon size={28} stroke-width={1.7} />
-            <h3>{title}</h3>
-            <p>{text}</p>
-          </li>
+      <div class="jobs">
+        {jobs.map(({ title, text, image, phone, alt }) => (
+          <article class="job">
+            <div class="job-text">
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+            <figure class="window job-shot">
+              <picture>
+                {phone && <source media="(max-width: 734px)" srcset={phone.srcSet.attribute} width={phone.attributes.width} height={phone.attributes.height} />}
+                <img src={image.src} srcset={image.srcSet.attribute} width={image.attributes.width} height={image.attributes.height} alt={alt} loading="lazy" />
+              </picture>
+            </figure>
+          </article>
         ))}
-      </ul>
-      <figure class="window detail">
-        <img src={listDetail.src} srcset={listDetail.srcSet.attribute} width={listDetail.attributes.width} height={listDetail.attributes.height} alt="List view up close: the campaign's photos, videos, ZIP and PDF with name, size, modified and kind columns, and the Info panel's preview, Download and Share buttons." loading="lazy" />
-      </figure>
+      </div>
+      <p class="fine jobs-note">Real OpenBucket windows, connected to local Garage and MinIO servers with demo files.</p>
     </section>
 
     <section class="plain" id="storage" aria-labelledby="storage-title">
@@ -164,26 +255,23 @@ const providers = [
       </div>
     </section>
 
-    <section class="band" aria-labelledby="work-title">
-      <div class="split split-media">
-        <h2 id="work-title">Everything you do with files.<br /><span>Now in your buckets.</span></h2>
-        <div>
-          <dl class="feature-list">
-            {work.map(({ title, text }) => (
-              <div>
-                <dt>{title}</dt>
-                <dd>{text}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-        <figure class="window">
-          <picture>
-            <source media="(max-width: 734px)" srcset={overviewPhone.srcSet.attribute} width={overviewPhone.attributes.width} height={overviewPhone.attributes.height} />
-            <img src={overview.src} srcset={overview.srcSet.attribute} width={overview.attributes.width} height={overview.attributes.height} alt="Storage Overview of a whole bucket, 13.5 GB in 3,287 objects: a treemap of its folders with backups taking 76%, its storage class, and the largest files." loading="lazy" />
-          </picture>
-        </figure>
+    <section class="band" id="mac" aria-labelledby="native-title">
+      <div class="section-head">
+        <h2 id="native-title">Made for the Mac.<br /><span>Not a web console in a window.</span></h2>
+        <p class="lede">OpenBucket uses SwiftUI and the macOS 26 look, and it works with the parts of macOS you already know.</p>
       </div>
+      <ul class="facts">
+        {native.map(({ Icon, title, text }) => (
+          <li>
+            <Icon size={28} stroke-width={1.7} />
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ul>
+      <figure class="window detail">
+        <img src={listDetail.src} srcset={listDetail.srcSet.attribute} width={listDetail.attributes.width} height={listDetail.attributes.height} alt="List view up close: the campaign's photos, videos, ZIP and PDF with name, size, modified and kind columns, and the Info panel's preview, Download and Share buttons." loading="lazy" />
+      </figure>
     </section>
 
     <section class="dark" id="security" aria-labelledby="security-title">
@@ -226,11 +314,25 @@ const providers = [
       </div>
     </section>
 
+    <section class="band" id="faq" aria-labelledby="faq-title">
+      <div class="section-head">
+        <h2 id="faq-title">Questions, answered.</h2>
+      </div>
+      <div class="faq">
+        {faq.map(({ q, a }) => (
+          <details>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
     <section class="get" aria-labelledby="get-title">
       <img class="app-icon" src={icon.src} alt="" width="96" height="96" loading="lazy" />
       <h2 id="get-title">Get OpenBucket.</h2>
       <a class="pill" href={dmg}><Download size={19} stroke-width={2.2} /> Download for macOS</a>
-      <p class="fine">{release} · macOS 26 or later · An early release: please report what breaks on GitHub.</p>
+      <p class="fine">{release} · Free and open source · Issues and ideas on <a href={`${repo}/issues`}>GitHub</a></p>
     </section>
   </main>
 

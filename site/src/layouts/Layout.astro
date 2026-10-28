@@ -8,8 +8,8 @@ interface Props {
   noindex?: boolean;
 }
 const {
-  title = 'OpenBucket — A native S3 browser for Mac',
-  description = 'OpenBucket is a free, open-source S3 browser for macOS. Browse, preview, share and manage files in Amazon S3 and S3-compatible storage.',
+  title = 'OpenBucket: Free, Native S3 Browser for Mac',
+  description = 'A free, open-source S3 browser for Mac. Browse, preview, share and restore files in Amazon S3, MinIO and other S3-compatible storage, read-only until you allow changes.',
   noindex = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -32,10 +32,13 @@ const shareImage = new URL('/og.png', Astro.site);
     <meta property="og:image" content={shareImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="OpenBucket: a native S3 browser for Mac" />
+    <meta property="og:image:alt" content="OpenBucket, the S3 browser for Mac, showing a campaign folder of photos and videos in a bucket" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <link rel="icon" type="image/png" href={icon.src} />
     <link rel="apple-touch-icon" href={touchIcon.src} />
+    <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
