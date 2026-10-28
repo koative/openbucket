@@ -632,9 +632,26 @@ private let completedUpload = reply(
   #expect(headers["content-type"] == ["text/plain"])
   #expect(headers["cache-control"] == ["no-cache"])
   #expect(headers["x-amz-meta-owner"] == ["rael"])
-  #expect(headers["x-amz-decoded-content-length"] == ["5"])
+  // R2 and other services reject aws-chunked signing, so custom endpoints send an unsigned payload.
+  #expect(headers["x-amz-content-sha256"] == ["UNSIGNED-PAYLOAD"])
+  #expect(headers["content-encoding"].isEmpty)
   #expect(await transport.bodies().first?.contains("hello") == true)
   #expect(sent.withLock { $0 } == 5)
+}
+
+@Test func amazonUploadKeepsChunkedSigning() async throws {
+  let file = temporaryURL()
+  try "hello".write(to: file, atomically: true, encoding: .utf8)
+  defer { try? FileManager.default.removeItem(at: file) }
+  let transport = RecordingHTTPClient("")
+
+  try await SotoS3Repository(httpClient: transport).uploadFile(
+    profile: try profile("https://s3.eu-central-1.amazonaws.com", .automatic), credentials: credentials,
+    bucket: "photos", key: "a.txt", from: file, headers: ObjectHeaders(), progress: { _ in })
+
+  let headers = try #require(await transport.headers().first)
+  #expect(headers["x-amz-content-sha256"] == ["STREAMING-AWS4-HMAC-SHA256-PAYLOAD"])
+  #expect(headers["x-amz-decoded-content-length"] == ["5"])
 }
 
 @Test func partSizeStaysAtTheMinimumUntilTenThousandPartsWouldNotFit() {
@@ -665,11 +682,10 @@ private let completedUpload = reply(
   #expect(queries[0].contains("uploads"))
   #expect(queries[1].contains("partNumber=1") && queries[1].contains("uploadId=u1"))
   #expect(queries[2].contains("partNumber=2"))
-  let headers = await transport.headers()
-  #expect(headers[1]["x-amz-decoded-content-length"] == ["\(SotoS3Repository.singlePutLimit)"])
-  #expect(headers[2]["x-amz-decoded-content-length"] == ["1"])
-  let complete = await transport.bodies()[3]
-  #expect(complete.contains("p1") && complete.contains("<PartNumber>2</PartNumber>"))
+  let bodies = await transport.bodies()
+  #expect(bodies[1].utf8.count == Int(SotoS3Repository.singlePutLimit))
+  #expect(bodies[2].utf8.count == 1)
+  #expect(bodies[3].contains("p1") && bodies[3].contains("<PartNumber>2</PartNumber>"))
   #expect(sent.withLock { $0 } == size)
 }
 

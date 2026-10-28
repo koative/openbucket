@@ -38,7 +38,7 @@ Download `OpenBucket-macOS.dmg` from `https://github.com/koative/openbucket/rele
 - Shipped in v0.2.0: grid and list browsing, breadcrumbs, Go to Location, favorites and recents, search below a folder, thumbnails and Quick Look, inline video, Info panel (headers, metadata, tags, EXIF), versions and deleted files, Browse As Of, presigned share links (15 min to 7 days, QR code), file/batch/folder downloads and uploads with parallel transfers, Storage Overview treemap, Compare with Local Folder with one-way Update S3 / Update Mac.
 - Out of scope today: continuous or two-way sync, Finder mounting, bucket management, permanent deletion of individual versions, non-S3 protocols.
 - Early preview software (v0.2.x).
-- Compatibility evidence is narrow and must not be overstated: live-tested with Amazon S3 (eu-central-1, including version history and restore), Garage 2.4.1, MinIO RELEASE.2025-10-15, RustFS 1.0.4, SeaweedFS 4.50 and Adobe S3Mock; Ceph, Cloudflare R2, Backblaze B2 and others have no live result. Say "Amazon S3 and S3-compatible stores", never "works with every provider".
+- Compatibility evidence is narrow and must not be overstated: live-tested with Amazon S3 (eu-central-1, including version history and restore), Cloudflare R2, Garage 2.4.1, MinIO RELEASE.2025-10-15, RustFS 1.0.4, SeaweedFS 4.50 and Adobe S3Mock; Ceph, Backblaze B2, Wasabi and others have no live result. Say "Amazon S3 and S3-compatible stores", never "works with every provider".
 
 ## Brand Commitments
 

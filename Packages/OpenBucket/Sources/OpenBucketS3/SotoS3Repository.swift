@@ -665,12 +665,17 @@ public struct SotoS3Repository: S3Repository {
     )
     var endpoint = profile.endpoint.absoluteString
     if endpoint.hasSuffix("/") { endpoint.removeLast() }
+    var options: AWSServiceConfig.Options =
+      profile.addressingStyle == .virtualHost ? [.s3ForceVirtualHost] : []
+    // Streamed bodies are signed as aws-chunked by default, which Cloudflare R2 and other services reject.
+    // Elsewhere uploads send UNSIGNED-PAYLOAD with a Content-Length instead.
+    if !profile.endpoint.isAmazon { options.insert(.s3DisableChunkedUploads) }
     let service = S3(
       client: client,
       region: Region(rawValue: profile.region),
       endpoint: endpoint,
       timeout: timeout,
-      options: profile.addressingStyle == .virtualHost ? [.s3ForceVirtualHost] : []
+      options: options
     )
     do {
       let value = try await operation(service)

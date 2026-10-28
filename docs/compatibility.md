@@ -8,6 +8,7 @@ OpenBucket browses, downloads and, on connections with **Allow changes** turned 
 | Adobe S3Mock (latest), path style | Write round trip passed. S3Mock keeps listing deleted keys in `ListObjectsV2`, keeps the old Content-Type on a metadata-replacing copy, and rejects an unchanged copy onto the same key |
 | Custom endpoint with a path, path style | A request-construction test checks that Soto signs the endpoint path followed by the bucket path |
 | Amazon S3, `eu-central-1`, regional endpoint, automatic (virtual-host) addressing | Live tests passed for a known bucket and nested prefix and for the write round trip below, with an IAM user limited to one versioned bucket. A versioning check also passed: two uploads list as two versions, copying the older version back restores it, a delete leaves a delete marker, and a connection set to the wrong region fails as an endpoint or region problem. Glacier restores, SSE-KMS and IAM Identity Center sign-in weren't exercised |
+| Cloudflare R2, account endpoint, region `auto`, automatic (path) addressing | Live tests passed for a known bucket and nested prefix and for the write round trip below, with an API token limited to one bucket. R2 rejects aws-chunked upload signing, so OpenBucket sends uploads to every endpoint except Amazon S3 with `UNSIGNED-PAYLOAD` and a Content-Length. R2 has no object tagging (`NotImplemented`) or versioning (`GetBucketVersioning` is denied), so Info shows no tags and deletes are reported as permanent |
 | MinIO RELEASE.2025-10-15, path style | Live tests passed for a known bucket and nested prefix and for the write round trip below. Object tagging and bucket versioning answer through the S3 API; the app's version history screens weren't exercised. This is the last community release Homebrew ships |
 | RustFS 1.0.4, path style | Same live tests and the same tagging and versioning API check passed |
 | SeaweedFS 4.50 (`weed server -s3`), path style | Same live tests and the same tagging and versioning API check passed. SeaweedFS sends `X-Amz-Meta-…` with a capital prefix; OpenBucket reads metadata header names case-insensitively for it |
@@ -21,7 +22,7 @@ Changes are sent only for connections with **Allow changes** turned on. They use
 
 | Action | S3 operations |
 | --- | --- |
-| Upload | `PutObject` up to 16 MiB; above that `CreateMultipartUpload`, `UploadPart` (parts of at least 16 MiB, at most 10,000 parts) and `CompleteMultipartUpload`, or `AbortMultipartUpload` after a failure or cancel. Content-Type comes from the file extension |
+| Upload | `PutObject` up to 16 MiB; above that `CreateMultipartUpload`, `UploadPart` (parts of at least 16 MiB, at most 10,000 parts) and `CompleteMultipartUpload`, or `AbortMultipartUpload` after a failure or cancel. Content-Type comes from the file extension. Amazon S3 bodies are signed in aws-chunked form; other endpoints get an unsigned payload, as R2 requires |
 | New Folder | `PutObject` of an empty `folder/` marker |
 | Rename, Move To, drag to a folder | `HeadObject` and `CopyObject` (multipart `UploadPartCopy` above 5 GiB) then `DeleteObjects` for each copied source; a source whose copy failed is kept. ⌥-drop copies without the delete |
 | Delete | `DeleteObjects` in batches of 1,000 without version IDs, so versioned buckets keep the data behind a delete marker |

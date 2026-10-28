@@ -141,7 +141,8 @@ func writeRoundTrip() async throws {
       #expect(try await details("small.txt").tags == ["team": "a&b"])
     }
 
-    let versioning = try await repository.bucketVersioning(
+    // Versioning is optional too: R2 denies GetBucketVersioning, and the app treats that as not versioned.
+    let versioning = try? await repository.bucketVersioning(
       profile: profile, credentials: credentials, bucket: bucket)
     let failures = try await repository.deleteObjects(
       profile: profile, credentials: credentials, bucket: bucket, keys: [prefix + "small.txt"])

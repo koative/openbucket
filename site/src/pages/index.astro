@@ -100,10 +100,11 @@ const native = [
 
 const providers = [
   { name: 'Amazon S3', status: 'Tested', note: 'Browsing, the full write round trip, version history and restore pass live tests.' },
+  { name: 'Cloudflare R2', status: 'Tested', note: 'Browsing and the full write round trip pass live tests. R2 has no tagging or versioning.' },
   { name: 'Garage 2.4.1', status: 'Tested', note: 'Browsing and the full write round trip pass live tests.' },
   { name: 'MinIO, RustFS and SeaweedFS', status: 'Tested', note: 'Browsing and the full write round trip pass live tests on each.' },
   { name: 'Adobe S3Mock', status: 'Tested', note: 'The write round trip passes.' },
-  { name: 'Ceph, Cloudflare R2, Backblaze B2 and others', status: 'Not yet tested', note: 'No live result yet.' },
+  { name: 'Ceph, Backblaze B2, Wasabi and others', status: 'Not yet tested', note: 'No live result yet.' },
 ];
 
 const faq = [
@@ -113,7 +114,7 @@ const faq = [
   },
   {
     q: 'Does it work with MinIO, Cloudflare R2 or Backblaze B2?',
-    a: 'Browsing and changing files pass live tests on Amazon S3, Garage, MinIO, RustFS and SeaweedFS. Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces and Hetzner Object Storage have ready-made endpoint settings, but none of those has a live test result yet.',
+    a: 'Browsing and changing files pass live tests on Amazon S3, Cloudflare R2, Garage, MinIO, RustFS and SeaweedFS. Backblaze B2, Wasabi, DigitalOcean Spaces and Hetzner Object Storage have ready-made endpoint settings, but none of those has a live test result yet.',
   },
   {
     q: 'Is it safe to connect to a production bucket?',
@@ -199,7 +200,7 @@ const structuredData = [
         <a class="text-link" href={repo}>View on GitHub <ArrowUpRight size={17} /></a>
       </div>
       <p class="fine">{release} · Free and open source · macOS 26 or later · Signed and notarized</p>
-      <p class="fine trust">Live-tested with Amazon S3, Garage, MinIO, RustFS and SeaweedFS</p>
+      <p class="fine trust">Live-tested with Amazon S3, Cloudflare R2, Garage, MinIO, RustFS and SeaweedFS</p>
       <figure class="window hero-window">
         <picture>
           <source media="(max-width: 734px)" srcset={gridPhone.srcSet.attribute} width={gridPhone.attributes.width} height={gridPhone.attributes.height} />
