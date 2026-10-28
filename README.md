@@ -37,7 +37,7 @@ The screenshots show a real OpenBucket window connected to a local Garage server
 
 | Area | Current behavior |
 | --- | --- |
-| Connections | Multiple profiles, custom HTTP or HTTPS endpoints, region and addressing style, access keys with an optional session token or a named AWS CLI profile (static keys, roles, IAM Identity Center after `aws sso login`) |
+| Connections | Multiple profiles; endpoint shapes for Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces and Hetzner Object Storage, so they need only a region or an R2 account ID; any other HTTP or HTTPS endpoint with region and addressing style; access keys with an optional session token or a named AWS CLI profile (static keys, roles, IAM Identity Center after `aws sso login`) |
 | Restricted accounts | Open a known bucket without account-wide `ListBuckets` permission; start in a chosen folder |
 | Browsing | Grid and sortable native table, breadcrumb path, folder navigation, `s3://` links (also opened from other apps) and S3 console URLs in Go to Location, favorites and recent folders per connection, filter and search below the current folder, refresh, incremental `ListObjectsV2` loading |
 | Selection and commands | Native multi-selection in grid and list (⌘A, ⇧-click, ⌘-click); menu commands and shortcuts for the enclosing folder (⌘↑), back and forward (⌘[ ⌘]), grid and list (⌘1 ⌘2), Find (⌘F) and the Info panel (⌥⌘I); context menus; Copy S3 URI |
@@ -56,7 +56,7 @@ Continuous or two-way sync, Finder mounting, bucket management, permanent deleti
 After installing the app:
 
 1. Choose **Add Connection**.
-2. Enter the S3 endpoint URL and region. For a custom service such as Garage, choose **Path style** if its buckets live beneath the endpoint path.
+2. Pick the **Provider** and enter its region (for Cloudflare R2, the account ID instead); the endpoint fills in. For anything else, choose **Other S3-compatible** and enter the endpoint URL and region. For a custom service such as Garage, choose **Path style** if its buckets live beneath the endpoint path.
 3. Enter an access key and secret. Set **Known bucket** when the key cannot list all buckets. **Starting folder** is optional and opens a folder inside that bucket.
 4. Test the connection, save it, and browse. Use the toolbar's location action to jump directly to `s3://bucket/folder/`. To upload or change files, edit the connection and turn on **Allow changes**.
 

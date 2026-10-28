@@ -144,3 +144,71 @@ import Testing
   #expect(version("\u{00E9}").id != version("e\u{0301}").id)
   #expect(version("a/b").id != version("a%2Fb").id)
 }
+
+@Test func providerPresetEndpointsParseAndAreRecognizedAgain() throws {
+  for preset in ProviderPreset.allCases where preset != .other {
+    let built = try #require(preset.endpoint(region: preset.defaultRegion ?? "", accountID: "0a1b2c3d"))
+    let endpoint = try S3Endpoint(built)
+    #expect(ProviderPreset(endpoint: endpoint) == preset, "\(built)")
+  }
+  let r2 = try S3Endpoint(
+    #require(ProviderPreset.cloudflareR2.endpoint(region: "auto", accountID: "0a1b2c3d")))
+  #expect(ProviderPreset.accountID(in: r2) == "0a1b2c3d")
+  #expect(ProviderPreset.accountID(in: try S3Endpoint("https://s3.example.com")) == "")
+  #expect(ProviderPreset(endpoint: try S3Endpoint("https://store.example.com/s3/")) == .other)
+  // A typed region never turns into a different host.
+  #expect(ProviderPreset.amazon.endpoint(region: "us-east-1.evil.com") == nil)
+  #expect(ProviderPreset.backblazeB2.endpoint(region: "") == nil)
+  #expect(ProviderPreset.cloudflareR2.endpoint(region: "auto") == nil)
+}
+
+@Test func providerFieldsFollowTheProviderButNeverOverwriteTypedValues() throws {
+  var fields = ProviderFields(endpoint: nil, region: nil)
+  #expect(fields.provider == .amazon && fields.region == "us-east-1")
+  #expect(fields.endpoint == "https://s3.us-east-1.amazonaws.com")
+
+  fields.select(.cloudflareR2)
+  #expect(fields.region == "auto" && fields.endpoint == "https://")
+  fields.accountID = "0a1b2c3d"
+  fields.refreshEndpoint()
+  #expect(fields.endpoint == "https://0a1b2c3d.r2.cloudflarestorage.com")
+
+  fields.select(.backblazeB2)
+  #expect(fields.endpoint == "https://s3.us-west-004.backblazeb2.com")
+  fields.region = "eu-central-003"
+  fields.refreshEndpoint()
+  #expect(fields.endpoint == "https://s3.eu-central-003.backblazeb2.com")
+  // A typed region survives a provider switch.
+  fields.select(.wasabi)
+  #expect(fields.region == "eu-central-003" && fields.endpoint == "https://s3.eu-central-003.wasabisys.com")
+
+  // A typed endpoint is never replaced, by a region edit or a provider switch.
+  fields.endpoint = "http://minio.local:9000"
+  fields.region = "us-east-1"
+  fields.refreshEndpoint()
+  fields.select(.amazon)
+  #expect(fields.endpoint == "http://minio.local:9000")
+  fields.useAWSProfile(region: "eu-west-1")
+  #expect(fields.endpoint == "http://minio.local:9000" && fields.region == "eu-west-1")
+
+  // An AWS profile fills an untouched form, and its region survives the switch to Amazon S3.
+  var fromProfile = ProviderFields(endpoint: nil, region: nil)
+  fromProfile.select(.hetzner)
+  fromProfile.useAWSProfile(region: "ap-south-1")
+  #expect(fromProfile.provider == .amazon && fromProfile.region == "ap-south-1")
+  #expect(fromProfile.endpoint == "https://s3.ap-south-1.amazonaws.com")
+
+  // A saved R2 connection follows account ID edits; a saved custom endpoint ignores region edits.
+  var savedR2 = ProviderFields(
+    endpoint: try S3Endpoint("https://0a1b2c3d.r2.cloudflarestorage.com"), region: "auto")
+  #expect(savedR2.provider == .cloudflareR2 && savedR2.accountID == "0a1b2c3d")
+  savedR2.accountID = "ffff0000"
+  savedR2.refreshEndpoint()
+  #expect(savedR2.endpoint == "https://ffff0000.r2.cloudflarestorage.com")
+  var savedCustom = ProviderFields(
+    endpoint: try S3Endpoint("https://store.example.com/s3/"), region: "garage")
+  #expect(savedCustom.provider == .other)
+  savedCustom.region = "us-east-1"
+  savedCustom.refreshEndpoint()
+  #expect(savedCustom.endpoint == "https://store.example.com/s3/")
+}

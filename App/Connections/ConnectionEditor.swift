@@ -8,8 +8,8 @@ struct ConnectionEditor: View {
   let existing: ConnectionProfile?
 
   @State private var name: String
-  @State private var endpoint: String
-  @State private var region: String
+  /// Endpoint, region and R2 account ID; they follow the provider until typed over.
+  @State private var fields: ProviderFields
   @State private var addressingStyle: AddressingStyle
   @State private var bucket: String
   @State private var startingPrefix: String
@@ -21,9 +21,6 @@ struct ConnectionEditor: View {
   @State private var awsProfile: String
   @State private var allowsChanges: Bool
   @State private var awsProfiles: [AWSConfigProfiles.Entry] = []
-  /// What `prefill` last wrote; it keeps replacing these while the fields still hold them.
-  @State private var prefilledRegion: String?
-  @State private var prefilledEndpoint: String?
   @State private var status: Status?
   /// Fields whose inline problem may show; everything shows after a Test or Save attempt.
   @State private var touched: Set<Field> = []
@@ -33,8 +30,7 @@ struct ConnectionEditor: View {
     self.model = model
     self.existing = existing
     _name = State(initialValue: existing?.name ?? "")
-    _endpoint = State(initialValue: existing?.endpoint.absoluteString ?? "https://")
-    _region = State(initialValue: existing?.region ?? Self.defaultRegion)
+    _fields = State(initialValue: ProviderFields(endpoint: existing?.endpoint, region: existing?.region))
     _addressingStyle = State(initialValue: existing?.addressingStyle ?? .automatic)
     _bucket = State(initialValue: existing?.knownBucket ?? "")
     _startingPrefix = State(initialValue: existing?.startingPrefix ?? "")
@@ -61,12 +57,28 @@ struct ConnectionEditor: View {
           TextField("Name", text: $name, prompt: Text("Required"))
             .onChange(of: name) { touched.insert(.name) }
           message(.name)
-          TextField("Endpoint URL", text: $endpoint)
+          Picker("Provider", selection: Binding(get: { fields.provider }, set: { fields.select($0) })) {
+            ForEach(ProviderPreset.allCases) { Text($0.title).tag($0) }
+          }
+          if fields.provider == .cloudflareR2 {
+            TextField(text: $fields.accountID, prompt: Text("Required")) {
+              Text("Account ID")
+              Text("The ID in the S3 API URL shown in your R2 bucket’s settings.")
+            }
+            .onChange(of: fields.accountID) { fields.refreshEndpoint() }
+          }
+          TextField("Endpoint URL", text: $fields.endpoint)
             .textContentType(.URL)
-            .onChange(of: endpoint) { touched.formUnion([.endpoint, .addressing]) }
+            .onChange(of: fields.endpoint) { touched.formUnion([.endpoint, .addressing]) }
           message(.endpoint)
-          TextField("Region", text: $region)
-            .onChange(of: region) { touched.insert(.region) }
+          TextField(text: $fields.region) {
+            Text("Region")
+            if let hint = fields.provider.regionHint { Text(hint) }
+          }
+          .onChange(of: fields.region) {
+            touched.insert(.region)
+            fields.refreshEndpoint()
+          }
           message(.region)
           Picker("Bucket addressing", selection: $addressingStyle) {
             Text("Automatic").tag(AddressingStyle.automatic)
@@ -201,23 +213,10 @@ struct ConnectionEditor: View {
     }
   }
 
-  private static let defaultRegion = "us-east-1"
-
   /// Fills region and endpoint from the chosen AWS profile unless the user already set them.
   private func prefill(from name: String) {
     guard let entry = awsProfiles.first(where: { $0.name == name }) else { return }
-    let currentRegion = region.trimmed
-    if let profileRegion = entry.region,
-      currentRegion.isEmpty || currentRegion == Self.defaultRegion || currentRegion == prefilledRegion
-    {
-      region = profileRegion
-      prefilledRegion = profileRegion
-    }
-    let current = endpoint.trimmed
-    if current.isEmpty || current == "https://" || current == prefilledEndpoint, !region.trimmed.isEmpty {
-      endpoint = "https://s3.\(region.trimmed).amazonaws.com"
-      prefilledEndpoint = endpoint
-    }
+    fields.useAWSProfile(region: entry.region)
   }
 
   @ViewBuilder private var statusView: some View {
@@ -270,7 +269,7 @@ struct ConnectionEditor: View {
     case .endpoint:
       return endpointProblem
     case .region:
-      return region.trimmed.isEmpty ? "Enter a region, such as us-east-1." : nil
+      return fields.region.trimmed.isEmpty ? "Enter a region, such as us-east-1." : nil
     case .addressing:
       return draft?.addressingProblem(bucket: bucket.trimmed)
     case .bucket:
@@ -287,7 +286,7 @@ struct ConnectionEditor: View {
   }
 
   private var endpointProblem: String? {
-    let text = endpoint.trimmed
+    let text = fields.endpoint.trimmed
     if text.isEmpty { return "Enter an endpoint URL." }
     do {
       _ = try S3Endpoint(text)
@@ -310,7 +309,7 @@ struct ConnectionEditor: View {
   /// Required fields are filled; finer validation runs on submit and inline.
   private var isComplete: Bool {
     let credentials = usesAWSProfile ? [awsProfile] : [accessKeyID, secretAccessKey]
-    return ([name, endpoint, region] + credentials).allSatisfy { !$0.trimmed.isEmpty }
+    return ([name, fields.endpoint, fields.region] + credentials).allSatisfy { !$0.trimmed.isEmpty }
   }
 
   private var isWorking: Bool {
@@ -320,12 +319,12 @@ struct ConnectionEditor: View {
 
   /// The profile as entered, or nil while the endpoint doesn't parse.
   private var draft: ConnectionProfile? {
-    guard let endpoint = try? S3Endpoint(endpoint.trimmed) else { return nil }
+    guard let endpoint = try? S3Endpoint(fields.endpoint.trimmed) else { return nil }
     return ConnectionProfile(
       id: existing?.id ?? UUID(),
       name: name.trimmed,
       endpoint: endpoint,
-      region: region.trimmed,
+      region: fields.region.trimmed,
       addressingStyle: addressingStyle,
       knownBucket: bucket.trimmed.nilIfEmpty,
       startingPrefix: startingPrefix,
