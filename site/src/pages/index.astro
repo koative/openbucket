@@ -135,6 +135,10 @@ const faq = [
     q: 'Which Macs does it run on?',
     a: 'macOS 26 or later, on Apple silicon and Intel Macs.',
   },
+  {
+    q: 'Can I install it with Homebrew?',
+    a: 'Yes. Run brew trust koative/tap once, then brew install --cask koative/tap/openbucket. The cask follows each new release.',
+  },
 ];
 
 const structuredData = [
@@ -332,6 +336,7 @@ const structuredData = [
       <img class="app-icon" src={icon.src} alt="" width="96" height="96" loading="lazy" />
       <h2 id="get-title">Get OpenBucket.</h2>
       <a class="pill" href={dmg}><Download size={19} stroke-width={2.2} /> Download for macOS</a>
+      <p class="brew">Or with Homebrew: <code>brew install --cask koative/tap/openbucket</code></p>
       <p class="fine">{release} · Free and open source · Issues and ideas on <a href={`${repo}/issues`}>GitHub</a></p>
     </section>
   </main>

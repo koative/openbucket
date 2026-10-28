@@ -23,6 +23,13 @@ OpenBucket is an early macOS app for Amazon S3 and S3-compatible object stores. 
 
 Use the **Download for macOS** button above: it always fetches the newest signed and notarized `OpenBucket-macOS.dmg` from [GitHub Releases](https://github.com/koative/openbucket/releases/latest). Open the DMG, drag OpenBucket to Applications, and launch it from there. OpenBucket runs on Apple silicon and Intel Macs with macOS 26 or later; every release lists its changes and a SHA-256 checksum. See [how releases are prepared](docs/RELEASING.md).
 
+Or install it with [Homebrew](https://brew.sh) from Koative's tap, which follows each new release:
+
+```sh
+brew trust koative/tap
+brew install --cask koative/tap/openbucket
+```
+
 ## See it in action
 
 The screenshots show a real OpenBucket window connected to a local Garage server, seeded with the fictional demo objects from [`docs/demo-assets`](docs/demo-assets).

@@ -56,5 +56,6 @@ The project disables signing for ordinary local and CI builds. The release scrip
    ```
 
 6. Review the draft's assets, notes, and download on GitHub, then publish it. The stable link for users is `https://github.com/koative/openbucket/releases/latest`. Publishing also runs `.github/workflows/site.yml`, which rebuilds [openbucket.koative.com](https://openbucket.koative.com) so it shows the new version.
+7. The Homebrew cask in [koative/homebrew-tap](https://github.com/koative/homebrew-tap) updates itself: its daily `brew bump` workflow finds the new release and opens a pull request with the new version and checksum. Merge it after its checks pass. To update right away, run the **brew bump** workflow from that repository's Actions tab.
 
 Do not reuse a version tag for different app bits. Fixes after publishing get a new version and a new tag.

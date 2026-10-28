@@ -424,7 +424,7 @@ Band section with a centred Headline and up to 820px of native `<details>` rows:
 Plain section, centred: Headline, Lede, and a row of three text links (Source code, Release notes, Contribute).
 
 ### Get block
-Centred close: 96px app icon with the Get icon glow, Headline ("Get OpenBucket."), the primary pill, and a Fine line that names the release and asks for bug reports. The 404 page reuses this block with "Go to OpenBucket".
+Centred close: 96px app icon with the Get icon glow, Headline ("Get OpenBucket."), the primary pill, a 15px Secondary Ink Homebrew line whose command sits in a selectable Band Grey monospace chip, and a Fine line that names the release and points to GitHub issues. The 404 page reuses this block with "Go to OpenBucket".
 
 ### Footer
 Band Grey, 12px Secondary Ink, on the measure with a Hairline top rule and 22px 22px 36px padding: maker line, a wrapping row of Footer Link Grey links (6px × 22px gaps), and the trademark line stating that OpenBucket is not affiliated with Amazon or Apple.
