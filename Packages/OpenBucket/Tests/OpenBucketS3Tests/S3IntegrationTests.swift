@@ -19,7 +19,7 @@ func listsKnownBucketAndNestedPrefix() async throws {
     name: "Integration S3",
     endpoint: try S3Endpoint(endpoint),
     region: region,
-    addressingStyle: .path,
+    addressingStyle: .automatic,
     knownBucket: bucket
   )
   let credentials = S3Credentials(accessKeyID: accessKey, secretAccessKey: secretKey)
@@ -69,7 +69,8 @@ func writeRoundTrip() async throws {
   let bucket = try #require(environment["OPENBUCKET_TEST_BUCKET"])
   let profile = ConnectionProfile(
     name: "Integration S3", endpoint: try S3Endpoint(try #require(environment["OPENBUCKET_TEST_ENDPOINT"])),
-    region: try #require(environment["OPENBUCKET_TEST_REGION"]), addressingStyle: .path, knownBucket: bucket,
+    region: try #require(environment["OPENBUCKET_TEST_REGION"]), addressingStyle: .automatic,
+    knownBucket: bucket,
     allowsChanges: true)
   let credentials = S3Credentials(
     accessKeyID: try #require(environment["OPENBUCKET_TEST_ACCESS_KEY"]),

@@ -7,7 +7,7 @@ OpenBucket browses, downloads and, on connections with **Allow changes** turned 
 | Garage 2.4.1, direct endpoint, path style | Live tests passed for a known bucket and nested prefix and for the write round trip below; the local demo screenshots use this setup. Garage has no versioning or object tagging |
 | Adobe S3Mock (latest), path style | Write round trip passed. S3Mock keeps listing deleted keys in `ListObjectsV2`, keeps the old Content-Type on a metadata-replacing copy, and rejects an unchanged copy onto the same key |
 | Custom endpoint with a path, path style | A request-construction test checks that Soto signs the endpoint path followed by the bucket path |
-| Amazon S3 | Soto adapter implemented; no account-backed live test in this repository yet |
+| Amazon S3, `eu-central-1`, regional endpoint, automatic (virtual-host) addressing | Live tests passed for a known bucket and nested prefix and for the write round trip below, with an IAM user limited to one versioned bucket. A versioning check also passed: two uploads list as two versions, copying the older version back restores it, a delete leaves a delete marker, and a connection set to the wrong region fails as an endpoint or region problem. Glacier restores, SSE-KMS and IAM Identity Center sign-in weren't exercised |
 | MinIO RELEASE.2025-10-15, path style | Live tests passed for a known bucket and nested prefix and for the write round trip below. Object tagging and bucket versioning answer through the S3 API; the app's version history screens weren't exercised. This is the last community release Homebrew ships |
 | RustFS 1.0.4, path style | Same live tests and the same tagging and versioning API check passed |
 | SeaweedFS 4.50 (`weed server -s3`), path style | Same live tests and the same tagging and versioning API check passed. SeaweedFS sends `X-Amz-Meta-…` with a capital prefix; OpenBucket reads metadata header names case-insensitively for it |
@@ -50,7 +50,7 @@ Soto selects virtual-host addressing for standard Amazon endpoints even when pat
 
 ## Live compatibility test
 
-The provider-neutral integration test is opt-in. Supply an isolated bucket with an existing object under the test prefix:
+The provider-neutral integration tests are opt-in. Both use automatic addressing, which is path style on custom endpoints and virtual-host style on Amazon S3. Supply an isolated bucket with an existing object under the test prefix:
 
 ```text
 OPENBUCKET_TEST_ENDPOINT
@@ -69,6 +69,8 @@ swift test --package-path Packages/OpenBucket --filter listsKnownBucketAndNested
 ```
 
 Use the same test against each provider before calling it verified. Never commit credentials or captured authorization headers.
+
+For Amazon S3, [`scripts/aws-live-test.yml`](../scripts/aws-live-test.yml) is a CloudFormation stack with one private, versioned, TLS-only bucket and an IAM user that can reach only that bucket. Deploy it, create the user's access key with `aws iam create-access-key`, run the tests, then delete the key. `aws cloudformation delete-stack` removes the user; empty the bucket's versions first.
 
 ## SDK boundary
 
