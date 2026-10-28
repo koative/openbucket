@@ -433,7 +433,7 @@ The hero window settles as it scrolls into view: a CSS scroll-driven animation o
 ### Do:
 - **Do** show only real OpenBucket screenshots, with their own transparent corners and the Window shadow, and caption them truthfully.
 - **Do** cut phone crops from the same real window at native scale and serve them through `<picture>` at `(max-width: 734px)`.
-- **Do** keep every claim inside the documented evidence: Garage 2.4.1 and Adobe S3Mock as Tested, Amazon S3 as Implemented, MinIO, RustFS and others as Not yet tested.
+- **Do** keep every claim inside the documented evidence: Garage 2.4.1, MinIO, RustFS, SeaweedFS and Adobe S3Mock as Tested, Amazon S3 as Implemented, everything else as Not yet tested.
 - **Do** keep one obvious download path: an Action Blue pill, with the source one text link away.
 - **Do** use the system font stack, semibold (600) headlines with negative tracking, and 17px body.
 - **Do** alternate Canvas White and Band Grey sections at 120px (80px on phones), with exactly one Night band.

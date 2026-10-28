@@ -8,7 +8,9 @@ OpenBucket browses, downloads and, on connections with **Allow changes** turned 
 | Adobe S3Mock (latest), path style | Write round trip passed. S3Mock keeps listing deleted keys in `ListObjectsV2`, keeps the old Content-Type on a metadata-replacing copy, and rejects an unchanged copy onto the same key |
 | Custom endpoint with a path, path style | A request-construction test checks that Soto signs the endpoint path followed by the bucket path |
 | Amazon S3 | Soto adapter implemented; no account-backed live test in this repository yet |
-| MinIO and RustFS | No live compatibility result yet |
+| MinIO RELEASE.2025-10-15, path style | Live tests passed for a known bucket and nested prefix and for the write round trip below. Object tagging and bucket versioning answer through the S3 API; the app's version history screens weren't exercised. This is the last community release Homebrew ships |
+| RustFS 1.0.4, path style | Same live tests and the same tagging and versioning API check passed |
+| SeaweedFS 4.50 (`weed server -s3`), path style | Same live tests and the same tagging and versioning API check passed. SeaweedFS sends `X-Amz-Meta-…` with a capital prefix; OpenBucket reads metadata header names case-insensitively for it |
 | Path-rewriting reverse proxy | Not verified; rewriting a SigV4-signed path can break authentication |
 
 The app uses `ListObjectsV2` with `/` as the delimiter. Each request asks for at most 500 entries; more entries load as you scroll. Each listing request times out after 20 seconds. A known bucket lets an account browse even if it cannot call account-wide `ListBuckets`. Listings request S3 URL encoding for keys that XML cannot represent, and decode only when the response declares URL encoding. Decoding follows Amazon S3 and MinIO: `+` becomes a space, and literal percent signs in keys remain intact. A response marked as truncated without a continuation token is reported as an error rather than shown as a complete listing.

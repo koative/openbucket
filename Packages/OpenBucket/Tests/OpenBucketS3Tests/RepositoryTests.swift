@@ -490,7 +490,8 @@ private func presign(
     200,
     headers: [
       "Content-Type": "image/jpeg", "x-amz-meta-Owner": "rael", "x-amz-storage-class": "GLACIER",
-      "x-amz-version-id": "v1",
+      // SeaweedFS capitalizes the prefix; header names are case-insensitive.
+      "X-Amz-Meta-Project": "aw26", "x-amz-version-id": "v1",
     ])
   let denied = reply(403, "<Error><Code>AccessDenied</Code></Error>")
   let tagging = reply(200, "<Tagging><TagSet><Tag><Key>team</Key><Value>ops</Value></Tag></TagSet></Tagging>")
@@ -503,7 +504,7 @@ private func presign(
   #expect(withoutTags.contentType == "image/jpeg")
   #expect(withoutTags.storageClass == "GLACIER")
   #expect(withoutTags.versionID == "v1")
-  #expect(withoutTags.metadata == ["owner": "rael"])
+  #expect(withoutTags.metadata == ["owner": "rael", "project": "aw26"])
   #expect(withoutTags.tags == nil)
   #expect(try await details([head, tagging]).tags == ["team": "ops"])
 }

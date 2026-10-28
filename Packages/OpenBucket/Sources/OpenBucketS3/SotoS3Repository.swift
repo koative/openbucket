@@ -660,6 +660,7 @@ public struct SotoS3Repository: S3Repository {
         sessionToken: credentials.sessionToken
       ),
       retryPolicy: .jitter(base: .milliseconds(200), maxRetries: 1),
+      middleware: Self.lowercaseMetadataHeaders,
       httpClient: httpClient
     )
     var endpoint = profile.endpoint.absoluteString
@@ -680,6 +681,20 @@ public struct SotoS3Repository: S3Repository {
       if error is CancellationError || Task.isCancelled { throw CancellationError() }
       throw S3ErrorMapper.map(error, writing: writing)
     }
+  }
+
+  /// Soto finds user metadata by a case-sensitive `x-amz-meta-` prefix, but header names are case-insensitive
+  /// and some services (SeaweedFS) answer `X-Amz-Meta-…`, which would drop the metadata. Lowercase those names.
+  private static let lowercaseMetadataHeaders = AWSMiddleware { request, context, next in
+    var response = try await next(request, context)
+    let mixedCase = response.headers.filter { name, _ in
+      name.utf8.count > 11 && !name.hasPrefix("x-amz-meta-") && name.prefix(11).lowercased() == "x-amz-meta-"
+    }
+    for (name, value) in mixedCase {
+      response.headers.remove(name: name)
+      response.headers.add(name: name.lowercased(), value: value)
+    }
+    return response
   }
 }
 
