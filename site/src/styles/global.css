@@ -13,8 +13,6 @@
   --night-ink: #f5f5f7;
   --night-ink-2: #a1a1a6;
   --night-link: #2997ff;
-  /* The screenshots' windows round 18px of 1224px wide; percentages keep that at any display size. */
-  --window-radius: 1.47% / 2.34%;
   --font:
     system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue',
     'Segoe UI', Roboto, Arial, sans-serif;
@@ -258,15 +256,9 @@ h2 {
   margin: 0 auto;
 }
 
+/* Screenshots carry the window's own transparent corners, so the shadow follows the alpha instead of a box. */
 .window img {
-  border-radius: var(--window-radius);
-  box-shadow:
-    0 2px 6px rgb(0 0 0 / 0.12),
-    0 34px 70px -18px rgb(0 0 0 / 0.42);
-}
-
-.window img.tall {
-  border-radius: 1.47% / 2.07%;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.14)) drop-shadow(0 26px 34px rgb(0 0 0 / 0.3));
 }
 
 .window figcaption {
@@ -623,13 +615,9 @@ h2 {
 }
 
 @media (max-width: 734px) {
-  /* Phone crops keep only some of the window's original 18px corners; match them at the crop's scale. */
-  .hero-window img {
-    border-radius: 2.3% / 3.66%;
-  }
-
-  .window img.tall {
-    border-radius: 2.88% / 2.07%;
+  /* Phone crops cut through the window; round the cut edges too. */
+  .window img {
+    border-radius: 10px;
   }
 
   .nav nav {

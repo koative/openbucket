@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@lucide/astro": "^1.16.0",
-    "astro": "^7.4.0"
+    "astro": "^7.4.0",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

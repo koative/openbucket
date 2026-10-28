@@ -122,10 +122,7 @@ rounded:
   detail: "14px"
   focus: "4px"
   icon: "22.5%"
-  window: "1.47% / 2.34%"
-  window-tall: "1.47% / 2.07%"
-  window-phone: "2.3% / 3.66%"
-  window-tall-phone: "2.88% / 2.07%"
+  crop-phone: "10px"
 spacing:
   gutter: "22px"
   measure: "1080px"
@@ -179,10 +176,7 @@ components:
     rounded: "{rounded.icon}"
     size: "112px"
   window:
-    rounded: "{rounded.window}"
     width: "1100px"
-  window-tall:
-    rounded: "{rounded.window-tall}"
   window-detail:
     rounded: "{rounded.detail}"
     width: "1014px"
@@ -274,7 +268,7 @@ components:
 
 OpenBucket's site is the category-standard Mac app landing page executed without a concept or costume, at the craft level of culturedcode.com/things and apple.com product pages. One product, one blue glass bucket icon, real app windows, one signed download. The page is a vertical stack of full-bleed sections on a white canvas, alternating with soft grey bands and a single black band, all set in the system face (SF Pro on Macs) with large semibold, slightly tightened headlines and generous whitespace.
 
-The product itself is the only imagery. Every visual of OpenBucket is a genuine screenshot of a real window against a local Garage bucket of demo files, shown at its own corner radius with a soft offset window shadow, and the hero window settles into place as it scrolls into view. Colour is restrained to Apple's neutral greys plus one action blue; the only other hues are the three compatibility badges, which carry evidence, not decoration.
+The product itself is the only imagery. Every visual of OpenBucket is a genuine screenshot of a real window against a local Garage bucket of demo files, captured with its own transparent corners and floating on a soft shadow that follows them, and the hero window settles into place as it scrolls into view. Colour is restrained to Apple's neutral greys plus one action blue; the only other hues are the three compatibility badges, which carry evidence, not decoration.
 
 The voice of the layout is calm and confident: centred heroes and section heads, two- and three-column grids of short facts, and claims that never outrun the documented evidence. It rejects novelty concepts and the dark developer-tool look.
 
@@ -282,7 +276,7 @@ The voice of the layout is calm and confident: centred heroes and section heads,
 - White canvas, #f5f5f7 bands, exactly one black band; light colour scheme only.
 - System type, semibold headlines with negative tracking, 17px body.
 - One action blue for the download pill; link blue for text links.
-- Real screenshots with radii that match the window's own 18px corners and a soft two-layer shadow.
+- Real screenshots with the window's own transparent corners and a soft two-layer shadow that follows them.
 - The app icon is the only illustration; Lucide line icons are the only glyphs.
 - Scroll-driven settle on the hero window, still under reduced motion.
 
@@ -353,7 +347,7 @@ A single centred column of full-bleed sections. Content width is the 1080px meas
 - **Stacks:** centred blocks (hero, black band, open-source block, get block) stack with a 22px gap. Section heads stack at 20px and sit 72px above their grid (48px on phones).
 - **Grids:** facts run 3 columns at 56px × 48px gaps; feature list 2 columns with a 56px column gap; trio 3 columns at 48px; the compatibility split is 1.05fr / 1fr at a 72px gap, vertically centred. The "everything you do" split stacks headline, feature list and the full-width Storage Overview window at 56px so the window's text stays legible.
 - **Breakpoints:** at 1068px the facts grid drops to 2 columns and splits stack at 48px. At 734px the nav links hide (brand and Download pill remain), facts, feature list and trio go to 1 column at 36px, section padding drops to 80px, the status panel tightens, and screenshots swap to phone crops.
-- **Phone crops:** each wide screenshot is a `<picture>` with a `(max-width: 734px)` source pointing at a native-scale crop of the same real window (grid view 784×492, Storage Overview 624×870), so phones see legible UI rather than a shrunken desktop.
+- **Phone crops:** each wide screenshot is a `<picture>` with a `(max-width: 734px)` source pointing at a native-scale crop of the same real window (the right of the grid view, the treemap half of Storage Overview), so phones see legible UI rather than a shrunken desktop.
 - **Anchors:** smooth scrolling with a 64px scroll padding so section titles clear the sticky nav.
 
 ## Elevation & Depth
@@ -361,7 +355,7 @@ A single centred column of full-bleed sections. Content width is the 1080px meas
 The page is flat. Sections are separated by tonal bands, not shadows; the status panel is a flat Band Grey surface on white. Depth is reserved for the product: real windows float on a soft two-layer shadow, and the app icon casts a blue-tinted drop shadow. The nav is the only translucent layer.
 
 ### Shadow Vocabulary
-- **Window shadow** (`box-shadow: 0 2px 6px rgb(0 0 0 / 0.12), 0 34px 70px -18px rgb(0 0 0 / 0.42)`): every screenshot window, a tight contact shadow plus a long, inset, offset lift, like a macOS window.
+- **Window shadow** (`filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.14)) drop-shadow(0 26px 34px rgb(0 0 0 / 0.3))`): every screenshot window, a tight contact shadow plus a long offset lift, like a macOS window. A filter, not a box shadow, so it follows the window's transparent corners.
 - **Hero icon glow** (`filter: drop-shadow(0 12px 22px rgb(0 40 120 / 0.28))`): the 112px hero icon.
 - **Get icon glow** (`filter: drop-shadow(0 10px 18px rgb(0 40 120 / 0.25))`): the 96px icon in the get block and on the 404 page.
 - **Nav glass** (`backdrop-filter: saturate(1.8) blur(20px)` over Nav Glass with a Hairline bottom border): the sticky nav.
@@ -371,10 +365,10 @@ The page is flat. Sections are separated by tonal bands, not shadows; the status
 
 ## Shapes
 
-Soft, Apple-standard geometry. Buttons and badges are full pills (999px). The status panel is the one rounded container (24px). Screenshot corners are not a design choice but a measurement: the captured windows round 18px of their 1224px width, so the window radius is expressed as percentages of the image (1.47% / 2.34% for the 1224×768 grid view, 1.47% / 2.07% for the 1224×870 Storage Overview) and stays true at any display size. Phone crops recompute the same 18px at crop scale (2.3% / 3.66% for 784×492, 2.88% / 2.07% for 624×870). The list-detail crop, cut from inside the window, takes a plain 14px. The app icon artwork is full-bleed and shows inside the macOS rounded-square mask (22.5%). Focus rings round at 4px.
+Soft, Apple-standard geometry. Buttons and badges are full pills (999px). The status panel is the one rounded container (24px). Screenshot corners are not a design choice: windows are captured as PNG with their own transparent macOS corners, so the page never rounds a whole window. Only crops, whose cut edges are square, take a radius: the list-detail crop 14px, phone crops 10px. The app icon artwork is full-bleed and shows inside the macOS rounded-square mask (22.5%). Focus rings round at 4px.
 
 ### Named Rules
-**The Measured Corner Rule.** A screenshot's radius matches the window's own 18px corner at the image's scale. Never round a real window with an arbitrary token.
+**The Real Corner Rule.** A whole window keeps the corners macOS drew. Never flatten a screenshot to JPEG or round it with CSS; a CSS circle never matches the macOS corner and leaves fringe pixels.
 
 ## Components
 
@@ -399,7 +393,7 @@ Soft, Apple-standard geometry. Buttons and badges are full pills (999px). The st
 Centred stack: 112px app icon, Display headline in two lines, Lede, actions row (pill + text link, 18px × 32px gaps), Fine release line ("Version x · macOS 26 or later · Apple silicon and Intel · Signed and notarized"), then the hero window, which starts inside the first viewport and continues below the fold.
 
 ### Window figure + caption
-- **Image:** a real screenshot with the measured window radius and Window shadow, up to 1100px wide.
+- **Image:** a real screenshot with its own transparent corners and the Window shadow, up to 1100px wide, served as 1x and 2x WebP.
 - **Caption:** Fine, Secondary Ink, 18px below, saying what the window really is ("A real OpenBucket window, connected to a local Garage bucket of demo files.").
 - **Detail variant:** a 1014px list-detail crop with a 14px radius sits under the facts grid.
 
@@ -437,8 +431,8 @@ The hero window settles as it scrolls into view: a CSS scroll-driven animation o
 ## Do's and Don'ts
 
 ### Do:
-- **Do** show only real OpenBucket screenshots, with the measured window radius and the Window shadow, and caption them truthfully.
-- **Do** cut phone crops from the same real window at native scale and serve them through `<picture>` at `(max-width: 734px)`, recomputing the 18px corner at crop scale.
+- **Do** show only real OpenBucket screenshots, with their own transparent corners and the Window shadow, and caption them truthfully.
+- **Do** cut phone crops from the same real window at native scale and serve them through `<picture>` at `(max-width: 734px)`.
 - **Do** keep every claim inside the documented evidence: Garage 2.4.1 and Adobe S3Mock as Tested, Amazon S3 as Implemented, MinIO, RustFS and others as Not yet tested.
 - **Do** keep one obvious download path: an Action Blue pill, with the source one text link away.
 - **Do** use the system font stack, semibold (600) headlines with negative tracking, and 17px body.
@@ -451,4 +445,4 @@ The hero window settles as it scrolls into view: a CSS scroll-driven animation o
 - **Don't** say or imply "works with every provider".
 - **Don't** imply affiliation with or endorsement by Amazon or Apple; keep the trademark and non-affiliation line in the footer.
 - **Don't** add a second filled button colour, gradients, or the dark developer-tool look.
-- **Don't** round screenshots with an arbitrary radius or put shadows on panels, pills or sections.
+- **Don't** round whole screenshots with CSS, flatten them to JPEG, or put shadows on panels, pills or sections.

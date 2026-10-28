@@ -1,4 +1,5 @@
 ---
+import { getImage } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import {
   ArrowUpRight,
@@ -15,11 +16,22 @@ import {
   Timer,
 } from '@lucide/astro';
 import icon from '../../../App/Resources/Assets.xcassets/AppIcon.appiconset/icon-256.png';
-import grid from '../../../docs/media/browser-grid.jpg';
-import listDetail from '../assets/list-detail.jpg';
-import gridPhone from '../assets/grid-phone.jpg';
-import overviewPhone from '../assets/overview-phone.jpg';
-import overview from '../../../docs/media/storage-overview.jpg';
+import gridShot from '../../../docs/media/browser-grid.png';
+import listDetailShot from '../assets/list-detail.png';
+import gridPhoneShot from '../assets/grid-phone.png';
+import overviewPhoneShot from '../assets/overview-phone.png';
+import overviewShot from '../../../docs/media/storage-overview.png';
+
+// Screenshots keep the window's own transparent corners; WebP at 1x and 2x keeps that alpha.
+const webp = (src: ImageMetadata, width: number) =>
+  getImage({ src, format: 'webp', width, densities: [1, 2], quality: 88 });
+const [grid, gridPhone, listDetail, overview, overviewPhone] = await Promise.all([
+  webp(gridShot, 1100),
+  webp(gridPhoneShot, 690),
+  webp(listDetailShot, 1014),
+  webp(overviewShot, 900),
+  webp(overviewPhoneShot, 459),
+]);
 
 const repo = 'https://github.com/koative/openbucket';
 const dmg = `${repo}/releases/latest/download/OpenBucket-macOS.dmg`;
@@ -98,8 +110,8 @@ const providers = [
       <p class="fine">{release} · macOS 26 or later · Apple silicon and Intel · Signed and notarized</p>
       <figure class="window hero-window">
         <picture>
-          <source media="(max-width: 734px)" srcset={gridPhone.src} width={gridPhone.width} height={gridPhone.height} />
-          <img src={grid.src} width={grid.width} height={grid.height} alt="OpenBucket in grid view: thumbnails of a travel folder, with the Info panel showing a selected photo's S3 URI, size, ETag and dimensions." fetchpriority="high" />
+          <source media="(max-width: 734px)" srcset={gridPhone.srcSet.attribute} width={gridPhone.attributes.width} height={gridPhone.attributes.height} />
+          <img src={grid.src} srcset={grid.srcSet.attribute} width={grid.attributes.width} height={grid.attributes.height} alt="OpenBucket in grid view: an outdoor brand's autumn campaign folder with photo and video thumbnails, and the Info panel showing the selected photo's S3 URI, size, ETag and dimensions." fetchpriority="high" />
         </picture>
         <figcaption>A real OpenBucket window, connected to a local Garage bucket of demo files.</figcaption>
       </figure>
@@ -120,7 +132,7 @@ const providers = [
         ))}
       </ul>
       <figure class="window detail">
-        <img src={listDetail.src} width={listDetail.width} height={listDetail.height} alt="List view up close: name, size, modified and kind columns with a selected photo, and the Info panel's preview, Download and Share buttons." loading="lazy" />
+        <img src={listDetail.src} srcset={listDetail.srcSet.attribute} width={listDetail.attributes.width} height={listDetail.attributes.height} alt="List view up close: the campaign's photos, videos, ZIP and PDF with name, size, modified and kind columns, and the Info panel's preview, Download and Share buttons." loading="lazy" />
       </figure>
     </section>
 
@@ -165,8 +177,8 @@ const providers = [
         </div>
         <figure class="window">
           <picture>
-            <source media="(max-width: 734px)" srcset={overviewPhone.src} width={overviewPhone.width} height={overviewPhone.height} />
-            <img class="tall" src={overview.src} width={overview.width} height={overview.height} alt="Storage Overview of the travel folder: a treemap of its files by size and kind, the storage class, and the largest files." loading="lazy" />
+            <source media="(max-width: 734px)" srcset={overviewPhone.srcSet.attribute} width={overviewPhone.attributes.width} height={overviewPhone.attributes.height} />
+            <img src={overview.src} srcset={overview.srcSet.attribute} width={overview.attributes.width} height={overview.attributes.height} alt="Storage Overview of a whole bucket, 13.5 GB in 3,287 objects: a treemap of its folders with backups taking 76%, its storage class, and the largest files." loading="lazy" />
           </picture>
         </figure>
       </div>

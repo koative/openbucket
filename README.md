@@ -25,13 +25,13 @@ Use the **Download for macOS** button above: it always fetches the newest signed
 
 ## See it in action
 
-The screenshots show a real OpenBucket window connected to a local Garage bucket with the demo images and video from [`docs/demo-assets`](docs/demo-assets).
+The screenshots show a real OpenBucket window connected to a local Garage server, seeded with the fictional demo objects from [`docs/demo-assets`](docs/demo-assets).
 
-![Grid view of the demo travel folder with image and video thumbnails, a selected photo, and the Info panel with details and photo dimensions](docs/media/browser-grid.jpg)
+![Grid view of an outdoor brand's autumn campaign folder with photo and video thumbnails, a selected photo, and the Info panel with details and photo dimensions](docs/media/browser-grid.png)
 
-![List view with name, size, modified and kind columns, a selected photo, and the Info panel](docs/media/browser-list.jpg)
+![List view of the same folder with name, size, modified and kind columns for its photos, videos, ZIP and PDF, a selected photo, and the Info panel](docs/media/browser-list.png)
 
-![Storage Overview of the travel folder: a treemap of its files by size and kind, the storage class, and the largest files](docs/media/storage-overview.jpg)
+![Storage Overview of a whole bucket, 13.5 GB in 3,287 objects: a treemap of its folders with backups taking 76%, the storage class, and the largest files](docs/media/storage-overview.png)
 
 ## What works
 
