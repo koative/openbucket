@@ -20,11 +20,14 @@ enum S3ErrorMapper {
     if let existing = error as? S3Failure { return existing }
     if let serviceError = error as? any AWSErrorType {
       return serviceFailure(
-        code: serviceError.errorCode, status: serviceError.context?.responseCode.code, writing: writing)
+        code: serviceError.errorCode, status: serviceError.context?.responseCode.code, writing: writing,
+        bucketRegion: serviceError.context?.headers.first(name: "x-amz-bucket-region"))
     }
     // Soto throws AWSRawError when it can't parse the error body, e.g. an HTML page from a proxy.
     if let rawError = error as? AWSRawError {
-      return serviceFailure(code: nil, status: rawError.context.responseCode.code, writing: writing)
+      return serviceFailure(
+        code: nil, status: rawError.context.responseCode.code, writing: writing,
+        bucketRegion: rawError.context.headers.first(name: "x-amz-bucket-region"))
     }
     if error is HTTPClient.NWTLSError {
       return S3Failure(
@@ -52,7 +55,10 @@ enum S3ErrorMapper {
   }
 
   /// Classifies by S3 error code, falling back on the HTTP status when the code is missing or unknown.
-  static func serviceFailure(code: String?, status: UInt?, writing: Bool = false) -> S3Failure {
+  /// `bucketRegion` is Amazon's `x-amz-bucket-region`, which names the right region for a wrong-region request.
+  static func serviceFailure(
+    code: String?, status: UInt?, writing: Bool = false, bucketRegion: String? = nil
+  ) -> S3Failure {
     let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_-."))
     let safeCode = code.map {
       $0.count <= 64 && $0.unicodeScalars.allSatisfy(allowed.contains) ? $0 : "Unrecognized"
@@ -104,6 +110,14 @@ enum S3ErrorMapper {
         default: (.unknown, generic)
         }
       }
+    if category == .regionOrEndpoint, let region = bucketRegion,
+      (1...32).contains(region.count),
+      region.allSatisfy({ $0.isASCII && ($0.isLowercase || $0.isNumber || $0 == "-") })
+    {
+      return S3Failure(
+        category: category, message: "This bucket is in \(region). Edit the connection to use that region.",
+        technicalDetail: detail)
+    }
     return S3Failure(category: category, message: message, technicalDetail: detail)
   }
 }

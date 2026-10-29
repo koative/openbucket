@@ -100,6 +100,9 @@ image="$work/$filename"
   "$image"
 
 /usr/bin/hdiutil verify "$image"
+# Signing the image itself, not only the app inside, lets Gatekeeper verify the download as a whole.
+/usr/bin/codesign --sign "$OPENBUCKET_SIGNING_IDENTITY" --timestamp "$image"
+/usr/bin/codesign --verify --strict --verbose=2 "$image"
 xcrun notarytool submit "$image" \
   --keychain-profile "$OPENBUCKET_NOTARY_PROFILE" \
   --wait \
@@ -115,6 +118,7 @@ fi
 xcrun stapler staple "$image"
 xcrun stapler validate "$image"
 /usr/bin/hdiutil verify "$image"
+/usr/sbin/spctl --assess --type open --context context:primary-signature --verbose=2 "$image"
 
 mv "$image" "$destination"
 (

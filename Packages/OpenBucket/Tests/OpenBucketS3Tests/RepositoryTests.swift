@@ -519,6 +519,34 @@ private func presign(
   #expect(missing?.message == "This object no longer exists. Refresh the folder.")
 }
 
+@Test func wrongRegionFailureNamesTheBucketsRegion() async throws {
+  let amazon = try profile("https://s3.us-east-1.amazonaws.com", .automatic)
+  func list(_ result: Result<AWSHTTPResponse, any Error>) async -> S3Failure? {
+    await failure {
+      _ = try await SotoS3Repository(httpClient: RecordingHTTPClient(result: result)).listObjects(
+        profile: amazon, credentials: credentials, bucket: "photos", prefix: "", continuationToken: nil)
+    }
+  }
+  let redirect = "<Error><Code>PermanentRedirect</Code><Message>m</Message></Error>"
+  let named = await list(reply(301, redirect, headers: ["x-amz-bucket-region": "eu-central-1"]))
+  #expect(named?.category == .regionOrEndpoint)
+  #expect(named?.message == "This bucket is in eu-central-1. Edit the connection to use that region.")
+
+  // A HEAD in the wrong region gets a bare 301 with the same header.
+  let head = await failure {
+    _ = try await SotoS3Repository(
+      httpClient: RecordingHTTPClient(result: reply(301, headers: ["x-amz-bucket-region": "ap-south-1"]))
+    ).objectDetails(profile: amazon, credentials: credentials, bucket: "photos", key: "a.jpg", versionID: nil)
+  }
+  #expect(head?.message == "This bucket is in ap-south-1. Edit the connection to use that region.")
+
+  // Without the header, or with one that isn't a region name, the message stays generic.
+  let generic = "Check the bucket, region, and endpoint address."
+  #expect(await list(reply(301, redirect))?.message == generic)
+  #expect(
+    await list(reply(301, redirect, headers: ["x-amz-bucket-region": "<b>Click</b>"]))?.message == generic)
+}
+
 @Test func listObjectVersionsMergesDeleteMarkersInS3Order() async throws {
   let transport = RecordingHTTPClient(
     """

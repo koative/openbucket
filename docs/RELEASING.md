@@ -38,7 +38,7 @@ The project disables signing for ordinary local and CI builds. The release scrip
    scripts/package-release.sh "$VERSION"
    ```
 
-   The script refuses to run when the version you pass differs from `MARKETING_VERSION` in `project.yml`, and it refuses to put an unnotarized image in `dist/`. It prints the archived version and build number, checks that the app is a universal binary containing both `arm64` and `x86_64`, verifies the app signature, waits for notarization to be accepted, staples the ticket to the DMG, verifies the DMG, and writes it with its SHA-256 checksum to `dist/vVERSION/`. `dist/` is ignored by Git.
+   The script refuses to run when the version you pass differs from `MARKETING_VERSION` in `project.yml`, and it refuses to put an unnotarized image in `dist/`. It prints the archived version and build number, checks that the app is a universal binary containing both `arm64` and `x86_64`, verifies the app signature, signs the DMG itself with the same Developer ID, waits for notarization to be accepted, staples the ticket to the DMG, checks that Gatekeeper accepts the DMG, and writes it with its SHA-256 checksum to `dist/vVERSION/`. `dist/` is ignored by Git.
 
 4. Mount the DMG and test the app after copying it to Applications. Check a fresh connection, a known bucket and starting folder, a media thumbnail, a single and a batch download, and first launch from a downloaded copy. On a disposable bucket with **Allow changes** on, also check an upload, a drag-to-move, a delete and Update Mac in Compare with Local Folder. Test on another Mac when possible.
 5. Tag the exact tested commit and create a **draft** GitHub release:
