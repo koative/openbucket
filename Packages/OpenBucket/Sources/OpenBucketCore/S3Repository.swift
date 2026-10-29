@@ -310,16 +310,15 @@ public protocol S3Repository: Sendable {
 
   /// Server-side copy inside `bucket`. `headers == nil` keeps the source's metadata (COPY);
   /// non-nil replaces it (REPLACE). Tags, storage class and server-side encryption (SSE-S3 or SSE-KMS key) are
-  /// kept either way, read with a HEAD of the source; ACLs and Object Lock settings are not. `size` is the
-  /// source's size: above 5 GiB the copy is multipart. `sourceVersionID` copies that version (restore = copy a
-  /// version onto its own key).
+  /// kept either way, read with a HEAD of the source, which also gives the size: above 5 GiB the copy is
+  /// multipart, with every part pinned to the ETag HEAD saw. `sourceVersionID` copies that version (restore = copy
+  /// a version onto its own key).
   func copyObject(
     profile: ConnectionProfile,
     credentials: S3Credentials,
     bucket: String,
     sourceKey: String,
     sourceVersionID: String?,
-    size: Int64,
     destinationKey: String,
     headers: ObjectHeaders?
   ) async throws

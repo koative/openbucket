@@ -83,7 +83,7 @@ private actor ScriptedRepository: S3Repository {
 
   func copyObject(
     profile: ConnectionProfile, credentials: S3Credentials, bucket: String, sourceKey: String,
-    sourceVersionID: String?, size: Int64, destinationKey: String, headers: ObjectHeaders?
+    sourceVersionID: String?, destinationKey: String, headers: ObjectHeaders?
   ) async throws { throw unsupported }
 
   func deleteObjects(profile: ConnectionProfile, credentials: S3Credentials, bucket: String, keys: [String])

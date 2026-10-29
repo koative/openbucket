@@ -626,13 +626,13 @@ private func upload(
     key: "trip/a b.txt", from: file, headers: headers, progress: progress)
 }
 
-private func copy(
-  _ transport: RecordingHTTPClient, size: Int64 = 3, versionID: String? = "v 1", headers: ObjectHeaders?
-) async throws {
+/// The copied size comes from the HEAD reply's Content-Length, as in a real copy.
+private func copy(_ transport: RecordingHTTPClient, versionID: String? = "v 1", headers: ObjectHeaders?)
+  async throws
+{
   try await SotoS3Repository(httpClient: transport).copyObject(
     profile: try profile("http://storage.example.com"), credentials: credentials, bucket: "photos",
-    sourceKey: "a b+c.txt", sourceVersionID: versionID, size: size, destinationKey: "copy.txt",
-    headers: headers)
+    sourceKey: "a b+c.txt", sourceVersionID: versionID, destinationKey: "copy.txt", headers: headers)
 }
 
 private let createdUpload = reply(
@@ -799,7 +799,7 @@ private let completedUpload = reply(
 
   try await SotoS3Repository(httpClient: transport).copyObject(
     profile: try profile("http://storage.example.com"), credentials: credentials, bucket: "photos",
-    sourceKey: "a.txt", sourceVersionID: "old", size: 3, destinationKey: "a.txt", headers: nil)
+    sourceKey: "a.txt", sourceVersionID: "old", destinationKey: "a.txt", headers: nil)
 
   #expect(await transport.methods() == ["HEAD", "PUT"])
   #expect(await transport.queries()[0].contains("versionId=old"))
@@ -816,8 +816,8 @@ private let completedUpload = reply(
   let head = reply(
     200,
     headers: [
-      "Content-Type": "video/mp4", "x-amz-meta-Owner": "rael", "x-amz-storage-class": "GLACIER_IR",
-      "x-amz-server-side-encryption": "AES256",
+      "Content-Length": "\(size)", "Content-Type": "video/mp4", "x-amz-meta-Owner": "rael",
+      "x-amz-storage-class": "GLACIER_IR", "x-amz-server-side-encryption": "AES256",
     ])
   let tagging = reply(
     200, "<Tagging><TagSet><Tag><Key>team</Key><Value>a&amp;b</Value></Tag></TagSet></Tagging>")
@@ -825,7 +825,7 @@ private let completedUpload = reply(
   let transport = RecordingHTTPClient(
     results: [head, tagging, createdUpload] + Array(repeating: part, count: 11) + [completedUpload])
 
-  try await copy(transport, size: size, headers: nil)
+  try await copy(transport, headers: nil)
 
   let methods = await transport.methods()
   #expect(methods == ["HEAD", "GET", "POST"] + Array(repeating: "PUT", count: 11) + ["POST"])
@@ -839,6 +839,41 @@ private let completedUpload = reply(
   #expect(headers[3]["x-amz-copy-source"] == ["photos/a%20b%2Bc.txt?versionId=v%201"])
   #expect(headers[3]["x-amz-copy-source-range"] == ["bytes=0-536870911"])
   #expect(headers[13]["x-amz-copy-source-range"] == ["bytes=5368709120-5368709120"])
+}
+
+// #3: the listing a move starts from can be stale; the copy must cover the object HEAD finds now, and every
+// part must come from that same object.
+@Test func multipartCopyUsesTheFreshHeadSizeAndPinsTheSource() async throws {
+  let actualSize = SotoS3Repository.singleCopyLimit + 1025
+  let head = reply(200, headers: ["Content-Length": "\(actualSize)", "ETag": "\"new\""])
+  let tags = reply(200, "<Tagging><TagSet></TagSet></Tagging>")
+  let part = reply(200, "<CopyPartResult><ETag>\"p\"</ETag></CopyPartResult>")
+  let transport = RecordingHTTPClient(
+    results: [head, tags, createdUpload] + Array(repeating: part, count: 11) + [completedUpload])
+
+  try await copy(transport, versionID: nil, headers: nil)
+
+  let parts = await transport.headers().filter { !$0["x-amz-copy-source-range"].isEmpty }
+  #expect(parts.last?["x-amz-copy-source-range"] == ["bytes=5368709120-\(actualSize - 1)"])
+  #expect(parts.allSatisfy { $0["x-amz-copy-source-if-match"] == ["\"new\""] })
+}
+
+// #2: a preserving copy must not drop tags it couldn't read, but a service without tagging has none to drop.
+@Test func multipartCopyStopsWhenSourceTagsAreDeniedButNotWhenUnimplemented() async throws {
+  let size = SotoS3Repository.singleCopyLimit + 1
+  let head = reply(200, headers: ["Content-Length": "\(size)", "Content-Type": "video/mp4"])
+  let denied = RecordingHTTPClient(results: [
+    head, reply(403, "<Error><Code>AccessDenied</Code><Message>No tagging</Message></Error>"),
+  ])
+  #expect(await failure { try await copy(denied, headers: nil) }?.category == .authorization)
+  #expect(await denied.methods() == ["HEAD", "GET"])
+
+  let part = reply(200, "<CopyPartResult><ETag>\"p\"</ETag></CopyPartResult>")
+  let unimplemented = RecordingHTTPClient(
+    results: [head, reply(501, "<Error><Code>NotImplemented</Code></Error>"), createdUpload]
+      + Array(repeating: part, count: 11) + [completedUpload])
+  try await copy(unimplemented, headers: nil)
+  #expect(await unimplemented.headers()[2]["x-amz-tagging"].isEmpty)
 }
 
 @Test func deleteObjectsBatchesByThousandWithContentMD5AndReportsKeyErrors() async throws {

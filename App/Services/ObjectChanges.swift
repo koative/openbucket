@@ -323,7 +323,7 @@ struct ObjectChanges {
       let item = items[index]
       try await repository.copyObject(
         profile: source.profile, credentials: source.credentials, bucket: source.bucket,
-        sourceKey: item.sourceKey, sourceVersionID: item.sourceVersionID, size: item.size,
+        sourceKey: item.sourceKey, sourceVersionID: item.sourceVersionID,
         destinationKey: item.destinationKey, headers: nil)
       guard deletingSources else { return }
       let failures = try await repository.deleteObjects(

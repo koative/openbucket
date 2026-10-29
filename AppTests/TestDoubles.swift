@@ -189,7 +189,7 @@ actor StubRepository: S3Repository {
 
   func copyObject(
     profile: ConnectionProfile, credentials: S3Credentials, bucket: String, sourceKey: String,
-    sourceVersionID: String?, size: Int64, destinationKey: String, headers: ObjectHeaders?
+    sourceVersionID: String?, destinationKey: String, headers: ObjectHeaders?
   ) async throws {
     try await pause()
     copies.append(

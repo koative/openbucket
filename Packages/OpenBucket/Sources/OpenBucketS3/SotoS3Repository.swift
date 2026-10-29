@@ -190,6 +190,19 @@ public struct SotoS3Repository: S3Repository {
     )
   }
 
+  /// Tags a multipart copy must send itself, as UploadPartCopy carries none. A service without tagging has
+  /// none to lose; any other failure stops the copy, since moving on would silently drop the source's tags.
+  private static func tagsToCarry(_ service: S3, bucket: String, key: String, versionID: String?) async throws
+    -> [String: String]?
+  {
+    do {
+      let output = try await service.getObjectTagging(bucket: bucket, key: key, versionId: versionID)
+      return Dictionary(output.tagSet.map { ($0.key, $0.value) }, uniquingKeysWith: { first, _ in first })
+    } catch  where S3ErrorMapper.map(error).category == .unsupportedOperation {
+      return nil
+    }
+  }
+
   public func readObjectBytes(
     profile: ConnectionProfile,
     credentials: S3Credentials,
@@ -461,19 +474,27 @@ public struct SotoS3Repository: S3Repository {
     bucket: String,
     sourceKey: String,
     sourceVersionID: String?,
-    size: Int64,
     destinationKey: String,
     headers: ObjectHeaders?
   ) async throws {
     let source = Self.copySource(bucket: bucket, key: sourceKey, versionID: sourceVersionID)
-    let multipart = size > Self.singleCopyLimit
     // A copy is written as STANDARD with the bucket's default encryption unless the request names the source's
-    // storage class and encryption, which only HEAD reports. UploadPartCopy also carries no tags.
-    let details = try await withService(profile: profile, credentials: credentials, bucket: bucket) {
-      service in
-      try await Self.details(
-        service, bucket: bucket, key: sourceKey, versionID: sourceVersionID, tags: multipart)
+    // storage class and encryption, which only HEAD reports. HEAD also gives the current size: a listing can be
+    // stale, and a multipart copy cut at an old size would complete without the object's tail.
+    let (details, tags): (ObjectDetails, [String: String]?) = try await withService(
+      profile: profile, credentials: credentials, bucket: bucket
+    ) { service in
+      let details = try await Self.details(
+        service, bucket: bucket, key: sourceKey, versionID: sourceVersionID, tags: false)
+      guard (details.contentLength ?? 0) > Self.singleCopyLimit else { return (details, nil) }
+      return (
+        details,
+        try await Self.tagsToCarry(service, bucket: bucket, key: sourceKey, versionID: sourceVersionID)
+      )
     }
+    // Without a Content-Length the copy is a single request, which can't truncate: it copies or fails whole.
+    let size = details.contentLength ?? 0
+    let multipart = size > Self.singleCopyLimit
     let storageClass = details.storageClass.flatMap(S3.StorageClass.init(rawValue:))
     let encryption = details.serverSideEncryption.flatMap(S3.ServerSideEncryption.init(rawValue:))
     // UploadPartCopy carries no metadata, and services reject an unchanged copy onto its own key (even from an
@@ -494,7 +515,7 @@ public struct SotoS3Repository: S3Repository {
       }
       return
     }
-    let tagging = details.tags.flatMap { tags -> String? in
+    let tagging = tags.flatMap { tags -> String? in
       tags.isEmpty
         ? nil
         : tags.sorted { $0.key < $1.key }.map { "\(Self.formEncoded($0))=\(Self.formEncoded($1))" }
@@ -517,9 +538,11 @@ public struct SotoS3Repository: S3Repository {
         uploadID, number in
         let offset = Int64(number - 1) * partSize
         guard offset < size else { return nil }
+        // Every part must come from the object HEAD saw; if it changes meanwhile the part fails and the upload
+        // is aborted rather than stitched from two objects.
         let output = try await service.uploadPartCopy(
           S3.UploadPartCopyRequest(
-            bucket: bucket, copySource: source,
+            bucket: bucket, copySource: source, copySourceIfMatch: details.eTag,
             copySourceRange: "bytes=\(offset)-\(min(offset + partSize, size) - 1)", key: destinationKey,
             partNumber: number, uploadId: uploadID))
         return output.copyPartResult.eTag

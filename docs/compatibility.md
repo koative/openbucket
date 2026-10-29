@@ -24,7 +24,7 @@ Changes are sent only for connections with **Allow changes** turned on. They use
 | --- | --- |
 | Upload | `PutObject` up to 16 MiB; above that `CreateMultipartUpload`, `UploadPart` (parts of at least 16 MiB, at most 10,000 parts) and `CompleteMultipartUpload`, or `AbortMultipartUpload` after a failure or cancel. Content-Type comes from the file extension. Amazon S3 bodies are signed in aws-chunked form; other endpoints get an unsigned payload, as R2 requires |
 | New Folder | `PutObject` of an empty `folder/` marker |
-| Rename, Move To, drag to a folder | `HeadObject` and `CopyObject` (multipart `UploadPartCopy` above 5 GiB) then `DeleteObjects` for each copied source; a source whose copy failed is kept. ⌥-drop copies without the delete |
+| Rename, Move To, drag to a folder | `HeadObject` and `CopyObject` then `DeleteObjects` for each copied source; a source whose copy failed is kept. ⌥-drop copies without the delete. Above 5 GiB (the size HEAD reports, not the listing's) the copy is multipart: `GetObjectTagging`, whose failure stops the copy unless the service doesn't implement tagging, then `UploadPartCopy` with `x-amz-copy-source-if-match` on the ETag HEAD saw, so a source replaced mid-copy aborts it. MinIO, RustFS, SeaweedFS and Garage accept that header and answer a changed source with 412 |
 | Delete | `DeleteObjects` in batches of 1,000 without version IDs, so versioned buckets keep the data behind a delete marker |
 | Restore | `CopyObject` of the chosen version onto its own key, which makes it the newest version |
 | Metadata and tags | `HeadObject` and `CopyObject` onto the same key with replaced headers, then `PutObjectTagging` or `DeleteObjectTagging` when tags changed |

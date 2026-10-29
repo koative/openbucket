@@ -180,7 +180,8 @@ final class BackupVerification {
     let mebibyte: Int64 = 1 << 20
     var partSizes: [Int64] = []  // empty: single-part
     if pieces.count == 2 {
-      guard let parts = Int64(pieces[1]), parts > 0 else { return nil }
+      // S3 caps uploads at 10,000 parts; a larger count can't be real and would overflow the arithmetic below.
+      guard let parts = Int64(pieces[1]), (1...10_000).contains(parts) else { return nil }
       let implied = ((size + parts - 1) / parts + mebibyte - 1) / mebibyte * mebibyte
       for partSize in [8, 16, 5, 15, 32, 64].map({ $0 * mebibyte }) + [implied]
       where partSize > 0 && (size + partSize - 1) / partSize == parts && !partSizes.contains(partSize) {

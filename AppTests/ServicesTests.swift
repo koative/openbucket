@@ -90,7 +90,7 @@ private actor ListingRepository: S3Repository {
 
   func copyObject(
     profile: ConnectionProfile, credentials: S3Credentials, bucket: String, sourceKey: String,
-    sourceVersionID: String?, size: Int64, destinationKey: String, headers: ObjectHeaders?
+    sourceVersionID: String?, destinationKey: String, headers: ObjectHeaders?
   ) throws { throw unused }
 
   func deleteObjects(profile: ConnectionProfile, credentials: S3Credentials, bucket: String, keys: [String])
@@ -194,6 +194,7 @@ private func object(_ key: String, _ data: Data, eTag: String? = nil) -> ObjectS
   try write("local-only.txt", hello)
   try write("sub/big.bin", big)
   try write("odd.bin", Data(count: 10))
+  try write("huge-parts.bin", Data("hi".utf8))
   try write("cafe\u{301}.txt", hello)
   try write(".hidden", hello)
   try write("quote \"x\", y.txt", Data("q".utf8))
@@ -214,6 +215,8 @@ private func object(_ key: String, _ data: Data, eTag: String? = nil) -> ObjectS
     object("backup/remote-only.txt", hello),
     object("backup/sub/big.bin", big, eTag: "\"\(multipartETag)\""),
     object("backup/odd.bin", Data(count: 10), eTag: "\"\(md5(hello))-3\""),
+    // #1: a part count no S3 service produces must not overflow the part-size arithmetic.
+    object("backup/huge-parts.bin", Data("hi".utf8), eTag: "\"\(md5(hello))-9223372036854775807\""),
     object("backup/caf\u{E9}.txt", hello),
     object("backup/.git/config", hello),
     object("backup/locked.txt", hello),
@@ -233,7 +236,8 @@ private func object(_ key: String, _ data: Data, eTag: String? = nil) -> ObjectS
     statuses == [
       "same.txt": .identical, "changed.txt": .different, "short.txt": .sizeMismatch,
       "local-only.txt": .missingInS3, "remote-only.txt": .onlyInS3, "sub/big.bin": .identical,
-      "odd.bin": .unverified, "caf\u{E9}.txt": .identical, "quote \"x\", y.txt": .missingInS3,
+      "odd.bin": .unverified, "huge-parts.bin": .unverified, "caf\u{E9}.txt": .identical,
+      "quote \"x\", y.txt": .missingInS3,
       ".hidden": .missingInS3, ".git/config": .identical, "locked.txt": .unreadable,
       "=SUM(A1).txt": .missingInS3,
     ])
@@ -241,8 +245,8 @@ private func object(_ key: String, _ data: Data, eTag: String? = nil) -> ObjectS
     verification.entries.contains {
       $0.relativePath.unicodeScalars.elementsEqual("caf\u{E9}.txt".unicodeScalars)
     })
-  #expect(verification.checkedFiles == 13)
-  #expect(verification.totalFiles == 13)
+  #expect(verification.checkedFiles == 14)
+  #expect(verification.totalFiles == 14)
   let csv = verification.csv()
   #expect(csv.hasPrefix("path,status,local_size,remote_size\r\n"))
   #expect(csv.contains("\r\n\"quote \"\"x\"\", y.txt\",missingInS3,1,\r\n"))

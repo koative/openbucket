@@ -1165,7 +1165,7 @@ final class BrowserController {
       if headersChanged {
         try await model.repository.copyObject(
           profile: source.profile, credentials: source.credentials, bucket: source.bucket, sourceKey: key,
-          sourceVersionID: nil, size: target.object.size, destinationKey: key, headers: headers)
+          sourceVersionID: nil, destinationKey: key, headers: headers)
         wrote = true
       }
       if let newTags {

@@ -120,14 +120,14 @@ func writeRoundTrip() async throws {
 
     try await repository.copyObject(
       profile: profile, credentials: credentials, bucket: bucket, sourceKey: prefix + "small.txt",
-      sourceVersionID: nil, size: 5, destinationKey: prefix + "copy of small.txt", headers: nil)
+      sourceVersionID: nil, destinationKey: prefix + "copy of small.txt", headers: nil)
     #expect(ObjectHeaders(try await details("copy of small.txt")) == smallHeaders)
 
     let replaced = ObjectHeaders(
       contentType: "text/markdown", cacheControl: "no-cache", metadata: ["owner": "bob"])
     try await repository.copyObject(
       profile: profile, credentials: credentials, bucket: bucket, sourceKey: prefix + "copy of small.txt",
-      sourceVersionID: nil, size: 5, destinationKey: prefix + "copy of small.txt", headers: replaced)
+      sourceVersionID: nil, destinationKey: prefix + "copy of small.txt", headers: replaced)
     // S3Mock keeps the old Content-Type on a REPLACE copy, so only the other headers are compared.
     let afterReplace = try await details("copy of small.txt")
     #expect(afterReplace.metadata == replaced.metadata && afterReplace.cacheControl == replaced.cacheControl)
@@ -159,7 +159,7 @@ func writeRoundTrip() async throws {
     // current version, so its HEAD still finds the delete marker.
     try await repository.copyObject(
       profile: profile, credentials: credentials, bucket: bucket, sourceKey: original.key,
-      sourceVersionID: original.versionID, size: original.size, destinationKey: original.key, headers: nil)
+      sourceVersionID: original.versionID, destinationKey: original.key, headers: nil)
   }
 
   var failure: (any Error)?
