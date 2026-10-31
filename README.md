@@ -110,3 +110,5 @@ flowchart LR
 `OpenBucketCore` owns S3 values and browsing state. `OpenBucketS3` adapts Soto and keeps SDK types outside the UI. `App` contains SwiftUI and macOS storage; `OpenBucketApp` wires them together. The adapter boundary allows the SDK implementation to change without reshaping the browser.
 
 Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). OpenBucket is licensed under [MIT](LICENSE).
+
+Made by [Koray Güler](https://koray.dev) at [koative](https://koative.com)

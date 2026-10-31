@@ -147,8 +147,7 @@ const structuredData = [
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'OpenBucket',
-    description:
-      'A free, open-source S3 browser for Mac to browse, preview, share and restore files in Amazon S3 and S3-compatible storage.',
+    description: 'A native macOS app for Amazon S3 and S3-compatible storage.',
     url: site,
     downloadUrl: dmg,
     image: new URL('/og.png', site).href,
@@ -158,7 +157,8 @@ const structuredData = [
     license: 'https://opensource.org/license/mit',
     isAccessibleForFree: true,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    publisher: { '@type': 'Organization', name: 'Koative', url: 'https://github.com/koative' },
+    publisher: { '@type': 'Organization', '@id': 'https://koative.com/#org', name: 'koative', url: 'https://koative.com/' },
+    author: { '@type': 'Person', '@id': 'https://koray.dev/#person', name: 'Koray Güler', url: 'https://koray.dev/' },
   },
   {
     '@context': 'https://schema.org',
@@ -344,7 +344,7 @@ const structuredData = [
 
   <footer class="footer">
     <div class="footer-inner">
-      <p>OpenBucket is made by <a href="https://github.com/koative">Koative</a> and released under the MIT license.</p>
+      <p>Made by <a href="https://koray.dev/">Koray Güler</a> at <a href="https://koative.com/">koative</a>. Released under the MIT license.</p>
       <nav aria-label="Footer">
         <a href={repo}>GitHub</a>
         <a href={`${repo}/releases`}>Releases</a>
