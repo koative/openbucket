@@ -111,4 +111,4 @@ flowchart LR
 
 Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). OpenBucket is licensed under [MIT](LICENSE).
 
-Made by [Koray Güler](https://koray.dev) at [koative](https://koative.com)
+Made by [koative](https://koative.com)
