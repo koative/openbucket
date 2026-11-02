@@ -8,6 +8,7 @@
 | `mark/bucketdeck-mark-white.svg` | The flat mark in white | On blue or dark backgrounds |
 | `banner/bucketdeck-banner.jpg` | The campaign banner (1264 × 848): icon, name, tagline and a composed app window on midnight blue. Owner-supplied artwork, not a literal screenshot | Product covers (koative.com), launch posts, the GitHub social preview |
 | `../site/public/og.png` | The 1200 × 630 share card, cut from the banner | Link previews of bucketdeck.com |
+| `https://bucketdeck.com/icon.png` | `app-icon/bucketdeck-256.png`, served at a fixed address by the site build (`site/src/pages/icon.png.ts`) | Other sites that link the product, such as koative.com's product list |
 
 Show the app icon as it is: no extra rounding, glow or shadow, since the image already carries what macOS draws. Don't recolour or rearrange the bands. The name and icon are Koative LLC's and are not covered by the code license.
 
