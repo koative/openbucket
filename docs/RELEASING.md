@@ -1,6 +1,6 @@
 # Releasing Bucketdeck for macOS
 
-Users download the app from [GitHub Releases](https://github.com/koative/bucketdeck/releases). Each published release has a version tag, release notes, a DMG named `Bucketdeck-macOS.dmg`, and a matching `.sha256` file. Because the name never changes, `https://github.com/koative/bucketdeck/releases/latest/download/Bucketdeck-macOS.dmg` (the README's download button) always downloads the newest release. Each release also carries the same DMG under its pre-rename name `OpenBucket-macOS.dmg`, so download links from before the rename keep working; this alias will be dropped in a later release. The DMG contains a universal Apple silicon and Intel `Bucketdeck.app` and an Applications shortcut. GitHub's source archives are for developers; they are not the app installer.
+Users download the app from [GitHub Releases](https://github.com/koative/bucketdeck/releases). Each published release has a version tag, release notes, a DMG named `Bucketdeck-macOS.dmg`, and a matching `.sha256` file. Because the name never changes, `https://github.com/koative/bucketdeck/releases/latest/download/Bucketdeck-macOS.dmg` (the README's download button) always downloads the newest release. The DMG contains a universal Apple silicon and Intel `Bucketdeck.app` and an Applications shortcut. GitHub's source archives are for developers; they are not the app installer.
 
 Publish only after the DMG is signed with Developer ID, accepted by Apple's notary service, stapled, and tested from the downloaded file. [Apple's direct-distribution guidance](https://developer.apple.com/documentation/technologyoverviews/distribution) explains why this matters for Gatekeeper.
 
@@ -50,8 +50,6 @@ The project disables signing for ordinary local and CI builds. The release scrip
    gh release create "v$VERSION" \
      "dist/v$VERSION/Bucketdeck-macOS.dmg" \
      "dist/v$VERSION/Bucketdeck-macOS.dmg.sha256" \
-     "dist/v$VERSION/OpenBucket-macOS.dmg" \
-     "dist/v$VERSION/OpenBucket-macOS.dmg.sha256" \
      --draft --verify-tag \
      --title "Bucketdeck v$VERSION" \
      --notes-file "docs/releases/v$VERSION.md"

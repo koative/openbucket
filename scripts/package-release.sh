@@ -42,9 +42,6 @@ fi
 distribution="$root/dist/v$version"
 filename="Bucketdeck-macOS.dmg"
 destination="$distribution/$filename"
-# ponytail: links published before the rename (README, OpenMacApps, posts) ask for the old name; attach a copy under
-# it until those are updated, then drop it.
-legacy_filename="OpenBucket-macOS.dmg"
 
 mkdir -p "$distribution"
 if [[ -e $destination ]]; then
@@ -127,14 +124,11 @@ xcrun stapler validate "$image"
 /usr/sbin/spctl --assess --type open --context context:primary-signature --verbose=2 "$image"
 
 mv "$image" "$destination"
-cp "$destination" "$distribution/$legacy_filename"
 (
   cd "$distribution"
   /usr/bin/shasum -a 256 "$filename" > "$filename.sha256"
-  /usr/bin/shasum -a 256 "$legacy_filename" > "$legacy_filename.sha256"
 )
 
 echo "Ready to review:"
 echo "$destination"
 echo "$destination.sha256"
-echo "$distribution/$legacy_filename (same image under the pre-rename name)"
