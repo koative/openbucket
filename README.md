@@ -14,7 +14,7 @@
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-18181b?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-f05138?logo=swift&logoColor=white)
 ![GPL-3.0 license](https://img.shields.io/badge/license-GPL--3.0-8b8bd4)
-[![Listed on OpenMacApps](https://openmacapps.com/badge.svg)](https://openmacapps.com/apps/openbucket/)
+[![Listed on OpenMacApps](https://openmacapps.com/badge.svg)](https://openmacapps.com/apps/bucketdeck/)
 
 </div>
 
