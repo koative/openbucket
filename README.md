@@ -13,7 +13,7 @@
 ![Latest release](https://img.shields.io/github/v/release/koative/openbucket?label=latest&color=18181b)
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-18181b?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-f05138?logo=swift&logoColor=white)
-![MIT license](https://img.shields.io/badge/license-MIT-8b8bd4)
+![GPL-3.0 license](https://img.shields.io/badge/license-GPL--3.0-8b8bd4)
 [![Listed on OpenMacApps](https://openmacapps.com/badge.svg)](https://openmacapps.com/apps/openbucket/)
 
 </div>
@@ -110,6 +110,12 @@ flowchart LR
 
 `OpenBucketCore` owns S3 values and browsing state. `OpenBucketS3` adapts Soto and keeps SDK types outside the UI. `App` contains SwiftUI and macOS storage; `OpenBucketApp` wires them together. The adapter boundary allows the SDK implementation to change without reshaping the browser.
 
-Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). OpenBucket is licensed under [MIT](LICENSE).
+Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+## License
+
+Copyright © 2026 Koative. OpenBucket is free software: you can redistribute and modify it under the terms of the [GNU General Public License, version 3](LICENSE). Anyone who distributes a modified version must publish its source code under the same license. Releases up to and including v0.2.3 were published under the MIT License, and those releases keep it.
+
+The OpenBucket name and app icon identify Koative's builds and are not covered by the license; a distributed fork needs its own name and icon.
 
 Made by [koative](https://koative.com)

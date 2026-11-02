@@ -25,6 +25,7 @@ targets:
       properties:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSHumanReadableCopyright: © 2026 Koative. Licensed under the GNU GPL v3.
         CFBundleURLTypes:
           - CFBundleURLName: dev.openbucket.s3-location
             CFBundleTypeRole: Viewer

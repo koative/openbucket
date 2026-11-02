@@ -110,7 +110,7 @@ const providers = [
 const faq = [
   {
     q: 'Is OpenBucket free?',
-    a: 'Yes. OpenBucket is free and open source under the MIT license. Every release is signed with a Developer ID and notarized by Apple.',
+    a: 'Yes. OpenBucket is free and open source under the GNU GPL v3. Every release is signed with a Developer ID and notarized by Apple.',
   },
   {
     q: 'Does it work with MinIO, Cloudflare R2 or Backblaze B2?',
@@ -154,7 +154,7 @@ const structuredData = [
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'macOS 26 or later',
     ...(version ? { softwareVersion: version } : {}),
-    license: 'https://opensource.org/license/mit',
+    license: 'https://www.gnu.org/licenses/gpl-3.0.html',
     isAccessibleForFree: true,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     publisher: { '@type': 'Organization', '@id': 'https://koative.com/#org', name: 'koative', url: 'https://koative.com/' },
@@ -309,7 +309,7 @@ const structuredData = [
     <section class="plain open" aria-labelledby="open-title">
       <h2 id="open-title">Free and open source.</h2>
       <p class="lede">
-        OpenBucket is MIT-licensed and built in the open with Swift 6, SwiftUI and Soto. Every release is signed
+        OpenBucket is licensed under the GNU GPL v3 and built in the open with Swift 6, SwiftUI and Soto. Every release is signed
         with a Developer ID, notarized by Apple, and published with its SHA-256 checksum.
       </p>
       <div class="actions">
@@ -344,7 +344,7 @@ const structuredData = [
 
   <footer class="footer">
     <div class="footer-inner">
-      <p>Made by <a href="https://koray.dev/">Koray Güler</a> at <a href="https://koative.com/">koative</a>. Released under the MIT license.</p>
+      <p>Made by <a href="https://koray.dev/">Koray Güler</a> at <a href="https://koative.com/">koative</a>. Released under the GNU GPL v3.</p>
       <nav aria-label="Footer">
         <a href={repo}>GitHub</a>
         <a href={`${repo}/releases`}>Releases</a>

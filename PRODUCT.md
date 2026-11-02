@@ -26,7 +26,7 @@ The owner chose these three to lead (2026-10-17):
 
 1. A real Mac app: SwiftUI with the macOS 26 Liquid Glass look, Quick Look, Spotlight favorites, App Intents for Shortcuts, `s3://` links, native multi-selection and keyboard commands, credentials in the macOS Keychain.
 2. Amazon S3 and S3-compatible stores: custom HTTP/HTTPS endpoints, path or virtual-host addressing, region, access keys with optional session token or a named AWS CLI profile (roles, IAM Identity Center), and known-bucket access for accounts without `ListBuckets`.
-3. Free and open source under the MIT license, distributed as a signed and notarized universal DMG from GitHub Releases.
+3. Free and open source under the GNU GPL v3 (releases through v0.2.3 were MIT), distributed as a signed and notarized universal DMG from GitHub Releases.
 
 ## Operating Context
 

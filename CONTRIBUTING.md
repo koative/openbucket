@@ -19,3 +19,7 @@ For behavior changes, add a test at the boundary where the behavior is visible. 
 Writes are opt-in per connection (**Allow changes**, off by default). A new write action should name the S3 operation, its progress and cancellation behavior, partial-failure handling, and what happens on versioned buckets, and extend the `writeRoundTrip` integration test before the user interface changes.
 
 Report security problems privately as described in [SECURITY.md](SECURITY.md), not in a public issue or pull request.
+
+## License of contributions
+
+OpenBucket is licensed under the GNU General Public License, version 3. By submitting a contribution, you license it under the GPL-3.0 and also grant Koative a perpetual, worldwide, irrevocable, royalty-free license to distribute and sublicense your contribution under other terms, including in Mac App Store builds and paid editions. You confirm that you wrote the contribution or otherwise have the right to submit it under these terms.
