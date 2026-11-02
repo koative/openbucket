@@ -6,7 +6,7 @@ on:
     paths:
       - site/**
       - docs/media/**
-      - App/Resources/Assets.xcassets/AppIcon.appiconset/**
+      - brand/app-icon/**
       - .github/workflows/site.yml
   # The page shows the newest release's version, so rebuild when one is published.
   release:

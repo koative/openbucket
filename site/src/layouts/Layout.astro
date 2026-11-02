@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
-import icon from '../../../App/Resources/Assets.xcassets/AppIcon.appiconset/icon-64.png';
-import touchIcon from '../../../App/Resources/Assets.xcassets/AppIcon.appiconset/icon-256.png';
+import icon from '../../../brand/app-icon/bucketdeck-64.png';
+import touchIcon from '../../../brand/app-icon/bucketdeck-256.png';
 interface Props {
   title?: string;
   description?: string;
@@ -32,7 +32,7 @@ const shareImage = new URL('/og.png', Astro.site);
     <meta property="og:image" content={shareImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Bucketdeck, the S3 browser for Mac, showing a campaign folder of photos and videos in a bucket" />
+    <meta property="og:image:alt" content="Bucketdeck: the S3 browser for your Mac, read-only until you allow changes." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

@@ -42,7 +42,7 @@ Download `Bucketdeck-macOS.dmg` from `https://github.com/koative/bucketdeck/rele
 
 ## Brand Commitments
 
-Name: Bucketdeck, published by Koative (github.com/koative). App icon: the blue glass bucket in `App/Resources/Assets.xcassets/AppIcon.appiconset/`. Website copy in English, matching the app and README. [Language inferred from the repository.]
+Name: Bucketdeck, published by Koative (github.com/koative). App icon: two nested glass bands on blue, authored in Icon Composer as `App/AppIcon.icon`; macOS renderings for the web and a flat mark live in `brand/`. Website copy in English, matching the app and README. [Language inferred from the repository.]
 
 Website direction (owner choice, 2026-10-17): the category standard for a Mac app site, executed straight at the craft level of culturedcode.com/things and apple.com product pages. No novelty concept or costume.
 

@@ -43,7 +43,6 @@
 		8593F1F270B5CB2E2473CEF9 /* ChangeSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03F483D438AE12BC6144DB /* ChangeSheets.swift */; };
 		8606E934C1B535163C71E19C /* ObjectChangesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59CFF8651F1758CEAB9DC59 /* ObjectChangesTests.swift */; };
 		8618079045EB116552373431 /* BrowserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493EDAC139D483631D8ACF3C /* BrowserController.swift */; };
-		8CE86889F6C06E42B1DB0959 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCE5B6A24140EF79CD9568C1 /* Assets.xcassets */; };
 		9F7B72F04F02BE9F26DB22F1 /* BatchDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8192BE7E3E0630E1F18F0252 /* BatchDownloader.swift */; };
 		A6ED150CC9C5BB5213D4085D /* BrowserThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F97E2563F7EC53C2C00517 /* BrowserThumbnail.swift */; };
 		A8E35183DB9026A9C440BF98 /* BrowserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDDCFC262281F17169D48F7 /* BrowserRow.swift */; };
@@ -55,6 +54,7 @@
 		CB9F65A885FC7FBC22BF62B9 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C96EE67BEBE617AB5B05CC /* ProfileStore.swift */; };
 		CF4DF556603F22FAFECBA409 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F7079ED7162065BC331954 /* AppModel.swift */; };
 		CF614B626BD926249FE10FE9 /* InspectorSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C2AD60EA01AC0FB8A382C8 /* InspectorSections.swift */; };
+		D00CFC6AE484B711B681FE4B /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 12536414872632A79F5A62F6 /* AppIcon.icon */; };
 		D0436DBB85AC9EF9844C9927 /* FolderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DC2EAA25A4D401B405B20 /* FolderSync.swift */; };
 		E54BECCC03379FD6E97BC980 /* InsightTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDCE2E2315D22F27FD20267 /* InsightTarget.swift */; };
 		EC7273F32843C6C72F491CD3 /* BucketdeckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D28A63C706F1F835A6C3440 /* BucketdeckApp.swift */; };
@@ -82,6 +82,7 @@
 		0B4DC2EAA25A4D401B405B20 /* FolderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSync.swift; sourceTree = "<group>"; };
 		0BDDCFC262281F17169D48F7 /* BrowserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserRow.swift; sourceTree = "<group>"; };
 		0FF0D20837D8FDD2E4E67243 /* AWSConfigProfilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConfigProfilesTests.swift; sourceTree = "<group>"; };
+		12536414872632A79F5A62F6 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		140637F0139F396FF07604E6 /* ObjectListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectListing.swift; sourceTree = "<group>"; };
 		14C96EE67BEBE617AB5B05CC /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		18B5DE7E91A91EC01C5384DF /* BatchDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDownloaderTests.swift; sourceTree = "<group>"; };
@@ -118,7 +119,6 @@
 		B06D2CE6F100D293D26C9CFF /* AppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelTests.swift; sourceTree = "<group>"; };
 		B0F97E2563F7EC53C2C00517 /* BrowserThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserThumbnail.swift; sourceTree = "<group>"; };
 		B4C2AD60EA01AC0FB8A382C8 /* InspectorSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorSections.swift; sourceTree = "<group>"; };
-		BCE5B6A24140EF79CD9568C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BDEC132A8CB0ED429F2EBE88 /* TestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDoubles.swift; sourceTree = "<group>"; };
 		C204775685C962FABE0EB1BA /* FolderSyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSyncTests.swift; sourceTree = "<group>"; };
 		C3873356B357BC59A6F3E11A /* KeychainCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainCredentialStore.swift; sourceTree = "<group>"; };
@@ -156,6 +156,7 @@
 		00B1762798885FF3733878FB /* App */ = {
 			isa = PBXGroup;
 			children = (
+				12536414872632A79F5A62F6 /* AppIcon.icon */,
 				34F7079ED7162065BC331954 /* AppModel.swift */,
 				2D28A63C706F1F835A6C3440 /* BucketdeckApp.swift */,
 				A756F2A73B9B1C673EFF1401 /* ContentView.swift */,
@@ -175,7 +176,6 @@
 		2E7F5AD3C398B3D23988F1DC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				BCE5B6A24140EF79CD9568C1 /* Assets.xcassets */,
 				EA9461E9E1045402E0C9A4D5 /* Credits.html */,
 			);
 			path = Resources;
@@ -396,7 +396,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8CE86889F6C06E42B1DB0959 /* Assets.xcassets in Resources */,
+				D00CFC6AE484B711B681FE4B /* AppIcon.icon in Resources */,
 				29322583EDF276DB263D26D0 /* Credits.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

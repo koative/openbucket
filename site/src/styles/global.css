@@ -227,14 +227,9 @@ h2 {
   overflow: hidden;
 }
 
-/* The app's icon artwork is full-bleed; macOS 26 shows it inside the system's rounded-square mask. */
-.app-icon {
-  border-radius: 22.5%;
-}
-
+/* brand/app-icon/ is macOS's own rendering: shape, margin and shadow are in the image, so the page adds none. */
 .hero-icon {
-  width: 112px;
-  filter: drop-shadow(0 12px 22px rgb(0 40 120 / 0.28));
+  width: 128px;
 }
 
 .hero h1 {
@@ -592,8 +587,7 @@ h2 {
 }
 
 .get img {
-  width: 96px;
-  filter: drop-shadow(0 10px 18px rgb(0 40 120 / 0.25));
+  width: 108px;
 }
 
 .brew {

@@ -121,7 +121,6 @@ rounded:
   panel: "24px"
   detail: "14px"
   focus: "4px"
-  icon: "22.5%"
   crop-phone: "10px"
 spacing:
   gutter: "22px"
@@ -173,8 +172,7 @@ components:
     typography: "{typography.display}"
     padding: "72px 22px 0"
   hero-icon:
-    rounded: "{rounded.icon}"
-    size: "112px"
+    size: "128px"
   window:
     width: "1100px"
   window-detail:
@@ -246,8 +244,7 @@ components:
     typography: "{typography.headline}"
     padding: "40px 22px 120px"
   get-icon:
-    rounded: "{rounded.icon}"
-    size: "96px"
+    size: "108px"
   fine-print:
     textColor: "{colors.ink-2}"
     typography: "{typography.fine}"
@@ -266,7 +263,7 @@ components:
 
 **Creative North Star: "The Straight Mac Page"**
 
-Bucketdeck's site is the category-standard Mac app landing page executed without a concept or costume, at the craft level of culturedcode.com/things and apple.com product pages. One product, one blue glass bucket icon, real app windows, one signed download. The page is a vertical stack of full-bleed sections on a white canvas, alternating with soft grey bands and a single black band, all set in the system face (SF Pro on Macs) with large semibold, slightly tightened headlines and generous whitespace.
+Bucketdeck's site is the category-standard Mac app landing page executed without a concept or costume, at the craft level of culturedcode.com/things and apple.com product pages. One product, one app icon (two nested glass bands on blue, built in Icon Composer), real app windows, one signed download. The page is a vertical stack of full-bleed sections on a white canvas, alternating with soft grey bands and a single black band, all set in the system face (SF Pro on Macs) with large semibold, slightly tightened headlines and generous whitespace.
 
 The product itself is the only imagery. Every visual of Bucketdeck is a genuine screenshot of a real window against a local Garage bucket of demo files, captured with its own transparent corners and floating on a soft shadow that follows them, and the hero window settles into place as it scrolls into view. Colour is restrained to Apple's neutral greys plus one action blue; the only other hues are the three compatibility badges, which carry evidence, not decoration.
 
@@ -353,12 +350,10 @@ A single centred column of full-bleed sections. Content width is the 1080px meas
 
 ## Elevation & Depth
 
-The page is flat. Sections are separated by tonal bands, not shadows; the status panel is a flat Band Grey surface on white. Depth is reserved for the product: real windows float on a soft two-layer shadow, and the app icon casts a blue-tinted drop shadow. The nav is the only translucent layer.
+The page is flat. Sections are separated by tonal bands, not shadows; the status panel is a flat Band Grey surface on white. Depth is reserved for the product: real windows float on a soft two-layer shadow, and the app icon carries the shadow macOS draws for it (the images in `brand/app-icon/` are macOS's own rendering, so the page adds none). The nav is the only translucent layer.
 
 ### Shadow Vocabulary
 - **Window shadow** (`filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.14)) drop-shadow(0 26px 34px rgb(0 0 0 / 0.3))`): every screenshot window, a tight contact shadow plus a long offset lift, like a macOS window. A filter, not a box shadow, so it follows the window's transparent corners.
-- **Hero icon glow** (`filter: drop-shadow(0 12px 22px rgb(0 40 120 / 0.28))`): the 112px hero icon.
-- **Get icon glow** (`filter: drop-shadow(0 10px 18px rgb(0 40 120 / 0.25))`): the 96px icon in the get block and on the 404 page.
 - **Nav glass** (`backdrop-filter: saturate(1.8) blur(20px)` over Nav Glass with a Hairline bottom border): the sticky nav.
 
 ### Named Rules
@@ -375,7 +370,7 @@ Soft, Apple-standard geometry. Buttons and badges are full pills (999px). The st
 
 ### Navigation
 - **Style:** sticky, 52px tall, Nav Glass with backdrop blur and a Hairline bottom border; inner row on the 1080px measure with a 28px gap.
-- **Content:** 28px masked app icon + "Bucketdeck" (Brand, 9px gap) on the left; Features, Compatibility, Security, GitHub (Nav, Ink at 0.8 opacity, 26px gap); the small Download pill at the right.
+- **Content:** 32px app icon + "Bucketdeck" (Brand, 9px gap) on the left; Features, Compatibility, Security, GitHub (Nav, Ink at 0.8 opacity, 26px gap); the small Download pill at the right.
 - **States:** links go to full opacity on hover with no underline.
 - **Phone:** links hide; brand and Download pill remain.
 
@@ -391,7 +386,7 @@ Soft, Apple-standard geometry. Buttons and badges are full pills (999px). The st
 - **Pairing:** next to the primary pill for the secondary path ("View on GitHub"), or alone at the end of a section.
 
 ### Hero
-Centred stack: 112px app icon, Display headline in two lines that names the audience ("The S3 browser for people who live in buckets."), Lede naming the services and the read-only default, actions row (pill + text link, 18px × 32px gaps), Fine release line ("Version x · Free and open source · macOS 26 or later · Signed and notarized") and a second Fine line with the live-tested servers, then the hero window, which starts inside the first viewport and continues below the fold.
+Centred stack: 128px app icon, Display headline in two lines that names the audience ("The S3 browser for people who live in buckets."), Lede naming the services and the read-only default, actions row (pill + text link, 18px × 32px gaps), Fine release line ("Version x · Free and open source · macOS 26 or later · Signed and notarized") and a second Fine line with the live-tested servers, then the hero window, which starts inside the first viewport and continues below the fold.
 
 ### Window figure + caption
 - **Image:** a real screenshot with its own transparent corners and the Window shadow, up to 1100px wide, served as 1x and 2x WebP.
@@ -424,7 +419,7 @@ Band section with a centred Headline and up to 820px of native `<details>` rows:
 Plain section, centred: Headline, Lede, and a row of three text links (Source code, Release notes, Contribute).
 
 ### Get block
-Centred close: 96px app icon with the Get icon glow, Headline ("Get Bucketdeck."), the primary pill, a 15px Secondary Ink Homebrew line whose command sits in a selectable Band Grey monospace chip, and a Fine line that names the release and points to GitHub issues. The 404 page reuses this block with "Go to Bucketdeck".
+Centred close: 108px app icon, Headline ("Get Bucketdeck."), the primary pill, a 15px Secondary Ink Homebrew line whose command sits in a selectable Band Grey monospace chip, and a Fine line that names the release and points to GitHub issues. The 404 page reuses this block with "Go to Bucketdeck".
 
 ### Footer
 Band Grey, 12px Secondary Ink, on the measure with a Hairline top rule and 22px 22px 36px padding: maker line, a wrapping row of Footer Link Grey links (6px × 22px gaps), and the trademark line stating that Bucketdeck is not affiliated with Amazon or Apple.

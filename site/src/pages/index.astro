@@ -16,7 +16,7 @@ import {
   SquareDashedMousePointer,
   Timer,
 } from '@lucide/astro';
-import icon from '../../../App/Resources/Assets.xcassets/AppIcon.appiconset/icon-256.png';
+import icon from '../../../brand/app-icon/bucketdeck-256.png';
 import gridShot from '../../../docs/media/browser-grid.png';
 import listDetailShot from '../assets/list-detail.png';
 import gridPhoneShot from '../assets/grid-phone.png';
@@ -177,7 +177,7 @@ const structuredData = [
   <header class="nav">
     <div class="nav-inner">
       <a class="brand" href="/">
-        <img class="app-icon" src={icon.src} alt="" width="28" height="28" />
+        <img src={icon.src} alt="" width="32" height="32" />
         Bucketdeck
       </a>
       <nav aria-label="Sections">
@@ -193,7 +193,7 @@ const structuredData = [
 
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
-      <img class="app-icon hero-icon" src={icon.src} alt="Bucketdeck app icon" width="112" height="112" />
+      <img class="hero-icon" src={icon.src} alt="Bucketdeck app icon" width="128" height="128" />
       <h1 id="hero-title">The S3 browser for people<br />who live in buckets.</h1>
       <p class="lede">
         Browse, preview, share and restore files in Amazon S3, MinIO and other S3‑compatible storage, in a native
@@ -338,7 +338,7 @@ const structuredData = [
     </section>
 
     <section class="get" aria-labelledby="get-title">
-      <img class="app-icon" src={icon.src} alt="" width="96" height="96" loading="lazy" />
+      <img src={icon.src} alt="" width="108" height="108" loading="lazy" />
       <h2 id="get-title">Get Bucketdeck.</h2>
       <a class="pill" href={dmg}><Download size={19} stroke-width={2.2} /> Download for macOS</a>
       <p class="brew">Or with Homebrew: <code>brew install --cask koative/tap/bucketdeck</code></p>

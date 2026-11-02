@@ -408,16 +408,6 @@
         "purpose": "box-shadow on every screenshot window."
       },
       {
-        "name": "hero-icon-glow",
-        "value": "drop-shadow(0 12px 22px rgb(0 40 120 / 0.28))",
-        "purpose": "CSS filter on the 112px hero app icon."
-      },
-      {
-        "name": "get-icon-glow",
-        "value": "drop-shadow(0 10px 18px rgb(0 40 120 / 0.25))",
-        "purpose": "CSS filter on the 96px get-block and 404 app icon."
-      },
-      {
         "name": "nav-glass",
         "value": "backdrop-filter: saturate(1.8) blur(20px)",
         "purpose": "Sticky nav over Nav Glass with a Hairline bottom border."

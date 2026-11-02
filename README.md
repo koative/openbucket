@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="App/Resources/Assets.xcassets/AppIcon.appiconset/icon-128.png" width="88" alt="Bucketdeck app icon">
+<img src="brand/app-icon/bucketdeck-256.png" width="104" alt="Bucketdeck app icon">
 
 # Bucketdeck
 
