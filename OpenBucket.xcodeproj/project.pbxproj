@@ -58,6 +58,7 @@
 		D349749582F5BED353165BD5 /* ShareLinkExpiryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702938D8CF6D13C20636AC /* ShareLinkExpiryTests.swift */; };
 		D80C11FA476E02E511653697 /* BrowserThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A0DB88793D9A81759A4BF8 /* BrowserThumbnail.swift */; };
 		DB6623F38BD7B1BF1E111251 /* InspectorSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBF4B8FEE3667BC2320CB418 /* InspectorSections.swift */; };
+		DD050F90CDA15133A65F6E2B /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = C6121EA97E479C7449D4DE5E /* Credits.html */; };
 		E36575214AEE982CEE18A358 /* MetadataEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0F873316834119F67D8113 /* MetadataEditor.swift */; };
 		E4212E389D40A90874DFA701 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92EFCC703C8816C7CE7E7352 /* Assets.xcassets */; };
 		E6804E73D2A16445534F8A76 /* BackupVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2149254C0E36EEB5EDFFB5CE /* BackupVerifyView.swift */; };
@@ -121,6 +122,7 @@
 		C0E2B0C26FE30A89B9FC43E6 /* PreviewFileName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFileName.swift; sourceTree = "<group>"; };
 		C1B385C52E15190191826676 /* BatchDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDownloader.swift; sourceTree = "<group>"; };
 		C356ECA0BDF4C3E50710927F /* BrowserControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserControllerTests.swift; sourceTree = "<group>"; };
+		C6121EA97E479C7449D4DE5E /* Credits.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		C9D492F8D03CFE403B612D08 /* BatchDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDownloaderTests.swift; sourceTree = "<group>"; };
 		CBC24ECBC900A051CA2BB5A8 /* OpenBucketIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBucketIntents.swift; sourceTree = "<group>"; };
 		D1FC01D86217CC165F100A40 /* StorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTests.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				92EFCC703C8816C7CE7E7352 /* Assets.xcassets */,
+				C6121EA97E479C7449D4DE5E /* Credits.html */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4212E389D40A90874DFA701 /* Assets.xcassets in Resources */,
+				DD050F90CDA15133A65F6E2B /* Credits.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

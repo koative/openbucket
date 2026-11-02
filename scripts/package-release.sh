@@ -35,6 +35,9 @@ if [[ -n $(git -C "$root" status --porcelain) ]]; then
   exit 1
 fi
 
+# Apache 2.0 needs the bundled packages' licenses and notices in the app; the About window shows Credits.html.
+/usr/bin/python3 "$root/scripts/generate-credits.py" --check
+
 # The DMG keeps one name across releases, so releases/latest/download/OpenBucket-macOS.dmg is a stable link.
 distribution="$root/dist/v$version"
 filename="OpenBucket-macOS.dmg"

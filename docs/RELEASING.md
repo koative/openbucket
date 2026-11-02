@@ -30,7 +30,7 @@ The project disables signing for ordinary local and CI builds. The release scrip
 ## Prepare a release
 
 1. Set the new `MARKETING_VERSION` and a higher `CURRENT_PROJECT_VERSION` (build number) in `project.yml`, regenerate `OpenBucket.xcodeproj` with `xcodegen generate --spec project.yml`, and rename `docs/releases/unreleased.md` to `docs/releases/vVERSION.md`, adding the version heading and install section used by earlier notes.
-2. Run the format check, app tests, and package tests shown in the main README. Make sure `Packages/OpenBucket/Package.resolved` is committed; the release archive refuses to re-resolve packages, so it builds exactly those versions. Commit and push a clean `main` branch and wait for CI to pass.
+2. Run the format check, app tests, and package tests shown in the main README. Make sure `Packages/OpenBucket/Package.resolved` is committed; the release archive refuses to re-resolve packages, so it builds exactly those versions. If packages changed, run `scripts/generate-credits.py` and commit `App/Resources/Credits.html`: it carries their licenses and notices into the About window, and the release script refuses a stale one. Commit and push a clean `main` branch and wait for CI to pass.
 3. Build and notarize the DMG:
 
    ```sh
