@@ -1,5 +1,5 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import UniformTypeIdentifiers
 
 /// One upload: a local file, or the marker of an empty folder (`source` nil).

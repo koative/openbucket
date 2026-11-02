@@ -1,5 +1,5 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 struct ObjectBrowserView: View {
@@ -99,7 +99,7 @@ struct ObjectBrowserView: View {
       ProgressView("Connecting…")
     } else if model.selectedProfile == nil {
       ContentUnavailableView {
-        Label("Welcome to OpenBucket", systemImage: "externaldrive.connected.to.line.below")
+        Label("Welcome to Bucketdeck", systemImage: "externaldrive.connected.to.line.below")
       } description: {
         Text("Add an S3 connection to browse your files.")
       } actions: {

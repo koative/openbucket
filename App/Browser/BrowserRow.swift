@@ -1,5 +1,5 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import UniformTypeIdentifiers
 
 struct BrowserRow: Identifiable {

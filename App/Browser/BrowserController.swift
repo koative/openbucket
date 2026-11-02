@@ -1,7 +1,7 @@
 import AppKit
+import BucketdeckCore
 import CoreTransferable
 import Observation
-import OpenBucketCore
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -697,7 +697,7 @@ final class BrowserController {
     panel.canChooseFiles = false
     panel.canCreateDirectories = true
     panel.prompt = "Download"
-    panel.message = "OpenBucket will create a folder named “\(name)” here with everything inside it."
+    panel.message = "Bucketdeck will create a folder named “\(name)” here with everything inside it."
     Task {
       guard let directory = await choose(panel) else { return }
       start(.download, name: name, Self.preparing) { transfer in
@@ -757,7 +757,7 @@ final class BrowserController {
     panel.canChooseFiles = false
     panel.canCreateDirectories = true
     panel.prompt = "Download"
-    panel.message = "OpenBucket will create a new folder here for the \(countLabel(objects.count, "file"))."
+    panel.message = "Bucketdeck will create a new folder here for the \(countLabel(objects.count, "file"))."
     Task {
       guard let directory = await choose(panel) else { return }
       let total = objects.reduce(Int64.zero) { $0 + $1.size }
@@ -1287,8 +1287,8 @@ final class BrowserController {
 }
 
 extension UTType {
-  /// Files and folders dragged inside OpenBucket; declared in Info.plist.
-  static let openBucketItem = UTType(exportedAs: "dev.openbucket.item")
+  /// Files and folders dragged inside Bucketdeck; declared in Info.plist.
+  static let bucketdeckItem = UTType(exportedAs: "dev.openbucket.item")
 }
 
 /// A browser item dragged inside the app: enough to move it, none of its data.
@@ -1300,7 +1300,7 @@ struct S3ItemReference: Codable, Hashable, Sendable, Transferable {
   let key: [UInt8]
 
   static var transferRepresentation: some TransferRepresentation {
-    CodableRepresentation(contentType: .openBucketItem)
+    CodableRepresentation(contentType: .bucketdeckItem)
   }
 }
 

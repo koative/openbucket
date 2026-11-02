@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  OpenBucket live S3 test - one private, versioned bucket and an IAM user that can reach only that bucket.
+  Bucketdeck live S3 test - one private, versioned bucket and an IAM user that can reach only that bucket.
   Create the user's access key with the CLI afterwards so the secret never lands in stack outputs.
 
 Resources:
@@ -53,7 +53,7 @@ Resources:
     Type: AWS::IAM::User
     Properties:
       Policies:
-        - PolicyName: openbucket-live-test-bucket
+        - PolicyName: bucketdeck-live-test-bucket
           PolicyDocument:
             Version: "2012-10-17"
             Statement:

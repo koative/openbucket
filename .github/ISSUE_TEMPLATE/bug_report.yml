@@ -1,11 +1,11 @@
 name: Bug report
-description: Something in OpenBucket doesn't work as expected.
+description: Something in Bucketdeck doesn't work as expected.
 labels: [bug]
 body:
   - type: markdown
     attributes:
       value: |
-        **Never paste access keys, secret keys, session tokens, presigned share links or authorization headers.** Replace bucket names, hosts and object keys with placeholders if they are private. Security problems go to a [private advisory](https://github.com/koative/openbucket/security/advisories/new), not an issue.
+        **Never paste access keys, secret keys, session tokens, presigned share links or authorization headers.** Replace bucket names, hosts and object keys with placeholders if they are private. Security problems go to a [private advisory](https://github.com/koative/bucketdeck/security/advisories/new), not an issue.
   - type: input
     id: macos
     attributes:
@@ -16,8 +16,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: OpenBucket version
-      description: OpenBucket → About OpenBucket, or the commit if you built from source.
+      label: Bucketdeck version
+      description: Bucketdeck → About Bucketdeck, or the commit if you built from source.
       placeholder: 0.2.0
     validations:
       required: true

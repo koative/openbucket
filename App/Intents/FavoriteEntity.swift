@@ -1,6 +1,6 @@
 import AppIntents
+import BucketdeckCore
 import CoreSpotlight
-import OpenBucketCore
 
 /// A favorite folder of one connection, for Shortcuts, Siri and Spotlight.
 struct FavoriteEntity: AppEntity, IndexedEntity {
@@ -75,6 +75,6 @@ enum FavoritesIndex {
       try? await index.deleteAppEntities(ofType: FavoriteEntity.self)
       try? await index.indexAppEntities(entities)
     }
-    OpenBucketShortcuts.updateAppShortcutParameters()
+    BucketdeckShortcuts.updateAppShortcutParameters()
   }
 }

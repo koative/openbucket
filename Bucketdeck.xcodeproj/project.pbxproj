@@ -1,0 +1,732 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		09BA6E47E30B014FC87DB732 /* StorageOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A32AF7F631B059D34D685B4 /* StorageOverviewView.swift */; };
+		0DB1D4ED4AE216AF0EADEFC1 /* MetadataEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EDA729431E13863B8DC1D1 /* MetadataEditor.swift */; };
+		0E7A0954ED8C9375CEFDA67C /* BrowserCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D6B7C2244AF4405AA0F789 /* BrowserCommands.swift */; };
+		10FBC1F49FB23FDB1E451E14 /* BrowserControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95878BA3FC5FF9C4B4001F3 /* BrowserControllerTests.swift */; };
+		1AEC27CB77EFA73F38F92279 /* AWSConfigProfilesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF0D20837D8FDD2E4E67243 /* AWSConfigProfilesTests.swift */; };
+		2387A8A9B6139E97C7F87339 /* TestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEC132A8CB0ED429F2EBE88 /* TestDoubles.swift */; };
+		240A1CFB37D7EA2BBE424D2A /* BucketdeckIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B4B45055D2568A7E2E5EB2 /* BucketdeckIntents.swift */; };
+		29322583EDF276DB263D26D0 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = EA9461E9E1045402E0C9A4D5 /* Credits.html */; };
+		3BB8A82E08325533D85B9C78 /* AWSConfigProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A60AA89B8F7681C8ACCC63 /* AWSConfigProfiles.swift */; };
+		3E62E2AB8443695F3A8D96E0 /* ServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3591868251BE8550867A4E /* ServicesTests.swift */; };
+		42A6BCDC69531C6C2B8DDF93 /* InsightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE3F7D92917E1553051FD0F /* InsightTests.swift */; };
+		435EA731D9D89654929A0A26 /* PreviewFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3498AEB481A58F74EBE0ECD8 /* PreviewFileName.swift */; };
+		44F81DBB1C4BC3BAB0475570 /* ShareLinkExpiryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4C5E31D1B9142CA1C9DC45 /* ShareLinkExpiryTests.swift */; };
+		4611FE6B50B761871B2261BE /* DeepSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59C958FBA37FB305EDCDFC2 /* DeepSearch.swift */; };
+		49A3FC1ACEBC0EFE37055BE5 /* InlinePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C6DD4F5BA7948FE736A6E9 /* InlinePlayer.swift */; };
+		506AEA38971F31D313C7F9BD /* KeychainCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3873356B357BC59A6F3E11A /* KeychainCredentialStore.swift */; };
+		57B788815EB398608BC54A97 /* BackupVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C568C6D84CFD15528471BD51 /* BackupVerifyView.swift */; };
+		57E459EBA55DDB9C45E8C569 /* Treemap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96C1173452BC6CB83721EF7 /* Treemap.swift */; };
+		59D20F39AD751133C02D16E9 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4183AA1F47F9ABC44551BFA3 /* Concurrency.swift */; };
+		5B952123073EE3C38291AED7 /* PreviewFileNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDB18B75F5C92C3BB424F78 /* PreviewFileNameTests.swift */; };
+		5CF68D10B3157CB864F26ED9 /* QuickLookPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA705CF3C5EF3C2E54D8812 /* QuickLookPanel.swift */; };
+		5D9A7BD7B981B4E3D23B240B /* BrowseAsOfSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F755DFB12F0CC1FABE176FC /* BrowseAsOfSheet.swift */; };
+		5FABE2CE4DC1278BC5519624 /* ObjectListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140637F0139F396FF07604E6 /* ObjectListing.swift */; };
+		5FF921B6DAAB6DDBC48CA86D /* FavoriteEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70BB10D2829349564587FDDF /* FavoriteEntity.swift */; };
+		6ABE774CB10220447BA87D91 /* ObjectBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6891FCD889588A768854339 /* ObjectBrowserView.swift */; };
+		6D42DA39E2C8D8C4D4683AA6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A756F2A73B9B1C673EFF1401 /* ContentView.swift */; };
+		6EA9EE217393CB987161BED4 /* FolderSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C204775685C962FABE0EB1BA /* FolderSyncTests.swift */; };
+		750371FE23A3954B65E21227 /* ShareLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8262D1A1A3B074E21CA819B /* ShareLinkView.swift */; };
+		77DC508173674D86700C6D61 /* BackupVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4BF7E5D33A0E84CA8A0580 /* BackupVerification.swift */; };
+		7901212BF49E8D329A87B283 /* BucketdeckCore in Frameworks */ = {isa = PBXBuildFile; productRef = EC5312F05CA12786FEEEBEFA /* BucketdeckCore */; };
+		7952BB481B257CE30182E49F /* BucketdeckS3 in Frameworks */ = {isa = PBXBuildFile; productRef = BE6558695364A08CAC78471C /* BucketdeckS3 */; };
+		79F00AD597559B10668A9C5F /* StorageClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47785EF34D1818187F7F8072 /* StorageClassName.swift */; };
+		7CE5497EC73CB9E26F34F8D6 /* ObjectChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8DF6790491A32FBBA3AAC2 /* ObjectChanges.swift */; };
+		8593F1F270B5CB2E2473CEF9 /* ChangeSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03F483D438AE12BC6144DB /* ChangeSheets.swift */; };
+		8606E934C1B535163C71E19C /* ObjectChangesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59CFF8651F1758CEAB9DC59 /* ObjectChangesTests.swift */; };
+		8618079045EB116552373431 /* BrowserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493EDAC139D483631D8ACF3C /* BrowserController.swift */; };
+		8CE86889F6C06E42B1DB0959 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCE5B6A24140EF79CD9568C1 /* Assets.xcassets */; };
+		9F7B72F04F02BE9F26DB22F1 /* BatchDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8192BE7E3E0630E1F18F0252 /* BatchDownloader.swift */; };
+		A6ED150CC9C5BB5213D4085D /* BrowserThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F97E2563F7EC53C2C00517 /* BrowserThumbnail.swift */; };
+		A8E35183DB9026A9C440BF98 /* BrowserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDDCFC262281F17169D48F7 /* BrowserRow.swift */; };
+		B25F386F6709E6D2F2B81575 /* StorageScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952EBD89651490C1CDFEEE0A /* StorageScan.swift */; };
+		B539023A0C37F2806FC49627 /* ImageMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F017E4C6110255EB1141BB /* ImageMetadata.swift */; };
+		C28DB99F094C0D98CED3FF26 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD5B88531F594D5EA37A489 /* SearchResultsView.swift */; };
+		C8AB838B34A4CE67161DD45D /* BrowserGridCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ECDCD086DE19F81926BB12 /* BrowserGridCard.swift */; };
+		C9BEE3D915484F2B4CFB1ECA /* AppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06D2CE6F100D293D26C9CFF /* AppModelTests.swift */; };
+		CB9F65A885FC7FBC22BF62B9 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C96EE67BEBE617AB5B05CC /* ProfileStore.swift */; };
+		CF4DF556603F22FAFECBA409 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F7079ED7162065BC331954 /* AppModel.swift */; };
+		CF614B626BD926249FE10FE9 /* InspectorSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C2AD60EA01AC0FB8A382C8 /* InspectorSections.swift */; };
+		D0436DBB85AC9EF9844C9927 /* FolderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DC2EAA25A4D401B405B20 /* FolderSync.swift */; };
+		E54BECCC03379FD6E97BC980 /* InsightTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDCE2E2315D22F27FD20267 /* InsightTarget.swift */; };
+		EC7273F32843C6C72F491CD3 /* BucketdeckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D28A63C706F1F835A6C3440 /* BucketdeckApp.swift */; };
+		ECEEBF9AA42A4A4E147786E5 /* ObjectInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AB81828D93DC6B19EED836 /* ObjectInspectorView.swift */; };
+		F0186D2DE8493E7B20759004 /* FolderDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3F3AD37DFF50998F634905 /* FolderDownloader.swift */; };
+		F0200B31EC87619F0EE643E7 /* ObjectTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9490BA553EF8709FCFAA21D5 /* ObjectTableView.swift */; };
+		F4ECDDC2861EB3D0485335C1 /* BatchDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B5DE7E91A91EC01C5384DF /* BatchDownloaderTests.swift */; };
+		FB6F05966CD5426C0758105C /* ConnectionEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31A99C3B769A5011320990 /* ConnectionEditor.swift */; };
+		FCA677D2475402CD69330F6D /* StorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76530D9E5FDE848C484283E7 /* StorageTests.swift */; };
+		FFCC17756BEC0FB088A3B34A /* FolderHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4916F9349947C5D348E03584 /* FolderHistory.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		85EF696A777A2C9B2E16D340 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE5980FF68CCCF2F985B87D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CEB65AEBE3DE104E450AEA17;
+			remoteInfo = Bucketdeck;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0031E0F583659056CE362107 /* BucketdeckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BucketdeckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B4DC2EAA25A4D401B405B20 /* FolderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSync.swift; sourceTree = "<group>"; };
+		0BDDCFC262281F17169D48F7 /* BrowserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserRow.swift; sourceTree = "<group>"; };
+		0FF0D20837D8FDD2E4E67243 /* AWSConfigProfilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConfigProfilesTests.swift; sourceTree = "<group>"; };
+		140637F0139F396FF07604E6 /* ObjectListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectListing.swift; sourceTree = "<group>"; };
+		14C96EE67BEBE617AB5B05CC /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
+		18B5DE7E91A91EC01C5384DF /* BatchDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDownloaderTests.swift; sourceTree = "<group>"; };
+		1E4C5E31D1B9142CA1C9DC45 /* ShareLinkExpiryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareLinkExpiryTests.swift; sourceTree = "<group>"; };
+		1F31A99C3B769A5011320990 /* ConnectionEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionEditor.swift; sourceTree = "<group>"; };
+		29F017E4C6110255EB1141BB /* ImageMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadata.swift; sourceTree = "<group>"; };
+		2D28A63C706F1F835A6C3440 /* BucketdeckApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BucketdeckApp.swift; sourceTree = "<group>"; };
+		3498AEB481A58F74EBE0ECD8 /* PreviewFileName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFileName.swift; sourceTree = "<group>"; };
+		34F7079ED7162065BC331954 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		3A32AF7F631B059D34D685B4 /* StorageOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageOverviewView.swift; sourceTree = "<group>"; };
+		3B6FB928FCB2260CA9107AF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4183AA1F47F9ABC44551BFA3 /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
+		47785EF34D1818187F7F8072 /* StorageClassName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageClassName.swift; sourceTree = "<group>"; };
+		4916F9349947C5D348E03584 /* FolderHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderHistory.swift; sourceTree = "<group>"; };
+		493EDAC139D483631D8ACF3C /* BrowserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserController.swift; sourceTree = "<group>"; };
+		4BA705CF3C5EF3C2E54D8812 /* QuickLookPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookPanel.swift; sourceTree = "<group>"; };
+		4CDB18B75F5C92C3BB424F78 /* PreviewFileNameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFileNameTests.swift; sourceTree = "<group>"; };
+		55B4B45055D2568A7E2E5EB2 /* BucketdeckIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BucketdeckIntents.swift; sourceTree = "<group>"; };
+		572FAB60BEAEC04E217D5E2C /* Bucketdeck */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Bucketdeck; path = Packages/Bucketdeck; sourceTree = SOURCE_ROOT; };
+		61AB81828D93DC6B19EED836 /* ObjectInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectInspectorView.swift; sourceTree = "<group>"; };
+		6B03F483D438AE12BC6144DB /* ChangeSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSheets.swift; sourceTree = "<group>"; };
+		6BE3F7D92917E1553051FD0F /* InsightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightTests.swift; sourceTree = "<group>"; };
+		70BB10D2829349564587FDDF /* FavoriteEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEntity.swift; sourceTree = "<group>"; };
+		76530D9E5FDE848C484283E7 /* StorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTests.swift; sourceTree = "<group>"; };
+		7CD5B88531F594D5EA37A489 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
+		8192BE7E3E0630E1F18F0252 /* BatchDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDownloader.swift; sourceTree = "<group>"; };
+		8F755DFB12F0CC1FABE176FC /* BrowseAsOfSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseAsOfSheet.swift; sourceTree = "<group>"; };
+		9490BA553EF8709FCFAA21D5 /* ObjectTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTableView.swift; sourceTree = "<group>"; };
+		952EBD89651490C1CDFEEE0A /* StorageScan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageScan.swift; sourceTree = "<group>"; };
+		9A3591868251BE8550867A4E /* ServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesTests.swift; sourceTree = "<group>"; };
+		A756F2A73B9B1C673EFF1401 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A8262D1A1A3B074E21CA819B /* ShareLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareLinkView.swift; sourceTree = "<group>"; };
+		AA8DF6790491A32FBBA3AAC2 /* ObjectChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectChanges.swift; sourceTree = "<group>"; };
+		B06D2CE6F100D293D26C9CFF /* AppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelTests.swift; sourceTree = "<group>"; };
+		B0F97E2563F7EC53C2C00517 /* BrowserThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserThumbnail.swift; sourceTree = "<group>"; };
+		B4C2AD60EA01AC0FB8A382C8 /* InspectorSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorSections.swift; sourceTree = "<group>"; };
+		BCE5B6A24140EF79CD9568C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BDEC132A8CB0ED429F2EBE88 /* TestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDoubles.swift; sourceTree = "<group>"; };
+		C204775685C962FABE0EB1BA /* FolderSyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSyncTests.swift; sourceTree = "<group>"; };
+		C3873356B357BC59A6F3E11A /* KeychainCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainCredentialStore.swift; sourceTree = "<group>"; };
+		C568C6D84CFD15528471BD51 /* BackupVerifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupVerifyView.swift; sourceTree = "<group>"; };
+		C6891FCD889588A768854339 /* ObjectBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectBrowserView.swift; sourceTree = "<group>"; };
+		C96C1173452BC6CB83721EF7 /* Treemap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Treemap.swift; sourceTree = "<group>"; };
+		CC8FCCDD8A730C63B8562CD7 /* Bucketdeck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bucketdeck.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD3F3AD37DFF50998F634905 /* FolderDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderDownloader.swift; sourceTree = "<group>"; };
+		D2EDA729431E13863B8DC1D1 /* MetadataEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataEditor.swift; sourceTree = "<group>"; };
+		D59CFF8651F1758CEAB9DC59 /* ObjectChangesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectChangesTests.swift; sourceTree = "<group>"; };
+		DA4BF7E5D33A0E84CA8A0580 /* BackupVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupVerification.swift; sourceTree = "<group>"; };
+		E1ECDCD086DE19F81926BB12 /* BrowserGridCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserGridCard.swift; sourceTree = "<group>"; };
+		E59C958FBA37FB305EDCDFC2 /* DeepSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepSearch.swift; sourceTree = "<group>"; };
+		E7D6B7C2244AF4405AA0F789 /* BrowserCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserCommands.swift; sourceTree = "<group>"; };
+		E95878BA3FC5FF9C4B4001F3 /* BrowserControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserControllerTests.swift; sourceTree = "<group>"; };
+		E9C6DD4F5BA7948FE736A6E9 /* InlinePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlinePlayer.swift; sourceTree = "<group>"; };
+		EA9461E9E1045402E0C9A4D5 /* Credits.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
+		F8A60AA89B8F7681C8ACCC63 /* AWSConfigProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConfigProfiles.swift; sourceTree = "<group>"; };
+		FEDCE2E2315D22F27FD20267 /* InsightTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightTarget.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8F54DA7CD460B99108737568 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7901212BF49E8D329A87B283 /* BucketdeckCore in Frameworks */,
+				7952BB481B257CE30182E49F /* BucketdeckS3 in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00B1762798885FF3733878FB /* App */ = {
+			isa = PBXGroup;
+			children = (
+				34F7079ED7162065BC331954 /* AppModel.swift */,
+				2D28A63C706F1F835A6C3440 /* BucketdeckApp.swift */,
+				A756F2A73B9B1C673EFF1401 /* ContentView.swift */,
+				3B6FB928FCB2260CA9107AF9 /* Info.plist */,
+				2F44846029BF910681E544FF /* Browser */,
+				781D9DA73806D41DB3532483 /* Connections */,
+				A20B37A764BB305061548B85 /* Insight */,
+				BC3E54698E32C6C502456266 /* Inspector */,
+				FC0FDAB374C9570E39D7F830 /* Intents */,
+				2E7F5AD3C398B3D23988F1DC /* Resources */,
+				B1B0A835A61361E8EA6D9D85 /* Services */,
+				42E8BC1A0A773191EC6E37CE /* Storage */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2E7F5AD3C398B3D23988F1DC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BCE5B6A24140EF79CD9568C1 /* Assets.xcassets */,
+				EA9461E9E1045402E0C9A4D5 /* Credits.html */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2F44846029BF910681E544FF /* Browser */ = {
+			isa = PBXGroup;
+			children = (
+				8192BE7E3E0630E1F18F0252 /* BatchDownloader.swift */,
+				8F755DFB12F0CC1FABE176FC /* BrowseAsOfSheet.swift */,
+				E7D6B7C2244AF4405AA0F789 /* BrowserCommands.swift */,
+				493EDAC139D483631D8ACF3C /* BrowserController.swift */,
+				E1ECDCD086DE19F81926BB12 /* BrowserGridCard.swift */,
+				0BDDCFC262281F17169D48F7 /* BrowserRow.swift */,
+				B0F97E2563F7EC53C2C00517 /* BrowserThumbnail.swift */,
+				6B03F483D438AE12BC6144DB /* ChangeSheets.swift */,
+				C6891FCD889588A768854339 /* ObjectBrowserView.swift */,
+				61AB81828D93DC6B19EED836 /* ObjectInspectorView.swift */,
+				9490BA553EF8709FCFAA21D5 /* ObjectTableView.swift */,
+				3498AEB481A58F74EBE0ECD8 /* PreviewFileName.swift */,
+				4BA705CF3C5EF3C2E54D8812 /* QuickLookPanel.swift */,
+				7CD5B88531F594D5EA37A489 /* SearchResultsView.swift */,
+				47785EF34D1818187F7F8072 /* StorageClassName.swift */,
+			);
+			path = Browser;
+			sourceTree = "<group>";
+		};
+		42E8BC1A0A773191EC6E37CE /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				F8A60AA89B8F7681C8ACCC63 /* AWSConfigProfiles.swift */,
+				C3873356B357BC59A6F3E11A /* KeychainCredentialStore.swift */,
+				14C96EE67BEBE617AB5B05CC /* ProfileStore.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		435E76C8DA827F9534998284 = {
+			isa = PBXGroup;
+			children = (
+				00B1762798885FF3733878FB /* App */,
+				7A935657C17CDF25CBF7CBD6 /* AppTests */,
+				66694C5958A6732666BEECF2 /* Packages */,
+				70A218341E459041FDF848CE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		66694C5958A6732666BEECF2 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				572FAB60BEAEC04E217D5E2C /* Bucketdeck */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		70A218341E459041FDF848CE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CC8FCCDD8A730C63B8562CD7 /* Bucketdeck.app */,
+				0031E0F583659056CE362107 /* BucketdeckTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		781D9DA73806D41DB3532483 /* Connections */ = {
+			isa = PBXGroup;
+			children = (
+				1F31A99C3B769A5011320990 /* ConnectionEditor.swift */,
+			);
+			path = Connections;
+			sourceTree = "<group>";
+		};
+		7A935657C17CDF25CBF7CBD6 /* AppTests */ = {
+			isa = PBXGroup;
+			children = (
+				B06D2CE6F100D293D26C9CFF /* AppModelTests.swift */,
+				0FF0D20837D8FDD2E4E67243 /* AWSConfigProfilesTests.swift */,
+				18B5DE7E91A91EC01C5384DF /* BatchDownloaderTests.swift */,
+				E95878BA3FC5FF9C4B4001F3 /* BrowserControllerTests.swift */,
+				C204775685C962FABE0EB1BA /* FolderSyncTests.swift */,
+				6BE3F7D92917E1553051FD0F /* InsightTests.swift */,
+				D59CFF8651F1758CEAB9DC59 /* ObjectChangesTests.swift */,
+				4CDB18B75F5C92C3BB424F78 /* PreviewFileNameTests.swift */,
+				9A3591868251BE8550867A4E /* ServicesTests.swift */,
+				1E4C5E31D1B9142CA1C9DC45 /* ShareLinkExpiryTests.swift */,
+				76530D9E5FDE848C484283E7 /* StorageTests.swift */,
+				BDEC132A8CB0ED429F2EBE88 /* TestDoubles.swift */,
+			);
+			path = AppTests;
+			sourceTree = "<group>";
+		};
+		A20B37A764BB305061548B85 /* Insight */ = {
+			isa = PBXGroup;
+			children = (
+				C568C6D84CFD15528471BD51 /* BackupVerifyView.swift */,
+				FEDCE2E2315D22F27FD20267 /* InsightTarget.swift */,
+				3A32AF7F631B059D34D685B4 /* StorageOverviewView.swift */,
+				C96C1173452BC6CB83721EF7 /* Treemap.swift */,
+			);
+			path = Insight;
+			sourceTree = "<group>";
+		};
+		B1B0A835A61361E8EA6D9D85 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DA4BF7E5D33A0E84CA8A0580 /* BackupVerification.swift */,
+				4183AA1F47F9ABC44551BFA3 /* Concurrency.swift */,
+				E59C958FBA37FB305EDCDFC2 /* DeepSearch.swift */,
+				CD3F3AD37DFF50998F634905 /* FolderDownloader.swift */,
+				4916F9349947C5D348E03584 /* FolderHistory.swift */,
+				0B4DC2EAA25A4D401B405B20 /* FolderSync.swift */,
+				29F017E4C6110255EB1141BB /* ImageMetadata.swift */,
+				AA8DF6790491A32FBBA3AAC2 /* ObjectChanges.swift */,
+				140637F0139F396FF07604E6 /* ObjectListing.swift */,
+				952EBD89651490C1CDFEEE0A /* StorageScan.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		BC3E54698E32C6C502456266 /* Inspector */ = {
+			isa = PBXGroup;
+			children = (
+				E9C6DD4F5BA7948FE736A6E9 /* InlinePlayer.swift */,
+				B4C2AD60EA01AC0FB8A382C8 /* InspectorSections.swift */,
+				D2EDA729431E13863B8DC1D1 /* MetadataEditor.swift */,
+				A8262D1A1A3B074E21CA819B /* ShareLinkView.swift */,
+			);
+			path = Inspector;
+			sourceTree = "<group>";
+		};
+		FC0FDAB374C9570E39D7F830 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				55B4B45055D2568A7E2E5EB2 /* BucketdeckIntents.swift */,
+				70BB10D2829349564587FDDF /* FavoriteEntity.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CEB65AEBE3DE104E450AEA17 /* Bucketdeck */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8C07E586EF5CEF98629D3DE /* Build configuration list for PBXNativeTarget "Bucketdeck" */;
+			buildPhases = (
+				BA4F181260AD4D04DEE07DCE /* Sources */,
+				5D69F39E15CD6CCC7FC22E2E /* Resources */,
+				8F54DA7CD460B99108737568 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Bucketdeck;
+			packageProductDependencies = (
+				EC5312F05CA12786FEEEBEFA /* BucketdeckCore */,
+				BE6558695364A08CAC78471C /* BucketdeckS3 */,
+			);
+			productName = Bucketdeck;
+			productReference = CC8FCCDD8A730C63B8562CD7 /* Bucketdeck.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FAC086C8AF07B1A0DD281CA8 /* BucketdeckTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE57CC628B5549839E34C084 /* Build configuration list for PBXNativeTarget "BucketdeckTests" */;
+			buildPhases = (
+				994EE1476668BEEE46327B56 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0EE3B8CC9797D9E431125398 /* PBXTargetDependency */,
+			);
+			name = BucketdeckTests;
+			packageProductDependencies = (
+			);
+			productName = BucketdeckTests;
+			productReference = 0031E0F583659056CE362107 /* BucketdeckTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE5980FF68CCCF2F985B87D4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 1DD40322E19E9F26B8FE2284 /* Build configuration list for PBXProject "Bucketdeck" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 435E76C8DA827F9534998284;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6ACC03B34C131AD644C134FA /* XCLocalSwiftPackageReference "Packages/Bucketdeck" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 70A218341E459041FDF848CE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CEB65AEBE3DE104E450AEA17 /* Bucketdeck */,
+				FAC086C8AF07B1A0DD281CA8 /* BucketdeckTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D69F39E15CD6CCC7FC22E2E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CE86889F6C06E42B1DB0959 /* Assets.xcassets in Resources */,
+				29322583EDF276DB263D26D0 /* Credits.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		994EE1476668BEEE46327B56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AEC27CB77EFA73F38F92279 /* AWSConfigProfilesTests.swift in Sources */,
+				C9BEE3D915484F2B4CFB1ECA /* AppModelTests.swift in Sources */,
+				F4ECDDC2861EB3D0485335C1 /* BatchDownloaderTests.swift in Sources */,
+				10FBC1F49FB23FDB1E451E14 /* BrowserControllerTests.swift in Sources */,
+				6EA9EE217393CB987161BED4 /* FolderSyncTests.swift in Sources */,
+				42A6BCDC69531C6C2B8DDF93 /* InsightTests.swift in Sources */,
+				8606E934C1B535163C71E19C /* ObjectChangesTests.swift in Sources */,
+				5B952123073EE3C38291AED7 /* PreviewFileNameTests.swift in Sources */,
+				3E62E2AB8443695F3A8D96E0 /* ServicesTests.swift in Sources */,
+				44F81DBB1C4BC3BAB0475570 /* ShareLinkExpiryTests.swift in Sources */,
+				FCA677D2475402CD69330F6D /* StorageTests.swift in Sources */,
+				2387A8A9B6139E97C7F87339 /* TestDoubles.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA4F181260AD4D04DEE07DCE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BB8A82E08325533D85B9C78 /* AWSConfigProfiles.swift in Sources */,
+				CF4DF556603F22FAFECBA409 /* AppModel.swift in Sources */,
+				77DC508173674D86700C6D61 /* BackupVerification.swift in Sources */,
+				57B788815EB398608BC54A97 /* BackupVerifyView.swift in Sources */,
+				9F7B72F04F02BE9F26DB22F1 /* BatchDownloader.swift in Sources */,
+				5D9A7BD7B981B4E3D23B240B /* BrowseAsOfSheet.swift in Sources */,
+				0E7A0954ED8C9375CEFDA67C /* BrowserCommands.swift in Sources */,
+				8618079045EB116552373431 /* BrowserController.swift in Sources */,
+				C8AB838B34A4CE67161DD45D /* BrowserGridCard.swift in Sources */,
+				A8E35183DB9026A9C440BF98 /* BrowserRow.swift in Sources */,
+				A6ED150CC9C5BB5213D4085D /* BrowserThumbnail.swift in Sources */,
+				EC7273F32843C6C72F491CD3 /* BucketdeckApp.swift in Sources */,
+				240A1CFB37D7EA2BBE424D2A /* BucketdeckIntents.swift in Sources */,
+				8593F1F270B5CB2E2473CEF9 /* ChangeSheets.swift in Sources */,
+				59D20F39AD751133C02D16E9 /* Concurrency.swift in Sources */,
+				FB6F05966CD5426C0758105C /* ConnectionEditor.swift in Sources */,
+				6D42DA39E2C8D8C4D4683AA6 /* ContentView.swift in Sources */,
+				4611FE6B50B761871B2261BE /* DeepSearch.swift in Sources */,
+				5FF921B6DAAB6DDBC48CA86D /* FavoriteEntity.swift in Sources */,
+				F0186D2DE8493E7B20759004 /* FolderDownloader.swift in Sources */,
+				FFCC17756BEC0FB088A3B34A /* FolderHistory.swift in Sources */,
+				D0436DBB85AC9EF9844C9927 /* FolderSync.swift in Sources */,
+				B539023A0C37F2806FC49627 /* ImageMetadata.swift in Sources */,
+				49A3FC1ACEBC0EFE37055BE5 /* InlinePlayer.swift in Sources */,
+				E54BECCC03379FD6E97BC980 /* InsightTarget.swift in Sources */,
+				CF614B626BD926249FE10FE9 /* InspectorSections.swift in Sources */,
+				506AEA38971F31D313C7F9BD /* KeychainCredentialStore.swift in Sources */,
+				0DB1D4ED4AE216AF0EADEFC1 /* MetadataEditor.swift in Sources */,
+				6ABE774CB10220447BA87D91 /* ObjectBrowserView.swift in Sources */,
+				7CE5497EC73CB9E26F34F8D6 /* ObjectChanges.swift in Sources */,
+				ECEEBF9AA42A4A4E147786E5 /* ObjectInspectorView.swift in Sources */,
+				5FABE2CE4DC1278BC5519624 /* ObjectListing.swift in Sources */,
+				F0200B31EC87619F0EE643E7 /* ObjectTableView.swift in Sources */,
+				435EA731D9D89654929A0A26 /* PreviewFileName.swift in Sources */,
+				CB9F65A885FC7FBC22BF62B9 /* ProfileStore.swift in Sources */,
+				5CF68D10B3157CB864F26ED9 /* QuickLookPanel.swift in Sources */,
+				C28DB99F094C0D98CED3FF26 /* SearchResultsView.swift in Sources */,
+				750371FE23A3954B65E21227 /* ShareLinkView.swift in Sources */,
+				79F00AD597559B10668A9C5F /* StorageClassName.swift in Sources */,
+				09BA6E47E30B014FC87DB732 /* StorageOverviewView.swift in Sources */,
+				B25F386F6709E6D2F2B81575 /* StorageScan.swift in Sources */,
+				57E459EBA55DDB9C45E8C569 /* Treemap.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0EE3B8CC9797D9E431125398 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CEB65AEBE3DE104E450AEA17 /* Bucketdeck */;
+			targetProxy = 85EF696A777A2C9B2E16D340 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1034A9228ED0AD2D927BD858 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.openbucket.app-tests";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bucketdeck.app/Contents/MacOS/Bucketdeck";
+			};
+			name = Debug;
+		};
+		735569DC7B05710294EE89F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		73DF827477D33C4AA74F0D1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		79D93D5E714A4F9DC0FA654D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Bucketdeck;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.3;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.openbucket.app;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		9B81097293367E49E1A89520 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Bucketdeck;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.3;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.openbucket.app;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E9817249EE85D5D3C8FC6C39 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.openbucket.app-tests";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bucketdeck.app/Contents/MacOS/Bucketdeck";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DD40322E19E9F26B8FE2284 /* Build configuration list for PBXProject "Bucketdeck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73DF827477D33C4AA74F0D1E /* Debug */,
+				735569DC7B05710294EE89F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D8C07E586EF5CEF98629D3DE /* Build configuration list for PBXNativeTarget "Bucketdeck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79D93D5E714A4F9DC0FA654D /* Debug */,
+				9B81097293367E49E1A89520 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EE57CC628B5549839E34C084 /* Build configuration list for PBXNativeTarget "BucketdeckTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1034A9228ED0AD2D927BD858 /* Debug */,
+				E9817249EE85D5D3C8FC6C39 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		6ACC03B34C131AD644C134FA /* XCLocalSwiftPackageReference "Packages/Bucketdeck" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Bucketdeck;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BE6558695364A08CAC78471C /* BucketdeckS3 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BucketdeckS3;
+		};
+		EC5312F05CA12786FEEEBEFA /* BucketdeckCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BucketdeckCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = CE5980FF68CCCF2F985B87D4 /* Project object */;
+}

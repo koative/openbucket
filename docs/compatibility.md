@@ -1,6 +1,6 @@
 # S3 compatibility
 
-OpenBucket browses, downloads and, on connections with **Allow changes** turned on, changes objects through the `OpenBucketS3` adapter. Provider compatibility is an observed result, not a guarantee implied by the phrase “S3-compatible.”
+Bucketdeck browses, downloads and, on connections with **Allow changes** turned on, changes objects through the `BucketdeckS3` adapter. Provider compatibility is an observed result, not a guarantee implied by the phrase “S3-compatible.”
 
 | Provider or configuration | Current evidence |
 | --- | --- |
@@ -8,10 +8,10 @@ OpenBucket browses, downloads and, on connections with **Allow changes** turned 
 | Adobe S3Mock (latest), path style | Write round trip passed. S3Mock keeps listing deleted keys in `ListObjectsV2`, keeps the old Content-Type on a metadata-replacing copy, and rejects an unchanged copy onto the same key |
 | Custom endpoint with a path, path style | A request-construction test checks that Soto signs the endpoint path followed by the bucket path |
 | Amazon S3, `eu-central-1`, regional endpoint, automatic (virtual-host) addressing | Live tests passed for a known bucket and nested prefix and for the write round trip below, with an IAM user limited to one versioned bucket. A versioning check also passed: two uploads list as two versions, copying the older version back restores it, a delete leaves a delete marker, and a connection set to the wrong region fails as an endpoint or region problem that names the bucket's region from `x-amz-bucket-region`. Glacier restores, SSE-KMS and IAM Identity Center sign-in weren't exercised |
-| Cloudflare R2, account endpoint, region `auto`, automatic (path) addressing | Live tests passed for a known bucket and nested prefix and for the write round trip below, with an API token limited to one bucket. R2 rejects aws-chunked upload signing, so OpenBucket sends uploads to every endpoint except Amazon S3 with `UNSIGNED-PAYLOAD` and a Content-Length. R2 has no object tagging (`NotImplemented`) or versioning (`GetBucketVersioning` is denied), so Info shows no tags and deletes are reported as permanent |
+| Cloudflare R2, account endpoint, region `auto`, automatic (path) addressing | Live tests passed for a known bucket and nested prefix and for the write round trip below, with an API token limited to one bucket. R2 rejects aws-chunked upload signing, so Bucketdeck sends uploads to every endpoint except Amazon S3 with `UNSIGNED-PAYLOAD` and a Content-Length. R2 has no object tagging (`NotImplemented`) or versioning (`GetBucketVersioning` is denied), so Info shows no tags and deletes are reported as permanent |
 | MinIO RELEASE.2025-10-15, path style | Live tests passed for a known bucket and nested prefix and for the write round trip below. Object tagging and bucket versioning answer through the S3 API; the app's version history screens weren't exercised. This is the last community release Homebrew ships |
 | RustFS 1.0.4, path style | Same live tests and the same tagging and versioning API check passed |
-| SeaweedFS 4.50 (`weed server -s3`), path style | Same live tests and the same tagging and versioning API check passed. SeaweedFS sends `X-Amz-Meta-…` with a capital prefix; OpenBucket reads metadata header names case-insensitively for it |
+| SeaweedFS 4.50 (`weed server -s3`), path style | Same live tests and the same tagging and versioning API check passed. SeaweedFS sends `X-Amz-Meta-…` with a capital prefix; Bucketdeck reads metadata header names case-insensitively for it |
 | Path-rewriting reverse proxy | Not verified; rewriting a SigV4-signed path can break authentication |
 
 The app uses `ListObjectsV2` with `/` as the delimiter. Each request asks for at most 500 entries; more entries load as you scroll. Each listing request times out after 20 seconds. A known bucket lets an account browse even if it cannot call account-wide `ListBuckets`. Listings request S3 URL encoding for keys that XML cannot represent, and decode only when the response declares URL encoding. Decoding follows Amazon S3 and MinIO: `+` becomes a space, and literal percent signs in keys remain intact. A response marked as truncated without a continuation token is reported as an error rather than shown as a complete listing.
@@ -36,7 +36,7 @@ Transfers run side by side, and each works on up to four files (or four `DeleteO
 Existing destinations are found by listing the destination prefix first; a name that already exists prompts Replace, Keep Both (`name 2.ext`) or Skip. Delete reads `GetBucketVersioning` to say whether deleted files can be restored. The opt-in write round trip uploads a small and a multipart file, creates a folder marker, copies, replaces metadata and deletes everything under a fresh prefix:
 
 ```sh
-OPENBUCKET_TEST_WRITES=1 swift test --package-path Packages/OpenBucket --filter writeRoundTrip
+BUCKETDECK_TEST_WRITES=1 swift test --package-path Packages/Bucketdeck --filter writeRoundTrip
 ```
 
 It needs the endpoint, region, bucket and key variables from the [live compatibility test](#live-compatibility-test) and a bucket you can write to.
@@ -45,28 +45,28 @@ It needs the endpoint, region, bucket and key variables from the [live compatibi
 
 The endpoint path and the starting folder are separate settings. With endpoint `https://store.example.com/s3/`, bucket `photos`, and path-style addressing, requests use a path beneath `/s3/photos`. Starting folder `2026/travel/` is an object-key prefix that filters keys **inside** that bucket; it does not change the endpoint base path.
 
-Soto uses path-style addressing by default for custom endpoints. Virtual-host addressing works with a pathless endpoint such as `https://store.example.com`. OpenBucket rejects virtual-host addressing with an endpoint path because Soto constructs an incompatible URL for that combination. It also rejects virtual-host addressing for a bucket name that contains dots, instead of silently switching that bucket to path style; choose **Automatic** or **Path style** for such buckets. Percent-encoded endpoint paths are rejected too, because Soto can rewrite them while building the signed request.
+Soto uses path-style addressing by default for custom endpoints. Virtual-host addressing works with a pathless endpoint such as `https://store.example.com`. Bucketdeck rejects virtual-host addressing with an endpoint path because Soto constructs an incompatible URL for that combination. It also rejects virtual-host addressing for a bucket name that contains dots, instead of silently switching that bucket to path style; choose **Automatic** or **Path style** for such buckets. Percent-encoded endpoint paths are rejected too, because Soto can rewrite them while building the signed request.
 
-Soto selects virtual-host addressing for standard Amazon endpoints even when path style is requested for a regular named bucket. OpenBucket reports that unsupported combination instead of silently changing the requested addressing mode. A gateway with a path prefix must receive the path that was signed; a proxy that rewrites it is a different configuration and needs its own live test.
+Soto selects virtual-host addressing for standard Amazon endpoints even when path style is requested for a regular named bucket. Bucketdeck reports that unsupported combination instead of silently changing the requested addressing mode. A gateway with a path prefix must receive the path that was signed; a proxy that rewrites it is a different configuration and needs its own live test.
 
 ## Live compatibility test
 
 The provider-neutral integration tests are opt-in. Both use automatic addressing, which is path style on custom endpoints and virtual-host style on Amazon S3. Supply an isolated bucket with an existing object under the test prefix:
 
 ```text
-OPENBUCKET_TEST_ENDPOINT
-OPENBUCKET_TEST_REGION
-OPENBUCKET_TEST_BUCKET
-OPENBUCKET_TEST_ACCESS_KEY
-OPENBUCKET_TEST_SECRET_KEY
-OPENBUCKET_TEST_PREFIX
-OPENBUCKET_TEST_EXPECT_KEY
+BUCKETDECK_TEST_ENDPOINT
+BUCKETDECK_TEST_REGION
+BUCKETDECK_TEST_BUCKET
+BUCKETDECK_TEST_ACCESS_KEY
+BUCKETDECK_TEST_SECRET_KEY
+BUCKETDECK_TEST_PREFIX
+BUCKETDECK_TEST_EXPECT_KEY
 ```
 
 Then run:
 
 ```sh
-swift test --package-path Packages/OpenBucket --filter listsKnownBucketAndNestedPrefix
+swift test --package-path Packages/Bucketdeck --filter listsKnownBucketAndNestedPrefix
 ```
 
 Use the same test against each provider before calling it verified. Never commit credentials or captured authorization headers.
@@ -75,4 +75,4 @@ For Amazon S3, [`scripts/aws-live-test.yml`](../scripts/aws-live-test.yml) is a 
 
 ## SDK boundary
 
-The first adapter candidate was the official AWS SDK for Swift, but its approximately 2.4 GB repository did not finish fetching on the development machine within 18 minutes. Soto resolved and passes the Garage and endpoint-path tests; the exact versions are pinned in `Packages/OpenBucket/Package.resolved`. `OpenBucketCore` depends on an S3 repository protocol, so the SDK can be changed without rewriting browser views.
+The first adapter candidate was the official AWS SDK for Swift, but its approximately 2.4 GB repository did not finish fetching on the development machine within 18 minutes. Soto resolved and passes the Garage and endpoint-path tests; the exact versions are pinned in `Packages/Bucketdeck/Package.resolved`. `BucketdeckCore` depends on an S3 repository protocol, so the SDK can be changed without rewriting browser views.

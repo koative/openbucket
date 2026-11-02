@@ -1,4 +1,4 @@
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 /// Matches anywhere below the searched folder, with the browser's selection, inspector, Quick Look,

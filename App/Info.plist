@@ -41,7 +41,7 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>OpenBucket item</string>
+			<string>Bucketdeck item</string>
 			<key>UTTypeIdentifier</key>
 			<string>dev.openbucket.item</string>
 		</dict>

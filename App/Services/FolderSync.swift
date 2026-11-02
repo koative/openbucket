@@ -1,6 +1,6 @@
+import BucketdeckCore
 import Foundation
 import Observation
-import OpenBucketCore
 
 /// One-way sync on a finished comparison: copies new and changed files to one side and never deletes. Update
 /// Mac moves each local file it replaces to the Trash; Update S3 overwrites (versioned buckets keep the old one).

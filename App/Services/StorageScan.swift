@@ -1,6 +1,6 @@
+import BucketdeckCore
 import Foundation
 import Observation
-import OpenBucketCore
 
 /// Sums sizes under a folder (per child folder and storage class) by listing every object below it.
 @MainActor @Observable

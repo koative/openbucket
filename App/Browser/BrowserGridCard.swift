@@ -1,5 +1,5 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 /// Icon view: click selects, ⌘-click toggles, ⇧-click extends, double-click or Return opens,

@@ -1,7 +1,7 @@
+import BucketdeckCore
 import CryptoKit
 import Foundation
 import Observation
-import OpenBucketCore
 
 /// Compares a local folder with an S3 folder by path, size and MD5-based ETag; the comparison changes neither side.
 @MainActor @Observable

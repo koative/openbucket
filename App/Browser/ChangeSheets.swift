@@ -1,5 +1,5 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 /// The sheets and dialogs of write actions, presented while their controller state is set.

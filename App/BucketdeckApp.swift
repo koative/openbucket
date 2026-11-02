@@ -1,10 +1,10 @@
 import AppIntents
-import OpenBucketCore
-import OpenBucketS3
+import BucketdeckCore
+import BucketdeckS3
 import SwiftUI
 
 @main
-struct OpenBucketApp: App {
+struct BucketdeckApp: App {
   @State private var model: AppModel
   @State private var browser: BrowserController
 
@@ -20,7 +20,7 @@ struct OpenBucketApp: App {
   }
 
   var body: some Scene {
-    Window("OpenBucket", id: "main") {
+    Window("Bucketdeck", id: "main") {
       ContentView(model: model, browser: browser)
         .environment(model)
         // Sidebar + content + inspector side by side.
@@ -50,6 +50,7 @@ struct OpenBucketApp: App {
     .handlesExternalEvents(matching: [])
   }
 
+  /// Still the OpenBucket folder: renaming it is part of the planned bundle ID change, which moves user data once.
   private static var profilesURL: URL {
     FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
       .appendingPathComponent("OpenBucket", isDirectory: true)

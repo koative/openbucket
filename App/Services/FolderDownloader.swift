@@ -1,5 +1,5 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 
 /// Downloads everything below an S3 folder into a new local folder, recreating the hierarchy.
 @MainActor

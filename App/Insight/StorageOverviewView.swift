@@ -1,4 +1,4 @@
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 import UniformTypeIdentifiers
 

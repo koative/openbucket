@@ -1,8 +1,8 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 private func source() throws -> AppModel.DownloadSource {
   AppModel.DownloadSource(

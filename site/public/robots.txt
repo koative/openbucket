@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://openbucket.koative.com/sitemap.xml
+Sitemap: https://bucketdeck.com/sitemap.xml

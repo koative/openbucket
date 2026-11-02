@@ -3,14 +3,14 @@
 # generated backups, logs, releases, exports and uploads in the platform bucket. See docs/demo-assets/README.md.
 set -eu
 
-: "${OPENBUCKET_DEMO_ENDPOINT:?Set the S3 endpoint URL}"
-: "${OPENBUCKET_DEMO_REGION:?Set the S3 region}"
-: "${OPENBUCKET_DEMO_ACCESS_KEY:?Set the access key}"
-: "${OPENBUCKET_DEMO_SECRET_KEY:?Set the secret key}"
-studio=${OPENBUCKET_DEMO_STUDIO_BUCKET:-kestrel-studio}
-platform=${OPENBUCKET_DEMO_PLATFORM_BUCKET:-kestrel-platform}
+: "${BUCKETDECK_DEMO_ENDPOINT:?Set the S3 endpoint URL}"
+: "${BUCKETDECK_DEMO_REGION:?Set the S3 region}"
+: "${BUCKETDECK_DEMO_ACCESS_KEY:?Set the access key}"
+: "${BUCKETDECK_DEMO_SECRET_KEY:?Set the secret key}"
+studio=${BUCKETDECK_DEMO_STUDIO_BUCKET:-kestrel-studio}
+platform=${BUCKETDECK_DEMO_PLATFORM_BUCKET:-kestrel-platform}
 
-case "$OPENBUCKET_DEMO_ENDPOINT" in
+case "$BUCKETDECK_DEMO_ENDPOINT" in
   http://*|https://*) ;;
   *) printf '%s\n' 'The endpoint must be an HTTP or HTTPS URL.' >&2; exit 1 ;;
 esac
@@ -110,9 +110,9 @@ while [ $i -lt 1800 ]; do
 done
 
 # Credentials reach curl as a config on stdin through the printf builtin, never on any argv.
-OB_CURL_USER=$(printf '%s:%s' "$OPENBUCKET_DEMO_ACCESS_KEY" "$OPENBUCKET_DEMO_SECRET_KEY" | sed 's/[\\"]/\\&/g')
-OB_ENDPOINT=${OPENBUCKET_DEMO_ENDPOINT%/}
-OB_REGION=$OPENBUCKET_DEMO_REGION
+OB_CURL_USER=$(printf '%s:%s' "$BUCKETDECK_DEMO_ACCESS_KEY" "$BUCKETDECK_DEMO_SECRET_KEY" | sed 's/[\\"]/\\&/g')
+OB_ENDPOINT=${BUCKETDECK_DEMO_ENDPOINT%/}
+OB_REGION=$BUCKETDECK_DEMO_REGION
 export OB_CURL_USER OB_ENDPOINT OB_REGION
 tr '\n' '\0' < "$list" | xargs -0 -n 2 -P 8 sh -c '
   case "$1" in

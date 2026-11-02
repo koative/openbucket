@@ -2,7 +2,7 @@
 """Writes App/Resources/Credits.html, which macOS shows in the standard About window: every resolved package with
 its version, NOTICE file and license, each distinct license text once. Apache 2.0 requires shipping these.
 
-Run after `swift package resolve` (it reads Packages/OpenBucket/.build/checkouts). With --check it only verifies
+Run after `swift package resolve` (it reads Packages/Bucketdeck/.build/checkouts). With --check it only verifies
 that the committed file is current; scripts/package-release.sh runs it that way.
 """
 import html
@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent
-package = root / "Packages/OpenBucket"
+package = root / "Packages/Bucketdeck"
 checkouts = package / ".build/checkouts"
 output = root / "App/Resources/Credits.html"
 LICENSE_NAMES = re.compile(r"^(LICEN[CS]E|COPYING)(\.(txt|md))?$", re.I)
@@ -33,7 +33,7 @@ for pin in sorted(pins, key=lambda p: p["identity"]):
     name = pin["identity"]
     folder = checkouts / name
     if not folder.is_dir():
-        sys.exit(f"{folder} is missing; run `swift package resolve --package-path Packages/OpenBucket` first.")
+        sys.exit(f"{folder} is missing; run `swift package resolve --package-path Packages/Bucketdeck` first.")
     licenses = [p for p in sorted(folder.iterdir()) if LICENSE_NAMES.match(p.name)]
     # Code vendored inside a package (e.g. llhttp in SwiftNIO) ships its own license under Sources/.
     licenses += [p for p in sorted((folder / "Sources").rglob("*")) if p.is_file() and LICENSE_NAMES.match(p.name)]
@@ -50,8 +50,8 @@ parts = [
     "<!doctype html><meta charset=utf-8>",
     "<style>body{font:11px -apple-system,sans-serif}h2{font-size:12px;margin:14px 0 4px}"
     "pre{font:10px ui-monospace,monospace;white-space:pre-wrap}</style>",
-    "<p>Copyright © 2026 Koative LLC. OpenBucket is free software under the GNU General Public License, version 3;"
-    " its source code is at https://github.com/koative/openbucket. It is built with these open-source components:</p>",
+    "<p>Copyright © 2026 Koative LLC. Bucketdeck is free software under the GNU General Public License, version 3;"
+    " its source code is at https://github.com/koative/bucketdeck. It is built with these open-source components:</p>",
 ]
 for name, version, url, notices in components:
     parts.append(f"<h2>{html.escape(name)} {html.escape(version)}</h2><p>{html.escape(url)}</p>")

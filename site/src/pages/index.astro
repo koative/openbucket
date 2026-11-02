@@ -40,16 +40,16 @@ const [grid, gridPhone, listDetail, overview, overviewPhone, restore, share, com
   webp(compareShot, 600),
 ]);
 
-const site = 'https://openbucket.koative.com/';
-const repo = 'https://github.com/koative/openbucket';
-const dmg = `${repo}/releases/latest/download/OpenBucket-macOS.dmg`;
+const site = 'https://bucketdeck.com/';
+const repo = 'https://github.com/koative/bucketdeck';
+const dmg = `${repo}/releases/latest/download/Bucketdeck-macOS.dmg`;
 const docs = `${repo}/blob/main/docs`;
 
 // The label shows the newest published release; if GitHub can't be reached at build time
 // it says "Latest release" rather than guessing from an unreleased project.yml.
 let version: string | null = null;
 try {
-  const response = await fetch(`https://api.github.com/repos/koative/openbucket/releases/latest`, {
+  const response = await fetch(`https://api.github.com/repos/koative/bucketdeck/releases/latest`, {
     headers: {
       Accept: 'application/vnd.github+json',
       ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
@@ -109,8 +109,12 @@ const providers = [
 
 const faq = [
   {
-    q: 'Is OpenBucket free?',
-    a: 'Yes. OpenBucket is free and open source under the GNU GPL v3. Every release is signed with a Developer ID and notarized by Apple.',
+    q: 'Is Bucketdeck free?',
+    a: 'Yes. Bucketdeck is free and open source under the GNU GPL v3. Every release is signed with a Developer ID and notarized by Apple.',
+  },
+  {
+    q: 'Wasn’t this called OpenBucket?',
+    a: 'Yes. OpenBucket was renamed Bucketdeck in version 0.3.0. Your connections and settings carry over, and the Homebrew cask openbucket now installs Bucketdeck.',
   },
   {
     q: 'Does it work with MinIO, Cloudflare R2 or Backblaze B2?',
@@ -130,7 +134,7 @@ const faq = [
   },
   {
     q: 'Does it mount buckets in Finder or sync them?',
-    a: 'No. OpenBucket is a browser: it doesn’t mount buckets or sync in the background. Compare with Local Folder updates S3 or your Mac once, when you ask.',
+    a: 'No. Bucketdeck is a browser: it doesn’t mount buckets or sync in the background. Compare with Local Folder updates S3 or your Mac once, when you ask.',
   },
   {
     q: 'Which Macs does it run on?',
@@ -138,7 +142,7 @@ const faq = [
   },
   {
     q: 'Can I install it with Homebrew?',
-    a: 'Yes. Run brew trust koative/tap once, then brew install --cask koative/tap/openbucket. The cask follows each new release.',
+    a: 'Yes. Run brew trust koative/tap once, then brew install --cask koative/tap/bucketdeck. The cask follows each new release.',
   },
 ];
 
@@ -146,7 +150,7 @@ const structuredData = [
   {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'OpenBucket',
+    name: 'Bucketdeck',
     description: 'A native macOS app for Amazon S3 and S3-compatible storage.',
     url: site,
     downloadUrl: dmg,
@@ -174,7 +178,7 @@ const structuredData = [
     <div class="nav-inner">
       <a class="brand" href="/">
         <img class="app-icon" src={icon.src} alt="" width="28" height="28" />
-        OpenBucket
+        Bucketdeck
       </a>
       <nav aria-label="Sections">
         <a href="#features">Features</a>
@@ -189,7 +193,7 @@ const structuredData = [
 
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
-      <img class="app-icon hero-icon" src={icon.src} alt="OpenBucket app icon" width="112" height="112" />
+      <img class="app-icon hero-icon" src={icon.src} alt="Bucketdeck app icon" width="112" height="112" />
       <h1 id="hero-title">The S3 browser for people<br />who live in buckets.</h1>
       <p class="lede">
         Browse, preview, share and restore files in Amazon S3, MinIO and other S3‑compatible storage, in a native
@@ -204,9 +208,9 @@ const structuredData = [
       <figure class="window hero-window">
         <picture>
           <source media="(max-width: 734px)" srcset={gridPhone.srcSet.attribute} width={gridPhone.attributes.width} height={gridPhone.attributes.height} />
-          <img src={grid.src} srcset={grid.srcSet.attribute} width={grid.attributes.width} height={grid.attributes.height} alt="OpenBucket in grid view: an outdoor brand's autumn campaign folder with photo and video thumbnails, and the Info panel showing the selected photo's S3 URI, size, ETag and dimensions." fetchpriority="high" />
+          <img src={grid.src} srcset={grid.srcSet.attribute} width={grid.attributes.width} height={grid.attributes.height} alt="Bucketdeck in grid view: an outdoor brand's autumn campaign folder with photo and video thumbnails, and the Info panel showing the selected photo's S3 URI, size, ETag and dimensions." fetchpriority="high" />
         </picture>
-        <figcaption>A real OpenBucket window, connected to a local Garage bucket of demo files.</figcaption>
+        <figcaption>A real Bucketdeck window, connected to a local Garage bucket of demo files.</figcaption>
       </figure>
     </section>
 
@@ -230,7 +234,7 @@ const structuredData = [
           </article>
         ))}
       </div>
-      <p class="fine jobs-note">Real OpenBucket windows, connected to local Garage and MinIO servers with demo files.</p>
+      <p class="fine jobs-note">Real Bucketdeck windows, connected to local Garage and MinIO servers with demo files.</p>
     </section>
 
     <section class="plain" id="storage" aria-labelledby="storage-title">
@@ -263,7 +267,7 @@ const structuredData = [
     <section class="band" id="mac" aria-labelledby="native-title">
       <div class="section-head">
         <h2 id="native-title">Made for the Mac.<br /><span>Not a web console in a window.</span></h2>
-        <p class="lede">OpenBucket uses SwiftUI and the macOS 26 look, and it works with the parts of macOS you already know.</p>
+        <p class="lede">Bucketdeck uses SwiftUI and the macOS 26 look, and it works with the parts of macOS you already know.</p>
       </div>
       <ul class="facts">
         {native.map(({ Icon, title, text }) => (
@@ -284,7 +288,7 @@ const structuredData = [
       <h2 id="security-title">Read-only until you say so.</h2>
       <p class="lede">
         Every connection starts read-only. Uploads, moves, renames and deletes appear only after you turn on
-        Allow changes for that connection, and OpenBucket checks the setting again before each change.
+        Allow changes for that connection, and Bucketdeck checks the setting again before each change.
       </p>
       <ul class="trio">
         <li>
@@ -303,13 +307,13 @@ const structuredData = [
           <p>Share links are signed on your Mac and stop working after the time you choose.</p>
         </li>
       </ul>
-      <a class="text-link" href={`${docs}/security.md`}>How OpenBucket handles your data <ArrowUpRight size={16} /></a>
+      <a class="text-link" href={`${docs}/security.md`}>How Bucketdeck handles your data <ArrowUpRight size={16} /></a>
     </section>
 
     <section class="plain open" aria-labelledby="open-title">
       <h2 id="open-title">Free and open source.</h2>
       <p class="lede">
-        OpenBucket is licensed under the GNU GPL v3 and built in the open with Swift 6, SwiftUI and Soto. Every release is signed
+        Bucketdeck is licensed under the GNU GPL v3 and built in the open with Swift 6, SwiftUI and Soto. Every release is signed
         with a Developer ID, notarized by Apple, and published with its SHA-256 checksum.
       </p>
       <div class="actions">
@@ -335,9 +339,9 @@ const structuredData = [
 
     <section class="get" aria-labelledby="get-title">
       <img class="app-icon" src={icon.src} alt="" width="96" height="96" loading="lazy" />
-      <h2 id="get-title">Get OpenBucket.</h2>
+      <h2 id="get-title">Get Bucketdeck.</h2>
       <a class="pill" href={dmg}><Download size={19} stroke-width={2.2} /> Download for macOS</a>
-      <p class="brew">Or with Homebrew: <code>brew install --cask koative/tap/openbucket</code></p>
+      <p class="brew">Or with Homebrew: <code>brew install --cask koative/tap/bucketdeck</code></p>
       <p class="fine">{release} · Free and open source · Issues and ideas on <a href={`${repo}/issues`}>GitHub</a></p>
     </section>
   </main>
@@ -352,7 +356,7 @@ const structuredData = [
         <a href={`${docs}/security.md`}>Security</a>
         <a href="https://openmacapps.com/">More open-source Mac apps</a>
       </nav>
-      <p class="legal">Amazon S3 is a trademark of Amazon.com, Inc. Mac and macOS are trademarks of Apple Inc. OpenBucket is not affiliated with Amazon or Apple.</p>
+      <p class="legal">Amazon S3 is a trademark of Amazon.com, Inc. Mac and macOS are trademarks of Apple Inc. Bucketdeck is not affiliated with Amazon or Apple.</p>
     </div>
   </footer>
 </Layout>

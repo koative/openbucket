@@ -1,20 +1,20 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import Testing
 import os
 
-@testable import OpenBucketS3
+@testable import BucketdeckS3
 
-@Test(.enabled(if: ProcessInfo.processInfo.environment["OPENBUCKET_TEST_ENDPOINT"] != nil))
+@Test(.enabled(if: ProcessInfo.processInfo.environment["BUCKETDECK_TEST_ENDPOINT"] != nil))
 func listsKnownBucketAndNestedPrefix() async throws {
   let environment = ProcessInfo.processInfo.environment
-  let endpoint = try #require(environment["OPENBUCKET_TEST_ENDPOINT"])
-  let region = try #require(environment["OPENBUCKET_TEST_REGION"])
-  let bucket = try #require(environment["OPENBUCKET_TEST_BUCKET"])
-  let accessKey = try #require(environment["OPENBUCKET_TEST_ACCESS_KEY"])
-  let secretKey = try #require(environment["OPENBUCKET_TEST_SECRET_KEY"])
-  let prefix = try #require(environment["OPENBUCKET_TEST_PREFIX"])
-  let expectedKey = try #require(environment["OPENBUCKET_TEST_EXPECT_KEY"])
+  let endpoint = try #require(environment["BUCKETDECK_TEST_ENDPOINT"])
+  let region = try #require(environment["BUCKETDECK_TEST_REGION"])
+  let bucket = try #require(environment["BUCKETDECK_TEST_BUCKET"])
+  let accessKey = try #require(environment["BUCKETDECK_TEST_ACCESS_KEY"])
+  let secretKey = try #require(environment["BUCKETDECK_TEST_SECRET_KEY"])
+  let prefix = try #require(environment["BUCKETDECK_TEST_PREFIX"])
+  let expectedKey = try #require(environment["BUCKETDECK_TEST_EXPECT_KEY"])
   let profile = ConnectionProfile(
     name: "Integration S3",
     endpoint: try S3Endpoint(endpoint),
@@ -62,19 +62,19 @@ func listsKnownBucketAndNestedPrefix() async throws {
 }
 
 /// Writes under a disposable `integration-writes/<uuid>/` prefix and deletes it afterwards. Run with
-/// OPENBUCKET_TEST_WRITES=1, the endpoint/region/bucket/key variables above, and `--filter writeRoundTrip`.
-@Test(.enabled(if: ProcessInfo.processInfo.environment["OPENBUCKET_TEST_WRITES"] == "1"))
+/// BUCKETDECK_TEST_WRITES=1, the endpoint/region/bucket/key variables above, and `--filter writeRoundTrip`.
+@Test(.enabled(if: ProcessInfo.processInfo.environment["BUCKETDECK_TEST_WRITES"] == "1"))
 func writeRoundTrip() async throws {
   let environment = ProcessInfo.processInfo.environment
-  let bucket = try #require(environment["OPENBUCKET_TEST_BUCKET"])
+  let bucket = try #require(environment["BUCKETDECK_TEST_BUCKET"])
   let profile = ConnectionProfile(
-    name: "Integration S3", endpoint: try S3Endpoint(try #require(environment["OPENBUCKET_TEST_ENDPOINT"])),
-    region: try #require(environment["OPENBUCKET_TEST_REGION"]), addressingStyle: .automatic,
+    name: "Integration S3", endpoint: try S3Endpoint(try #require(environment["BUCKETDECK_TEST_ENDPOINT"])),
+    region: try #require(environment["BUCKETDECK_TEST_REGION"]), addressingStyle: .automatic,
     knownBucket: bucket,
     allowsChanges: true)
   let credentials = S3Credentials(
-    accessKeyID: try #require(environment["OPENBUCKET_TEST_ACCESS_KEY"]),
-    secretAccessKey: try #require(environment["OPENBUCKET_TEST_SECRET_KEY"]))
+    accessKeyID: try #require(environment["BUCKETDECK_TEST_ACCESS_KEY"]),
+    secretAccessKey: try #require(environment["BUCKETDECK_TEST_SECRET_KEY"]))
   let repository = SotoS3Repository()
   let prefix = "integration-writes/\(UUID().uuidString)/"
   let directory = FileManager.default.temporaryDirectory.appendingPathComponent(

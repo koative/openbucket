@@ -1,5 +1,5 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 
 /// What a Storage Overview or Compare window shows: a folder on one connection, independent of the main
 /// window's selection.

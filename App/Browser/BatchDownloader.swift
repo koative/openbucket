@@ -1,5 +1,5 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 
 /// `receivedBytes` counts finished files (including failed ones) at their listed size, so it reaches
 /// `totalBytes` when the batch ends.
@@ -37,7 +37,7 @@ struct BatchDownloader {
     progress: @escaping @MainActor (BatchDownloadProgress) -> Void
   ) async throws -> BatchDownloadResult {
     let directory = parentDirectory.appendingPathComponent(
-      "OpenBucket Export-\(UUID().uuidString.prefix(8))", isDirectory: true)
+      "Bucketdeck Export-\(UUID().uuidString.prefix(8))", isDirectory: true)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
     var usedNames = Set<String>()
     let plan = objects.map {

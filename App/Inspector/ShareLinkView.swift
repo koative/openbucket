@@ -1,6 +1,6 @@
 import AppKit
+import BucketdeckCore
 import CoreImage.CIFilterBuiltins
-import OpenBucketCore
 import SwiftUI
 import UniformTypeIdentifiers
 

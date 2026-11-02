@@ -1,5 +1,5 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 struct ContentView: View {
@@ -96,14 +96,14 @@ struct ContentView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
       }
-      .navigationTitle("OpenBucket")
+      .navigationTitle("Bucketdeck")
       .navigationSplitViewColumnWidth(min: 210, ideal: 250, max: 350)
     } detail: {
       ObjectBrowserView(
         model: model, browser: browser,
         showSidebar: columnVisibility == .detailOnly ? { columnVisibility = .all } : nil
       )
-      .navigationTitle(model.browser.location?.displayName ?? model.selectedProfile?.name ?? "OpenBucket")
+      .navigationTitle(model.browser.location?.displayName ?? model.selectedProfile?.name ?? "Bucketdeck")
       .navigationSubtitle(model.browser.location == nil ? "" : model.selectedProfile?.name ?? "")
     }
     .toolbar {
@@ -327,7 +327,7 @@ struct ContentView: View {
     } else if !model.openLink(text) {
       linkError =
         S3Location(link: text) == nil
-        ? "OpenBucket can open s3:// locations, S3 object URLs and AWS console links."
+        ? "Bucketdeck can open s3:// locations, S3 object URLs and AWS console links."
         : "Add a connection that can reach this bucket first."
     }
   }

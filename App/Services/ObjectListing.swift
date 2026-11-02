@@ -1,5 +1,5 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 
 extension AppModel.DownloadSource {
   /// Pages `listAllObjects` under `prefix` until `body` returns false or the listing ends.

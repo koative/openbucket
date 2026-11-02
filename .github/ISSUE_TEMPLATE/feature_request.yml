@@ -1,11 +1,11 @@
 name: Feature request
-description: Suggest something OpenBucket should do.
+description: Suggest something Bucketdeck should do.
 labels: [enhancement]
 body:
   - type: markdown
     attributes:
       value: |
-        OpenBucket stays focused on S3. Continuous or two-way sync, Finder mounting, bucket management and non-S3 protocols are currently outside its scope.
+        Bucketdeck stays focused on S3. Continuous or two-way sync, Finder mounting, bucket management and non-S3 protocols are currently outside its scope.
   - type: textarea
     id: problem
     attributes:

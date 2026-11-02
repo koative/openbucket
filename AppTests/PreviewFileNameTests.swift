@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 @Test func longPreviewNameKeepsFileExtension() {
   let name = PreviewFileName.from(objectKey: "photos/\(String(repeating: "a", count: 130)).png")

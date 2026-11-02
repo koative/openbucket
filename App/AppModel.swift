@@ -1,6 +1,6 @@
+import BucketdeckCore
 import Foundation
 import Observation
-import OpenBucketCore
 
 @MainActor @Observable
 final class AppModel {
@@ -413,7 +413,7 @@ final class AppModel {
     maximumBytes: Int64
   ) async throws -> URL {
     let directory = FileManager.default.temporaryDirectory
-      .appendingPathComponent("OpenBucket-\(UUID().uuidString)", isDirectory: true)
+      .appendingPathComponent("Bucketdeck-\(UUID().uuidString)", isDirectory: true)
     try FileManager.default.createDirectory(
       at: directory, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
     let file = directory.appendingPathComponent(PreviewFileName.from(objectKey: object.key))

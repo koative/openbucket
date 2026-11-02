@@ -15,16 +15,16 @@ if [[ $project_version != "$version" ]]; then
   exit 1
 fi
 
-: "${OPENBUCKET_SIGNING_IDENTITY:?Set OPENBUCKET_SIGNING_IDENTITY to your Developer ID Application SHA-1 fingerprint}"
-: "${OPENBUCKET_TEAM_ID:?Set OPENBUCKET_TEAM_ID to your Apple Developer team ID}"
-: "${OPENBUCKET_NOTARY_PROFILE:?Set OPENBUCKET_NOTARY_PROFILE to a notarytool Keychain profile}"
+: "${BUCKETDECK_SIGNING_IDENTITY:?Set BUCKETDECK_SIGNING_IDENTITY to your Developer ID Application SHA-1 fingerprint}"
+: "${BUCKETDECK_TEAM_ID:?Set BUCKETDECK_TEAM_ID to your Apple Developer team ID}"
+: "${BUCKETDECK_NOTARY_PROFILE:?Set BUCKETDECK_NOTARY_PROFILE to a notarytool Keychain profile}"
 
-if [[ ! $OPENBUCKET_SIGNING_IDENTITY =~ ^[[:xdigit:]]{40}$ ]]; then
-  echo "Set OPENBUCKET_SIGNING_IDENTITY to the 40-character SHA-1 fingerprint from security find-identity." >&2
+if [[ ! $BUCKETDECK_SIGNING_IDENTITY =~ ^[[:xdigit:]]{40}$ ]]; then
+  echo "Set BUCKETDECK_SIGNING_IDENTITY to the 40-character SHA-1 fingerprint from security find-identity." >&2
   exit 1
 fi
 
-identity_record=$(/usr/bin/security find-identity -v -p codesigning | /usr/bin/grep -i "$OPENBUCKET_SIGNING_IDENTITY" || true)
+identity_record=$(/usr/bin/security find-identity -v -p codesigning | /usr/bin/grep -i "$BUCKETDECK_SIGNING_IDENTITY" || true)
 if [[ $identity_record != *'"Developer ID Application:'* ]]; then
   echo "The selected fingerprint is not a valid Developer ID Application identity." >&2
   exit 1
@@ -38,10 +38,13 @@ fi
 # Apache 2.0 needs the bundled packages' licenses and notices in the app; the About window shows Credits.html.
 /usr/bin/python3 "$root/scripts/generate-credits.py" --check
 
-# The DMG keeps one name across releases, so releases/latest/download/OpenBucket-macOS.dmg is a stable link.
+# The DMG keeps one name across releases, so releases/latest/download/Bucketdeck-macOS.dmg is a stable link.
 distribution="$root/dist/v$version"
-filename="OpenBucket-macOS.dmg"
+filename="Bucketdeck-macOS.dmg"
 destination="$distribution/$filename"
+# ponytail: links published before the rename (README, OpenMacApps, posts) ask for the old name; attach a copy under
+# it until those are updated, then drop it.
+legacy_filename="OpenBucket-macOS.dmg"
 
 mkdir -p "$distribution"
 if [[ -e $destination ]]; then
@@ -53,24 +56,24 @@ work=$(mktemp -d "$distribution/.release.XXXXXX")
 trap 'rm -rf "$work"' EXIT
 
 xcodebuild archive \
-  -project "$root/OpenBucket.xcodeproj" \
-  -scheme OpenBucket \
+  -project "$root/Bucketdeck.xcodeproj" \
+  -scheme Bucketdeck \
   -configuration Release \
   -destination 'generic/platform=macOS' \
   -derivedDataPath "$root/DerivedData/Release" \
-  -archivePath "$work/OpenBucket.xcarchive" \
+  -archivePath "$work/Bucketdeck.xcarchive" \
   -disableAutomaticPackageResolution \
   CODE_SIGNING_ALLOWED=YES \
   CODE_SIGN_STYLE=Manual \
-  CODE_SIGN_IDENTITY="$OPENBUCKET_SIGNING_IDENTITY" \
-  DEVELOPMENT_TEAM="$OPENBUCKET_TEAM_ID" \
+  CODE_SIGN_IDENTITY="$BUCKETDECK_SIGNING_IDENTITY" \
+  DEVELOPMENT_TEAM="$BUCKETDECK_TEAM_ID" \
   ENABLE_HARDENED_RUNTIME=YES \
   CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
   OTHER_CODE_SIGN_FLAGS='--options=runtime --timestamp'
 
-app="$work/OpenBucket.xcarchive/Products/Applications/OpenBucket.app"
+app="$work/Bucketdeck.xcarchive/Products/Applications/Bucketdeck.app"
 if [[ ! -d $app ]]; then
-  echo "Xcode did not produce OpenBucket.app in the archive." >&2
+  echo "Xcode did not produce Bucketdeck.app in the archive." >&2
   exit 1
 fi
 
@@ -81,9 +84,9 @@ if [[ $actual_version != "$version" ]]; then
 fi
 
 build_number=$(/usr/bin/plutil -extract CFBundleVersion raw -o - "$app/Contents/Info.plist")
-echo "Archived OpenBucket $actual_version (build $build_number)."
+echo "Archived Bucketdeck $actual_version (build $build_number)."
 
-archs=" $(/usr/bin/lipo -archs "$app/Contents/MacOS/OpenBucket") "
+archs=" $(/usr/bin/lipo -archs "$app/Contents/MacOS/Bucketdeck") "
 if [[ $archs != *" arm64 "* || $archs != *" x86_64 "* ]]; then
   echo "The archived app is not universal (architectures:$archs); expected arm64 and x86_64." >&2
   exit 1
@@ -92,22 +95,22 @@ fi
 /usr/bin/codesign --verify --deep --strict --verbose=2 "$app"
 
 mkdir "$work/volume"
-/usr/bin/ditto "$app" "$work/volume/OpenBucket.app"
+/usr/bin/ditto "$app" "$work/volume/Bucketdeck.app"
 ln -s /Applications "$work/volume/Applications"
 
 image="$work/$filename"
 /usr/sbin/diskutil image create from \
-  --volumeName "OpenBucket $version" \
+  --volumeName "Bucketdeck $version" \
   --format UDZO \
   "$work/volume" \
   "$image"
 
 /usr/bin/hdiutil verify "$image"
 # Signing the image itself, not only the app inside, lets Gatekeeper verify the download as a whole.
-/usr/bin/codesign --sign "$OPENBUCKET_SIGNING_IDENTITY" --timestamp "$image"
+/usr/bin/codesign --sign "$BUCKETDECK_SIGNING_IDENTITY" --timestamp "$image"
 /usr/bin/codesign --verify --strict --verbose=2 "$image"
 xcrun notarytool submit "$image" \
-  --keychain-profile "$OPENBUCKET_NOTARY_PROFILE" \
+  --keychain-profile "$BUCKETDECK_NOTARY_PROFILE" \
   --wait \
   --output-format json > "$work/notarization.json"
 
@@ -124,11 +127,14 @@ xcrun stapler validate "$image"
 /usr/sbin/spctl --assess --type open --context context:primary-signature --verbose=2 "$image"
 
 mv "$image" "$destination"
+cp "$destination" "$distribution/$legacy_filename"
 (
   cd "$distribution"
   /usr/bin/shasum -a 256 "$filename" > "$filename.sha256"
+  /usr/bin/shasum -a 256 "$legacy_filename" > "$legacy_filename.sha256"
 )
 
 echo "Ready to review:"
 echo "$destination"
 echo "$destination.sha256"
+echo "$distribution/$legacy_filename (same image under the pre-rename name)"

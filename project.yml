@@ -1,4 +1,4 @@
-name: OpenBucket
+name: Bucketdeck
 options:
   xcodeVersion: "27.0"
   deploymentTarget:
@@ -8,24 +8,26 @@ settings:
     SWIFT_VERSION: "6.0"
     CODE_SIGNING_ALLOWED: NO
 packages:
-  OpenBucketPackage:
-    path: Packages/OpenBucket
+  BucketdeckPackage:
+    path: Packages/Bucketdeck
 targets:
-  OpenBucket:
+  Bucketdeck:
     type: application
     platform: macOS
     sources: [App]
     dependencies:
-      - package: OpenBucketPackage
-        product: OpenBucketCore
-      - package: OpenBucketPackage
-        product: OpenBucketS3
+      - package: BucketdeckPackage
+        product: BucketdeckCore
+      - package: BucketdeckPackage
+        product: BucketdeckS3
     info:
       path: App/Info.plist
       properties:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSHumanReadableCopyright: © 2026 Koative LLC. Licensed under the GNU GPL v3.
+        # The `dev.openbucket.*` identifiers below and the bundle IDs stay until the planned bundle ID change, which
+        # moves user data once (preferences, Keychain items and Application Support live under these names).
         CFBundleURLTypes:
           - CFBundleURLName: dev.openbucket.s3-location
             CFBundleTypeRole: Viewer
@@ -33,7 +35,7 @@ targets:
         # Items dragged inside the app carry this type, so drops move them instead of downloading.
         UTExportedTypeDeclarations:
           - UTTypeIdentifier: dev.openbucket.item
-            UTTypeDescription: OpenBucket item
+            UTTypeDescription: Bucketdeck item
             UTTypeConformsTo: [public.data]
     settings:
       base:
@@ -43,14 +45,14 @@ targets:
         ENABLE_HARDENED_RUNTIME: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: OpenBucket
+        INFOPLIST_KEY_CFBundleDisplayName: Bucketdeck
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
-  OpenBucketTests:
+  BucketdeckTests:
     type: bundle.unit-test
     platform: macOS
     sources: [AppTests]
     dependencies:
-      - target: OpenBucket
+      - target: Bucketdeck
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.openbucket.app-tests

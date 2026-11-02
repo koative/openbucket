@@ -1,7 +1,7 @@
 import AsyncHTTPClient
+import BucketdeckCore
 import Foundation
 import Network
-import OpenBucketCore
 import SotoCore
 
 /// Maps SDK errors to user-facing failures. `technicalDetail` never echoes service messages,

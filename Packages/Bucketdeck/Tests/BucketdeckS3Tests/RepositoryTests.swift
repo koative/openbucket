@@ -1,12 +1,12 @@
 import AsyncHTTPClient
+import BucketdeckCore
 import Foundation
 import Network
-import OpenBucketCore
 import SotoCore
 import Testing
 import os
 
-@testable import OpenBucketS3
+@testable import BucketdeckS3
 
 private let emptyListing = """
   <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">

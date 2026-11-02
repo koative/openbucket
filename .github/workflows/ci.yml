@@ -17,19 +17,19 @@ jobs:
         with:
           persist-credentials: false
       - name: Swift format
-        run: swift format lint --strict --recursive App AppTests Packages/OpenBucket/Sources Packages/OpenBucket/Tests
+        run: swift format lint --strict --recursive App AppTests Packages/Bucketdeck/Sources Packages/Bucketdeck/Tests
       - name: Project matches project.yml
         run: |
           brew install xcodegen
           xcodegen generate --spec project.yml
-          git diff --exit-code -- OpenBucket.xcodeproj
+          git diff --exit-code -- Bucketdeck.xcodeproj
       - name: Package tests
-        run: swift test --package-path Packages/OpenBucket
+        run: swift test --package-path Packages/Bucketdeck
       - name: Build and test
         run: >-
           xcodebuild test
-          -project OpenBucket.xcodeproj
-          -scheme OpenBucket
+          -project Bucketdeck.xcodeproj
+          -scheme Bucketdeck
           -destination 'platform=macOS'
           -derivedDataPath DerivedData
           -disableAutomaticPackageResolution

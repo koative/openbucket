@@ -1,5 +1,5 @@
 import AppIntents
-import OpenBucketCore
+import BucketdeckCore
 
 /// An error whose message Shortcuts and Siri show as is.
 struct IntentFailure: Error, CustomLocalizedStringResourceConvertible {
@@ -11,7 +11,7 @@ struct IntentFailure: Error, CustomLocalizedStringResourceConvertible {
 /// Opening a favorite; also what Spotlight runs when a favorite result is chosen.
 struct OpenFavoriteIntent: OpenIntent {
   static let title: LocalizedStringResource = "Open Favorite"
-  static let description = IntentDescription("Opens a favorite folder in OpenBucket.")
+  static let description = IntentDescription("Opens a favorite folder in Bucketdeck.")
   static let supportedModes: IntentModes = .foreground(.immediate)
 
   @Parameter(title: "Favorite") var target: FavoriteEntity
@@ -34,7 +34,7 @@ struct OpenFavoriteIntent: OpenIntent {
 struct OpenS3LocationIntent: AppIntent {
   static let title: LocalizedStringResource = "Open S3 Location"
   static let description = IntentDescription(
-    "Opens an s3:// link, AWS console link or S3 URL in OpenBucket. Links to a file reveal it in its folder.")
+    "Opens an s3:// link, AWS console link or S3 URL in Bucketdeck. Links to a file reveal it in its folder.")
   static let supportedModes: IntentModes = .foreground(.immediate)
 
   @Parameter(title: "Location") var location: String
@@ -49,10 +49,10 @@ struct OpenS3LocationIntent: AppIntent {
   @MainActor func perform() async throws -> some IntentResult {
     guard S3Location(link: location) != nil else {
       throw IntentFailure(
-        "OpenBucket doesn't recognise this location. Use a link such as s3://bucket/photos/.")
+        "Bucketdeck doesn't recognise this location. Use a link such as s3://bucket/photos/.")
     }
     await model.loadProfilesIfNeeded()
-    guard model.openLink(location) else { throw IntentFailure("Add a connection in OpenBucket first.") }
+    guard model.openLink(location) else { throw IntentFailure("Add a connection in Bucketdeck first.") }
     return .result()
   }
 }
@@ -123,7 +123,7 @@ struct CopyShareLinkIntent: AppIntent {
     }
     await model.loadProfilesIfNeeded()
     guard let profile = model.profile(forBucket: location.bucket) else {
-      throw IntentFailure("No connection can open the bucket \(location.bucket). Add one in OpenBucket.")
+      throw IntentFailure("No connection can open the bucket \(location.bucket). Add one in Bucketdeck.")
     }
     let credentials: S3Credentials
     do {
@@ -154,7 +154,7 @@ struct CopyShareLinkIntent: AppIntent {
   }
 }
 
-struct OpenBucketShortcuts: AppShortcutsProvider {
+struct BucketdeckShortcuts: AppShortcutsProvider {
   static var appShortcuts: [AppShortcut] {
     AppShortcut(
       intent: OpenFavoriteIntent(),

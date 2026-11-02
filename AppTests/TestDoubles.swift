@@ -1,8 +1,8 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 /// Lists `buckets`, one object page plus a second page; downloads write the key's bytes ("bad.txt" fails).
 /// AWS profiles resolve to `testCredentials` expiring `credentialLifetime` after each resolution; versions

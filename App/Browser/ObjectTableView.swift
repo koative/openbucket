@@ -1,4 +1,4 @@
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 /// List view: native multi-selection, double-click/Return opens, Space toggles Quick Look.

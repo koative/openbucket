@@ -1,16 +1,16 @@
 <div align="center">
 
-<img src="App/Resources/Assets.xcassets/AppIcon.appiconset/icon-128.png" width="88" alt="OpenBucket app icon">
+<img src="App/Resources/Assets.xcassets/AppIcon.appiconset/icon-128.png" width="88" alt="Bucketdeck app icon">
 
-# OpenBucket
+# Bucketdeck
 
 **A native S3 browser for macOS. Browse, preview, share, and manage the objects in your buckets.**
 
-<a href="https://github.com/koative/openbucket/releases/latest/download/OpenBucket-macOS.dmg"><img src="https://img.shields.io/badge/Download_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white" height="40" alt="Download OpenBucket for macOS"></a>
+<a href="https://github.com/koative/bucketdeck/releases/latest/download/Bucketdeck-macOS.dmg"><img src="https://img.shields.io/badge/Download_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white" height="40" alt="Download Bucketdeck for macOS"></a>
 
-**Website:** [openbucket.koative.com](https://openbucket.koative.com)
+**Website:** [bucketdeck.com](https://bucketdeck.com)
 
-![Latest release](https://img.shields.io/github/v/release/koative/openbucket?label=latest&color=18181b)
+![Latest release](https://img.shields.io/github/v/release/koative/bucketdeck?label=latest&color=18181b)
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-18181b?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-f05138?logo=swift&logoColor=white)
 ![GPL-3.0 license](https://img.shields.io/badge/license-GPL--3.0-8b8bd4)
@@ -18,22 +18,22 @@
 
 </div>
 
-OpenBucket is an early macOS app for Amazon S3 and S3-compatible object stores. Every connection is read-only until you turn on **Allow changes** for it. It uses SwiftUI, the macOS 26 Liquid Glass appearance, and [Soto](https://github.com/soto-project/soto) behind a replaceable S3 adapter. It stays focused on S3 rather than adding unrelated file protocols.
+Bucketdeck is an early macOS app for Amazon S3 and S3-compatible object stores. It was formerly called OpenBucket. Every connection is read-only until you turn on **Allow changes** for it. It uses SwiftUI, the macOS 26 Liquid Glass appearance, and [Soto](https://github.com/soto-project/soto) behind a replaceable S3 adapter. It stays focused on S3 rather than adding unrelated file protocols.
 
 ## Download
 
-Use the **Download for macOS** button above: it always fetches the newest signed and notarized `OpenBucket-macOS.dmg` from [GitHub Releases](https://github.com/koative/openbucket/releases/latest). Open the DMG, drag OpenBucket to Applications, and launch it from there. OpenBucket runs on Apple silicon and Intel Macs with macOS 26 or later; every release lists its changes and a SHA-256 checksum. See [how releases are prepared](docs/RELEASING.md).
+Use the **Download for macOS** button above: it always fetches the newest signed and notarized `Bucketdeck-macOS.dmg` from [GitHub Releases](https://github.com/koative/bucketdeck/releases/latest). Open the DMG, drag Bucketdeck to Applications, and launch it from there. Bucketdeck runs on Apple silicon and Intel Macs with macOS 26 or later; every release lists its changes and a SHA-256 checksum. See [how releases are prepared](docs/RELEASING.md).
 
 Or install it with [Homebrew](https://brew.sh) from Koative's tap, which follows each new release:
 
 ```sh
 brew trust koative/tap
-brew install --cask koative/tap/openbucket
+brew install --cask koative/tap/bucketdeck
 ```
 
 ## See it in action
 
-The screenshots show a real OpenBucket window connected to a local Garage server, seeded with the fictional demo objects from [`docs/demo-assets`](docs/demo-assets).
+The screenshots show a real Bucketdeck window connected to a local Garage server, seeded with the fictional demo objects from [`docs/demo-assets`](docs/demo-assets).
 
 ![Grid view of an outdoor brand's autumn campaign folder with photo and video thumbnails, a selected photo, and the Info panel with details and photo dimensions](docs/media/browser-grid.png)
 
@@ -72,23 +72,23 @@ The endpoint URL path and the starting folder are separate. For example, endpoin
 
 ## Build and test
 
-Building from source requires **macOS 26 or later** and **Xcode 27**. Open `OpenBucket.xcodeproj`, select the `OpenBucket` scheme, and run it on your Mac. The Xcode project is committed; [XcodeGen](https://github.com/yonaskolb/XcodeGen) is needed only after changing `project.yml`:
+Building from source requires **macOS 26 or later** and **Xcode 27**. Open `Bucketdeck.xcodeproj`, select the `Bucketdeck` scheme, and run it on your Mac. The Xcode project is committed; [XcodeGen](https://github.com/yonaskolb/XcodeGen) is needed only after changing `project.yml`:
 
 ```sh
 xcodegen generate --spec project.yml
 ```
 
 ```sh
-swift format lint --strict --recursive App AppTests Packages/OpenBucket/Sources Packages/OpenBucket/Tests
-xcodebuild test -project OpenBucket.xcodeproj -scheme OpenBucket -destination 'platform=macOS' -derivedDataPath DerivedData -disableAutomaticPackageResolution CODE_SIGNING_ALLOWED=NO
-swift test --package-path Packages/OpenBucket
+swift format lint --strict --recursive App AppTests Packages/Bucketdeck/Sources Packages/Bucketdeck/Tests
+xcodebuild test -project Bucketdeck.xcodeproj -scheme Bucketdeck -destination 'platform=macOS' -derivedDataPath DerivedData -disableAutomaticPackageResolution CODE_SIGNING_ALLOWED=NO
+swift test --package-path Packages/Bucketdeck
 ```
 
 Unit tests need no AWS account. The optional live S3 test uses an isolated bucket and environment variables documented in [compatibility testing](docs/compatibility.md#live-compatibility-test). For every change outside `site/`, GitHub Actions runs the format check, app tests, package tests, and a check that the committed Xcode project matches `project.yml` on an Xcode 27 runner.
 
 ### Website
 
-The website at [openbucket.koative.com](https://openbucket.koative.com) lives in `site/` and is built with [Astro](https://astro.build) and [Bun](https://bun.sh) 1.4.3 or later:
+The website at [bucketdeck.com](https://bucketdeck.com) lives in `site/` and is built with [Astro](https://astro.build) and [Bun](https://bun.sh) 1.4.3 or later:
 
 ```sh
 cd site && bun install && bun run dev
@@ -100,22 +100,22 @@ cd site && bun install && bun run dev
 
 ```mermaid
 flowchart LR
-    UI[SwiftUI app] --> Core[OpenBucketCore]
+    UI[SwiftUI app] --> Core[BucketdeckCore]
     UI --> Local[Profiles + Keychain]
     Core --> Port[S3Repository protocol]
-    Port --> Adapter[OpenBucketS3 adapter]
+    Port --> Adapter[BucketdeckS3 adapter]
     Adapter --> Soto[Soto]
     Soto --> Store[(S3 endpoint)]
 ```
 
-`OpenBucketCore` owns S3 values and browsing state. `OpenBucketS3` adapts Soto and keeps SDK types outside the UI. `App` contains SwiftUI and macOS storage; `OpenBucketApp` wires them together. The adapter boundary allows the SDK implementation to change without reshaping the browser.
+`BucketdeckCore` owns S3 values and browsing state. `BucketdeckS3` adapts Soto and keeps SDK types outside the UI. `App` contains SwiftUI and macOS storage; `BucketdeckApp` wires them together. The adapter boundary allows the SDK implementation to change without reshaping the browser.
 
 Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-Copyright © 2026 Koative LLC. OpenBucket is free software: you can redistribute and modify it under the terms of the [GNU General Public License, version 3](LICENSE). Anyone who distributes a modified version must publish its source code under the same license. Releases up to and including v0.2.3 were published under the MIT License, and those releases keep it.
+Copyright © 2026 Koative LLC. Bucketdeck is free software: you can redistribute and modify it under the terms of the [GNU General Public License, version 3](LICENSE). Anyone who distributes a modified version must publish its source code under the same license. Releases up to and including v0.2.3 were published under the MIT License, and those releases keep it.
 
-The OpenBucket name and app icon identify Koative LLC's builds and are not covered by the license; a distributed fork needs its own name and icon.
+The Bucketdeck name and app icon identify Koative LLC's builds and are not covered by the license; a distributed fork needs its own name and icon.
 
 Made by [koative](https://koative.com)

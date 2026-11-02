@@ -1,4 +1,4 @@
-# OpenBucket
+# Bucketdeck
 
 <!-- impeccable:product-schema 1 -->
 
@@ -6,11 +6,11 @@
 
 web
 
-The designed surface is the project website at https://openbucket.koative.com. The product itself is a native macOS app (SwiftUI, macOS 26+).
+The designed surface is the project website at https://bucketdeck.com. The product itself is a native macOS app (SwiftUI, macOS 26+).
 
 ## Stack
 
-Website: Astro built with Bun, in `site/` of this repository, deployed by GitHub Actions to GitHub Pages under the custom domain `openbucket.koative.com` (chosen by the owner on 2026-10-17, matching Koative's Maco site). The app: Swift 6, SwiftUI, Soto behind an `S3Repository` adapter, XcodeGen project.
+Website: Astro built with Bun, in `site/` of this repository, deployed by GitHub Actions to GitHub Pages under the custom domain `bucketdeck.com` (chosen by the owner on 2026-10-17, matching Koative's Maco site). The app: Swift 6, SwiftUI, Soto behind an `S3Repository` adapter, XcodeGen project.
 
 ## Users
 
@@ -18,7 +18,7 @@ Mac users who keep files in Amazon S3 or an S3-compatible object store and want 
 
 ## Product Purpose
 
-OpenBucket is a native S3 browser for macOS: browse buckets like folders, preview images and video, create share links, download, and, when a connection allows changes, upload, move, rename, delete and restore objects. Success: someone with S3 credentials downloads the signed DMG, connects, and works with their bucket as comfortably as with Finder.
+Bucketdeck is a native S3 browser for macOS: browse buckets like folders, preview images and video, create share links, download, and, when a connection allows changes, upload, move, rename, delete and restore objects. Success: someone with S3 credentials downloads the signed DMG, connects, and works with their bucket as comfortably as with Finder.
 
 ## Positioning
 
@@ -30,7 +30,7 @@ The owner chose these three to lead (2026-10-17):
 
 ## Operating Context
 
-Download `OpenBucket-macOS.dmg` from `https://github.com/koative/openbucket/releases/latest/download/OpenBucket-macOS.dmg`, drag to Applications, Add Connection (endpoint, region, keys, optional known bucket and starting folder), browse. Requires macOS 26 or later on Apple silicon or Intel.
+Download `Bucketdeck-macOS.dmg` from `https://github.com/koative/bucketdeck/releases/latest/download/Bucketdeck-macOS.dmg`, drag to Applications, Add Connection (endpoint, region, keys, optional known bucket and starting folder), browse. Requires macOS 26 or later on Apple silicon or Intel.
 
 ## Capabilities and Constraints
 
@@ -42,13 +42,13 @@ Download `OpenBucket-macOS.dmg` from `https://github.com/koative/openbucket/rele
 
 ## Brand Commitments
 
-Name: OpenBucket, published by Koative (github.com/koative). App icon: the blue glass bucket in `App/Resources/Assets.xcassets/AppIcon.appiconset/`. Website copy in English, matching the app and README. [Language inferred from the repository.]
+Name: Bucketdeck, published by Koative (github.com/koative). App icon: the blue glass bucket in `App/Resources/Assets.xcassets/AppIcon.appiconset/`. Website copy in English, matching the app and README. [Language inferred from the repository.]
 
 Website direction (owner choice, 2026-10-17): the category standard for a Mac app site, executed straight at the craft level of culturedcode.com/things and apple.com product pages. No novelty concept or costume.
 
 ## Evidence on Hand
 
-- Real app screenshots: `docs/media/browser-grid.jpg`, `docs/media/browser-list.jpg`, `docs/media/storage-overview.jpg`. They show a real OpenBucket window against a local Garage bucket filled with fictional demo objects (generated scenery images and a short video in `docs/demo-assets/travel/`).
+- Real app screenshots: `docs/media/browser-grid.jpg`, `docs/media/browser-list.jpg`, `docs/media/storage-overview.jpg`. They show a real Bucketdeck window against a local Garage bucket filled with fictional demo objects (generated scenery images and a short video in `docs/demo-assets/travel/`).
 - Release notes in `docs/releases/`, compatibility in `docs/compatibility.md`, local data and credential handling in `docs/security.md`.
 - No testimonials, user counts, press, ratings or benchmarks exist. The repository has very few stars and downloads; never display or invent adoption numbers.
 

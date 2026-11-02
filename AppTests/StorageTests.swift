@@ -1,9 +1,9 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import Security
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 @Test func profileFileContainsNoCredentials() async throws {
   let directory = FileManager.default.temporaryDirectory

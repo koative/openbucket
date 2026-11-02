@@ -1,6 +1,6 @@
+import BucketdeckCore
 import Foundation
 import Observation
-import OpenBucketCore
 
 /// Every version and delete marker directly inside a folder, for "folder as of date" and deleted files.
 @MainActor @Observable

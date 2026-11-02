@@ -1,8 +1,8 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 @Test func batchNamesRemainUniqueAfterSanitizing() {
   var used = Set<String>()

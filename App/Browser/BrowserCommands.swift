@@ -1,5 +1,5 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 /// Menu-bar commands; each mirrors a toolbar, context-menu or keyboard action in the browser.

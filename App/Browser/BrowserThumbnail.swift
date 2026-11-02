@@ -1,5 +1,5 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import QuickLookThumbnailing
 import SwiftUI
 import UniformTypeIdentifiers

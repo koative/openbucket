@@ -1,7 +1,7 @@
 import AsyncHTTPClient
+import BucketdeckCore
 import Darwin
 import Foundation
-import OpenBucketCore
 import SotoCore
 import SotoS3
 import os
@@ -352,7 +352,7 @@ public struct SotoS3Repository: S3Repository {
       let scratch = try? fileManager.url(
         for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: destination, create: true)
       let staging = (scratch ?? destination.deletingLastPathComponent())
-        .appendingPathComponent(".openbucket-\(UUID().uuidString).download")
+        .appendingPathComponent(".bucketdeck-\(UUID().uuidString).download")
       defer { try? fileManager.removeItem(at: scratch ?? staging) }
       try Self.fileOperation {
         guard fileManager.createFile(atPath: staging.path, contents: nil) else {
@@ -635,7 +635,7 @@ public struct SotoS3Repository: S3Repository {
       throw S3Failure(
         category: .localFile,
         message: reading
-          ? "The file couldn't be read. Check that it still exists and that OpenBucket can open it."
+          ? "The file couldn't be read. Check that it still exists and that Bucketdeck can open it."
           : "The file couldn't be saved. Check the destination folder's permissions and free space.",
         technicalDetail: "File error: \(error.domain) \(error.code)")
     }

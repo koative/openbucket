@@ -1,5 +1,5 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 /// Get Info-style rows: trailing labels and wrapping values, aligned on the first baseline.

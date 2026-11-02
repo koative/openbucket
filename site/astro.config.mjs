@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://openbucket.koative.com',
+  site: 'https://bucketdeck.com',
   output: 'static',
   devToolbar: { enabled: false },
   trailingSlash: 'always',

@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 private func write(_ text: String, to url: URL) throws {
   try FileManager.default.createDirectory(

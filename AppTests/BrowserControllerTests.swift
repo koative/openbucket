@@ -1,8 +1,8 @@
 import AppKit
-import OpenBucketCore
+import BucketdeckCore
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 private func fileID(_ key: String) -> BrowserRow.ID {
   BrowserRow.ID(isFolder: false, key: Array(key.utf8))

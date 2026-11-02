@@ -3,11 +3,11 @@
 import PackageDescription
 
 let package = Package(
-  name: "OpenBucket",
+  name: "Bucketdeck",
   platforms: [.macOS("26.0")],
   products: [
-    .library(name: "OpenBucketCore", targets: ["OpenBucketCore"]),
-    .library(name: "OpenBucketS3", targets: ["OpenBucketS3"]),
+    .library(name: "BucketdeckCore", targets: ["BucketdeckCore"]),
+    .library(name: "BucketdeckS3", targets: ["BucketdeckS3"]),
   ],
   dependencies: [
     .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.36.2"),
@@ -15,22 +15,22 @@ let package = Package(
     .package(url: "https://github.com/soto-project/soto-core.git", from: "7.17.0"),
   ],
   targets: [
-    .target(name: "OpenBucketCore"),
+    .target(name: "BucketdeckCore"),
     .target(
-      name: "OpenBucketS3",
+      name: "BucketdeckS3",
       dependencies: [
-        "OpenBucketCore",
+        "BucketdeckCore",
         .product(name: "AsyncHTTPClient", package: "async-http-client"),
         .product(name: "SotoS3", package: "soto"),
         .product(name: "SotoCore", package: "soto-core"),
       ]
     ),
-    .testTarget(name: "OpenBucketCoreTests", dependencies: ["OpenBucketCore"]),
+    .testTarget(name: "BucketdeckCoreTests", dependencies: ["BucketdeckCore"]),
     .testTarget(
-      name: "OpenBucketS3Tests",
+      name: "BucketdeckS3Tests",
       dependencies: [
-        "OpenBucketS3",
-        "OpenBucketCore",
+        "BucketdeckS3",
+        "BucketdeckCore",
         .product(name: "AsyncHTTPClient", package: "async-http-client"),
         .product(name: "SotoCore", package: "soto-core"),
       ]),

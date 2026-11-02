@@ -1,6 +1,6 @@
+import BucketdeckCore
 import Foundation
 import Observation
-import OpenBucketCore
 
 /// Finds objects anywhere below a folder whose key (relative to the folder) contains a query.
 @MainActor @Observable

@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import OpenBucketCore
+@testable import BucketdeckCore
 
 /// Holds every listing request until the test answers it, so no test depends on scheduling.
 private actor ScriptedRepository: S3Repository {

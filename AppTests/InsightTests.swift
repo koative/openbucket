@@ -1,7 +1,7 @@
 import CoreGraphics
 import Testing
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 struct TreemapTests {
   static let cases: [[Double]] = [

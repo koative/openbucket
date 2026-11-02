@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import OpenBucketCore
+@testable import BucketdeckCore
 
 private func at(_ day: Double) -> Date { Date(timeIntervalSince1970: day * 86_400) }
 

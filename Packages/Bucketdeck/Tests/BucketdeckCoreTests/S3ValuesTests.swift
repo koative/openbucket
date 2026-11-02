@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import OpenBucketCore
+@testable import BucketdeckCore
 
 @Test func parsesLocationWithoutChangingKeyPrefix() throws {
   let location = try S3Location("s3://photos//2026/trip/")

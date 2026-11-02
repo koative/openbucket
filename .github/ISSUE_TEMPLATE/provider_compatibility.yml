@@ -1,11 +1,11 @@
 name: Provider compatibility report
-description: Tell us how OpenBucket works with an S3 provider or configuration.
+description: Tell us how Bucketdeck works with an S3 provider or configuration.
 labels: [compatibility]
 body:
   - type: markdown
     attributes:
       value: |
-        [S3 compatibility](https://github.com/koative/openbucket/blob/main/docs/compatibility.md) lists the providers tested so far, the S3 operations each action uses, and the [live compatibility test](https://github.com/koative/openbucket/blob/main/docs/compatibility.md#live-compatibility-test) you can run against your own bucket.
+        [S3 compatibility](https://github.com/koative/bucketdeck/blob/main/docs/compatibility.md) lists the providers tested so far, the S3 operations each action uses, and the [live compatibility test](https://github.com/koative/bucketdeck/blob/main/docs/compatibility.md#live-compatibility-test) you can run against your own bucket.
 
         **Never paste access keys, secret keys, session tokens, presigned share links or authorization headers.**
   - type: input
@@ -36,7 +36,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: OpenBucket version
+      label: Bucketdeck version
       placeholder: 0.2.0
     validations:
       required: true

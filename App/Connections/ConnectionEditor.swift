@@ -1,5 +1,5 @@
 import Accessibility
-import OpenBucketCore
+import BucketdeckCore
 import SwiftUI
 
 struct ConnectionEditor: View {

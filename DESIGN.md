@@ -1,5 +1,5 @@
 ---
-name: OpenBucket
+name: Bucketdeck
 description: The Mac app landing page, played straight - one product, real windows, one download.
 colors:
   canvas: "#ffffff"
@@ -260,15 +260,15 @@ components:
     textColor: "{colors.footer-link}"
 ---
 
-# Design System: OpenBucket
+# Design System: Bucketdeck
 
 ## Overview
 
 **Creative North Star: "The Straight Mac Page"**
 
-OpenBucket's site is the category-standard Mac app landing page executed without a concept or costume, at the craft level of culturedcode.com/things and apple.com product pages. One product, one blue glass bucket icon, real app windows, one signed download. The page is a vertical stack of full-bleed sections on a white canvas, alternating with soft grey bands and a single black band, all set in the system face (SF Pro on Macs) with large semibold, slightly tightened headlines and generous whitespace.
+Bucketdeck's site is the category-standard Mac app landing page executed without a concept or costume, at the craft level of culturedcode.com/things and apple.com product pages. One product, one blue glass bucket icon, real app windows, one signed download. The page is a vertical stack of full-bleed sections on a white canvas, alternating with soft grey bands and a single black band, all set in the system face (SF Pro on Macs) with large semibold, slightly tightened headlines and generous whitespace.
 
-The product itself is the only imagery. Every visual of OpenBucket is a genuine screenshot of a real window against a local Garage bucket of demo files, captured with its own transparent corners and floating on a soft shadow that follows them, and the hero window settles into place as it scrolls into view. Colour is restrained to Apple's neutral greys plus one action blue; the only other hues are the three compatibility badges, which carry evidence, not decoration.
+The product itself is the only imagery. Every visual of Bucketdeck is a genuine screenshot of a real window against a local Garage bucket of demo files, captured with its own transparent corners and floating on a soft shadow that follows them, and the hero window settles into place as it scrolls into view. Colour is restrained to Apple's neutral greys plus one action blue; the only other hues are the three compatibility badges, which carry evidence, not decoration.
 
 The voice of the layout is calm and confident: centred heroes and section heads, two- and three-column grids of short facts, and claims that never outrun the documented evidence. It rejects novelty concepts and the dark developer-tool look.
 
@@ -285,7 +285,7 @@ The voice of the layout is calm and confident: centred heroes and section heads,
 Apple's neutral ladder with one blue for action, one link blue per ground, and three muted badge pairs that encode test status.
 
 ### Primary
-- **Action Blue** (action): the fill of every pill button (Download in the nav, Download for macOS, Go to OpenBucket), the skip link, the focus ring, the line icons in the facts grid and the checks list, and (at 22% alpha, the selection tint) text selection. Lifts to **Action Blue Hover** (action-hover) on hover.
+- **Action Blue** (action): the fill of every pill button (Download in the nav, Download for macOS, Go to Bucketdeck), the skip link, the focus ring, the line icons in the facts grid and the checks list, and (at 22% alpha, the selection tint) text selection. Lifts to **Action Blue Hover** (action-hover) on hover.
 - **Link Blue** (link): every text link on light ground, including "View on GitHub ↗" and "Compatibility details ↗".
 
 ### Secondary
@@ -375,7 +375,7 @@ Soft, Apple-standard geometry. Buttons and badges are full pills (999px). The st
 
 ### Navigation
 - **Style:** sticky, 52px tall, Nav Glass with backdrop blur and a Hairline bottom border; inner row on the 1080px measure with a 28px gap.
-- **Content:** 28px masked app icon + "OpenBucket" (Brand, 9px gap) on the left; Features, Compatibility, Security, GitHub (Nav, Ink at 0.8 opacity, 26px gap); the small Download pill at the right.
+- **Content:** 28px masked app icon + "Bucketdeck" (Brand, 9px gap) on the left; Features, Compatibility, Security, GitHub (Nav, Ink at 0.8 opacity, 26px gap); the small Download pill at the right.
 - **States:** links go to full opacity on hover with no underline.
 - **Phone:** links hide; brand and Download pill remain.
 
@@ -395,7 +395,7 @@ Centred stack: 112px app icon, Display headline in two lines that names the audi
 
 ### Window figure + caption
 - **Image:** a real screenshot with its own transparent corners and the Window shadow, up to 1100px wide, served as 1x and 2x WebP.
-- **Caption:** Fine, Secondary Ink, 18px below, saying what the window really is ("A real OpenBucket window, connected to a local Garage bucket of demo files.").
+- **Caption:** Fine, Secondary Ink, 18px below, saying what the window really is ("A real Bucketdeck window, connected to a local Garage bucket of demo files.").
 - **Detail variant:** a 1014px list-detail crop with a 14px radius sits under the facts grid.
 
 ### Facts grid
@@ -424,10 +424,10 @@ Band section with a centred Headline and up to 820px of native `<details>` rows:
 Plain section, centred: Headline, Lede, and a row of three text links (Source code, Release notes, Contribute).
 
 ### Get block
-Centred close: 96px app icon with the Get icon glow, Headline ("Get OpenBucket."), the primary pill, a 15px Secondary Ink Homebrew line whose command sits in a selectable Band Grey monospace chip, and a Fine line that names the release and points to GitHub issues. The 404 page reuses this block with "Go to OpenBucket".
+Centred close: 96px app icon with the Get icon glow, Headline ("Get Bucketdeck."), the primary pill, a 15px Secondary Ink Homebrew line whose command sits in a selectable Band Grey monospace chip, and a Fine line that names the release and points to GitHub issues. The 404 page reuses this block with "Go to Bucketdeck".
 
 ### Footer
-Band Grey, 12px Secondary Ink, on the measure with a Hairline top rule and 22px 22px 36px padding: maker line, a wrapping row of Footer Link Grey links (6px × 22px gaps), and the trademark line stating that OpenBucket is not affiliated with Amazon or Apple.
+Band Grey, 12px Secondary Ink, on the measure with a Hairline top rule and 22px 22px 36px padding: maker line, a wrapping row of Footer Link Grey links (6px × 22px gaps), and the trademark line stating that Bucketdeck is not affiliated with Amazon or Apple.
 
 ### Signature: the settling window
 The hero window settles as it scrolls into view: a CSS scroll-driven animation on `view()` over `entry 10% cover 45%`, from `perspective(1600px) rotateX(9deg) translateY(28px) scale(0.94)` to no transform, linear, both fill. It runs only under `prefers-reduced-motion: no-preference` and where `animation-timeline: view()` is supported; otherwise the window simply sits flat. Under `prefers-reduced-motion: reduce`, smooth scrolling and all transitions are also switched off.
@@ -435,7 +435,7 @@ The hero window settles as it scrolls into view: a CSS scroll-driven animation o
 ## Do's and Don'ts
 
 ### Do:
-- **Do** show only real OpenBucket screenshots, with their own transparent corners and the Window shadow, and caption them truthfully.
+- **Do** show only real Bucketdeck screenshots, with their own transparent corners and the Window shadow, and caption them truthfully.
 - **Do** cut phone crops from the same real window at native scale and serve them through `<picture>` at `(max-width: 734px)`.
 - **Do** keep every claim inside the documented evidence: Amazon S3, Cloudflare R2, Garage 2.4.1, MinIO, RustFS, SeaweedFS and Adobe S3Mock as Tested, everything else as Not yet tested; Implemented is for a provider whose support exists without a live result.
 - **Do** keep one obvious download path: an Action Blue pill, with the source one text link away.

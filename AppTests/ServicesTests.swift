@@ -1,11 +1,11 @@
+import BucketdeckCore
 import CryptoKit
 import Foundation
 import ImageIO
-import OpenBucketCore
 import Testing
 import UniformTypeIdentifiers
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 /// Lists `objects` under the requested prefix, `pageSize` at a time; downloads write the key's bytes.
 /// `repeatsToken` hands out continuation token "1" for every page, like a broken server.

@@ -1,8 +1,8 @@
 {
-  "name": "openbucket-site",
+  "name": "bucketdeck-site",
   "private": true,
   "type": "module",
-  "description": "The OpenBucket website at openbucket.koative.com.",
+  "description": "The Bucketdeck website at bucketdeck.com.",
   "scripts": {
     "dev": "bun --bun astro dev",
     "build": "bun --bun astro build",

@@ -1,5 +1,5 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import Security
 
 enum CredentialStoreError: Error, Equatable {

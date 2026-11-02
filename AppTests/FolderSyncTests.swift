@@ -1,9 +1,9 @@
+import BucketdeckCore
 import Foundation
-import OpenBucketCore
 import Testing
 import os
 
-@testable import OpenBucket
+@testable import Bucketdeck
 
 private typealias Entry = BackupVerification.Entry
 

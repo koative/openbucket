@@ -1,6 +1,6 @@
+import BucketdeckCore
 import Darwin
 import Foundation
-import OpenBucketCore
 
 /// profiles.json existed but couldn't be decoded; it was moved aside to `backupName` in the same directory.
 struct UnreadableProfilesError: Error {
