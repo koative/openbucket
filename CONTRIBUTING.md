@@ -22,4 +22,4 @@ Report security problems privately as described in [SECURITY.md](SECURITY.md), n
 
 ## License of contributions
 
-OpenBucket is licensed under the GNU General Public License, version 3. By submitting a contribution, you license it under the GPL-3.0 and also grant Koative a perpetual, worldwide, irrevocable, royalty-free license to distribute and sublicense your contribution under other terms, including in Mac App Store builds and paid editions. You confirm that you wrote the contribution or otherwise have the right to submit it under these terms.
+OpenBucket is licensed under the GNU General Public License, version 3. By submitting a contribution, you license it under the GPL-3.0 and also grant Koative LLC a perpetual, worldwide, irrevocable, royalty-free license to distribute and sublicense your contribution under other terms, including in Mac App Store builds and paid editions. You confirm that you wrote the contribution or otherwise have the right to submit it under these terms.

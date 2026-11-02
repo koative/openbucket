@@ -50,7 +50,7 @@ parts = [
     "<!doctype html><meta charset=utf-8>",
     "<style>body{font:11px -apple-system,sans-serif}h2{font-size:12px;margin:14px 0 4px}"
     "pre{font:10px ui-monospace,monospace;white-space:pre-wrap}</style>",
-    "<p>Copyright © 2026 Koative. OpenBucket is free software under the GNU General Public License, version 3;"
+    "<p>Copyright © 2026 Koative LLC. OpenBucket is free software under the GNU General Public License, version 3;"
     " its source code is at https://github.com/koative/openbucket. It is built with these open-source components:</p>",
 ]
 for name, version, url, notices in components:

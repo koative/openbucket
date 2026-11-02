@@ -114,8 +114,8 @@ Contributions are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md). Report vulne
 
 ## License
 
-Copyright © 2026 Koative. OpenBucket is free software: you can redistribute and modify it under the terms of the [GNU General Public License, version 3](LICENSE). Anyone who distributes a modified version must publish its source code under the same license. Releases up to and including v0.2.3 were published under the MIT License, and those releases keep it.
+Copyright © 2026 Koative LLC. OpenBucket is free software: you can redistribute and modify it under the terms of the [GNU General Public License, version 3](LICENSE). Anyone who distributes a modified version must publish its source code under the same license. Releases up to and including v0.2.3 were published under the MIT License, and those releases keep it.
 
-The OpenBucket name and app icon identify Koative's builds and are not covered by the license; a distributed fork needs its own name and icon.
+The OpenBucket name and app icon identify Koative LLC's builds and are not covered by the license; a distributed fork needs its own name and icon.
 
 Made by [koative](https://koative.com)
