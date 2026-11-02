@@ -54,7 +54,7 @@ Website direction (owner choice, 2026-10-17): the category standard for a Mac ap
 
 ## Product Principles
 
-- Show the real app at work; every visual of the product is a genuine screenshot.
+- Show the real app at work; every visual of the product on the website is a genuine screenshot. The one exception is the share card (`site/public/og.png`), cut from the owner-supplied campaign banner in `brand/banner/`.
 - Claims stay inside the documented evidence, especially provider compatibility.
 - Safety is a default, not a feature toggle hunt: read-only until the user allows changes.
 - Native first: behave like a Mac app, not a web console in a window.

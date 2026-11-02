@@ -6,7 +6,8 @@
 | `app-icon/bucketdeck-{32,64,128,256,512,1024}.png` | macOS's own rendering of that icon, with the system shape, margin and shadow | README, website, favicon, store listings, anywhere the app is shown |
 | `mark/bucketdeck-mark.svg` | The flat mark in blue (`#0071E3`), no glass and no background | Small or single-colour use: docs, print, a wordmark lockup |
 | `mark/bucketdeck-mark-white.svg` | The flat mark in white | On blue or dark backgrounds |
-| `../site/public/og.png` (source `../site/design/og.html`) | The 1200 × 630 share card | Link previews, the GitHub social preview |
+| `banner/bucketdeck-banner.jpg` | The campaign banner (1264 × 848): icon, name, tagline and a composed app window on midnight blue. Owner-supplied artwork, not a literal screenshot | Product covers (koative.com), launch posts, the GitHub social preview |
+| `../site/public/og.png` | The 1200 × 630 share card, cut from the banner | Link previews of bucketdeck.com |
 
 Show the app icon as it is: no extra rounding, glow or shadow, since the image already carries what macOS draws. Don't recolour or rearrange the bands. The name and icon are Koative LLC's and are not covered by the code license.
 
@@ -28,4 +29,8 @@ for R in Default Dark TintedLight TintedDark ClearLight ClearDark; do
 done
 ```
 
-The share card's source page loads Inter (SIL Open Font License) instead of SF Pro, whose license doesn't cover marketing images; capture it at exactly 1200 × 630 with the repository root served over HTTP.
+The share card is the banner scaled to 1200 px wide and cropped to 630 px, 20 px from the top:
+
+```sh
+ffmpeg -i brand/banner/bucketdeck-banner.jpg -vf "scale=1200:-2:flags=lanczos,crop=1200:630:0:20" -frames:v 1 site/public/og.png
+```

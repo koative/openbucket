@@ -591,7 +591,7 @@
       "**Do** keep the settle animation still under reduced motion."
     ],
     "donts": [
-      "**Don't** use mockups, illustrations, renders or stock imagery; the app icon is the only illustration.",
+      "**Don't** use mockups, illustrations, renders or stock imagery on the page; the app icon is the only illustration. The share card (`site/public/og.png`) is the exception: it is cut from the campaign banner in `brand/banner/` and appears only in link previews.",
       "**Don't** show or invent adoption numbers, stars, downloads, testimonials, ratings, press or benchmarks.",
       "**Don't** say or imply \"works with every provider\".",
       "**Don't** imply affiliation with or endorsement by Amazon or Apple; keep the trademark and non-affiliation line in the footer.",
